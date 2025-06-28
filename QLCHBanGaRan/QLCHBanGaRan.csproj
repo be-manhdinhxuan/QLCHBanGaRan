@@ -61,18 +61,30 @@
     <Compile Include="Forms\frm_Login.Designer.cs">
       <DependentUpon>frm_Login.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\frm_Main.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frm_Main.Designer.cs">
+      <DependentUpon>frm_Main.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\frm_Splash.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\frm_Splash.Designer.cs">
       <DependentUpon>frm_Splash.cs</DependentUpon>
     </Compile>
+    <Compile Include="lib\cls_DatabaseManager.cs" />
+    <Compile Include="lib\cls_EmployeeManagement.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\DatabaseHelper.cs" />
     <Compile Include="Utilities\LoadingAnimation.cs" />
     <Compile Include="Utilities\LoadingOverlay.cs">
       <SubType>Form</SubType>
     </Compile>
+    <EmbeddedResource Include="Forms\frm_Login.resx">
+      <DependentUpon>frm_Login.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -126,6 +138,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\sqlsever2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\logo_login.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
