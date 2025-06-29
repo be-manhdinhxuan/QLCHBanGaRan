@@ -1,17 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Data.SqlClient;
+﻿using MaterialSkin;
+using System;
 using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using MaterialSkin;
-using MaterialSkin.Controls;
-using QLCHBanGaRan.Utilities;
 
 namespace QLCHBanGaRan
 {
@@ -43,6 +32,8 @@ namespace QLCHBanGaRan
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            this.Icon = global::QLCHBanGaRan.Properties.Resources.logo;
             this.pnlRight = new System.Windows.Forms.Panel();
             this.btnClose = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -55,6 +46,7 @@ namespace QLCHBanGaRan
             this.picEyeToggle = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.btnLogin = new MaterialSkin.Controls.MaterialRaisedButton();
+            this.focusTimer = new System.Windows.Forms.Timer(this.components);
             this.pnlRight.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.pnlLeft.SuspendLayout();
@@ -73,6 +65,9 @@ namespace QLCHBanGaRan
             this.pnlRight.Name = "pnlRight";
             this.pnlRight.Size = new System.Drawing.Size(516, 533);
             this.pnlRight.TabIndex = 1;
+            this.pnlRight.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pnlRight_MouseDown);
+            this.pnlRight.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pnlRight_MouseMove);
+            this.pnlRight.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pnlRight_MouseUp);
             // 
             // btnClose
             // 
@@ -83,6 +78,7 @@ namespace QLCHBanGaRan
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(25, 28);
             this.btnClose.TabIndex = 9;
+            this.btnClose.TabStop = false;
             this.btnClose.UseVisualStyleBackColor = true;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
@@ -95,6 +91,7 @@ namespace QLCHBanGaRan
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(563, 80);
             this.label1.TabIndex = 8;
+            this.label1.TabStop = false;
             this.label1.Text = "FastFood Chicken Bông";
             // 
             // pictureBox1
@@ -116,6 +113,7 @@ namespace QLCHBanGaRan
             this.lblLogin.Name = "lblLogin";
             this.lblLogin.Size = new System.Drawing.Size(283, 32);
             this.lblLogin.TabIndex = 1;
+            this.lblLogin.TabStop = false;
             this.lblLogin.Text = "ĐĂNG NHẬP HỆ THỐNG";
             // 
             // txtTenDangNhap
@@ -130,7 +128,7 @@ namespace QLCHBanGaRan
             this.txtTenDangNhap.SelectionLength = 0;
             this.txtTenDangNhap.SelectionStart = 0;
             this.txtTenDangNhap.Size = new System.Drawing.Size(315, 23);
-            this.txtTenDangNhap.TabIndex = 2;
+            this.txtTenDangNhap.TabIndex = 0;
             this.txtTenDangNhap.UseSystemPasswordChar = false;
             this.txtTenDangNhap.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtTenDangNhap_KeyDown);
             // 
@@ -146,7 +144,7 @@ namespace QLCHBanGaRan
             this.txtPassword.SelectionLength = 0;
             this.txtPassword.SelectionStart = 0;
             this.txtPassword.Size = new System.Drawing.Size(315, 23);
-            this.txtPassword.TabIndex = 3;
+            this.txtPassword.TabIndex = 1;
             this.txtPassword.UseSystemPasswordChar = true;
             this.txtPassword.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtPassword_KeyDown);
             // 
@@ -156,6 +154,7 @@ namespace QLCHBanGaRan
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(100, 23);
             this.label6.TabIndex = 7;
+            this.label6.TabStop = false;
             // 
             // pnlLeft
             // 
@@ -172,6 +171,9 @@ namespace QLCHBanGaRan
             this.pnlLeft.Name = "pnlLeft";
             this.pnlLeft.Size = new System.Drawing.Size(379, 533);
             this.pnlLeft.TabIndex = 0;
+            this.pnlLeft.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pnlLeft_MouseDown);
+            this.pnlLeft.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pnlLeft_MouseMove);
+            this.pnlLeft.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pnlLeft_MouseUp);
             // 
             // picEyeToggle
             // 
@@ -203,10 +205,15 @@ namespace QLCHBanGaRan
             this.btnLogin.Name = "btnLogin";
             this.btnLogin.Primary = true;
             this.btnLogin.Size = new System.Drawing.Size(207, 53);
-            this.btnLogin.TabIndex = 5;
+            this.btnLogin.TabIndex = 2;
             this.btnLogin.Text = "ĐĂNG NHẬP";
             this.btnLogin.UseVisualStyleBackColor = false;
             this.btnLogin.Click += new System.EventHandler(this.btnLogin_Click);
+            // 
+            // focusTimer
+            // 
+            this.focusTimer.Interval = 300; // Delay 100ms
+            this.focusTimer.Tick += new System.EventHandler(this.focusTimer_Tick);
             // 
             // frm_Login
             // 
@@ -221,6 +228,7 @@ namespace QLCHBanGaRan
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Đăng Nhập";
             this.Load += new System.EventHandler(this.frm_Login_Load);
+            this.Activated += new System.EventHandler(this.frm_Login_Activated);
             this.pnlRight.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.pnlLeft.ResumeLayout(false);
@@ -234,37 +242,46 @@ namespace QLCHBanGaRan
         #endregion
         private System.Windows.Forms.Panel pnlRight;
         private System.Windows.Forms.Label lblLogin;
-        private MaterialSkin.Controls.MaterialSingleLineTextField txtTenDangNhap; // Thay BunifuTextBox
-        private MaterialSkin.Controls.MaterialSingleLineTextField txtPassword; // Thay BunifuTextBox
+        private MaterialSkin.Controls.MaterialSingleLineTextField txtTenDangNhap;
+        private MaterialSkin.Controls.MaterialSingleLineTextField txtPassword;
         private System.Windows.Forms.Label label6;
-        private MaterialSkin.Controls.MaterialRaisedButton btnLogin; // Thay BunifuButton
+        private MaterialSkin.Controls.MaterialRaisedButton btnLogin;
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.Panel pnlLeft;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnClose;
         private System.Windows.Forms.PictureBox picEyeToggle;
+        private System.Windows.Forms.Timer focusTimer;
 
-        //private bool isDragging = false;
-        //private Point lastCursorPosition;
-        //private Point lastFormPosition;
+        private bool isDragging = false;
+        private Point lastCursorPosition;
+        private Point lastFormPosition;
 
         private void frm_Login_Load(object sender, EventArgs e)
         {
-            // Cấu hình MaterialSkinManager để khớp với màu của pnlRight
             var materialSkinManager = MaterialSkinManager.Instance;
             materialSkinManager.AddFormToManage(this);
             materialSkinManager.Theme = MaterialSkinManager.Themes.LIGHT;
             materialSkinManager.ColorScheme = new ColorScheme(
-                Primary.Red800, // Thay bằng màu tùy chỉnh gần với (228, 0, 42)
+                Primary.Red800, // Gần với (228, 0, 42)
                 Primary.Red900,
                 Primary.Red500,
                 Accent.Red200,
                 TextShade.WHITE
             );
-
-            // Đảm bảo btnLogin sử dụng màu Primary
             btnLogin.Primary = true;
+            focusTimer.Start(); // Bắt đầu timer để delay focus
+        }
+
+        private void frm_Login_Activated(object sender, EventArgs e)
+        {
+        }
+
+        private void focusTimer_Tick(object sender, EventArgs e)
+        {
+            focusTimer.Stop(); // Dừng timer sau lần đầu
+            txtTenDangNhap.Focus();
         }
     }
 }

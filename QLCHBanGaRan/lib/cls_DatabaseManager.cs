@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
@@ -9,7 +8,7 @@ namespace QLCHBanGaRan.lib
 {
     class cls_DatabaseManager
     {
-        public static readonly string connectionString = File.ReadAllText("config.env").Trim();
+        public static readonly string connectionString = File.ReadAllText("config.env").Trim(); // Thay private thành public
 
         public static void Connect()
         {
@@ -25,11 +24,6 @@ namespace QLCHBanGaRan.lib
                     throw;
                 }
             }
-        }
-
-        public static void Disconnect()
-        {
-            // Không cần phương thức riêng nếu sử dụng using statement trong Connect
         }
 
         public static DataTable TableRead(string query, SqlParameter[] parameters = null)
@@ -112,7 +106,7 @@ namespace QLCHBanGaRan.lib
                 }
                 catch (SqlException ex)
                 {
-                    MessageBox.Show("Lỗi thực thi truy vấn: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Lỗi thực thi truy vấn Scalar: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 catch (Exception ex)
                 {

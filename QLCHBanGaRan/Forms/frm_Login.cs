@@ -10,25 +10,27 @@ namespace QLCHBanGaRan
 {
     public partial class frm_Login : MaterialForm
     {
-
         public frm_Login()
         {
             InitializeComponent();
 
-            // Khởi tạo theme MaterialSkin
-            var materialSkinManager = MaterialSkinManager.Instance;
-            materialSkinManager.AddFormToManage(this);
-            materialSkinManager.Theme = MaterialSkinManager.Themes.LIGHT; // Hoặc DARK
-            materialSkinManager.ColorScheme = new ColorScheme(
-                Primary.BlueGrey800, // Màu chính
-                Primary.BlueGrey900, // Màu chính đậm
-                Primary.BlueGrey500, // Màu thứ cấp
-                Accent.LightBlue200, // Màu nhấn
-                TextShade.WHITE // Màu chữ
-            );
-
             // Tùy chỉnh thêm nếu cần
-            txtPassword.UseSystemPasswordChar = true; // Đảm bảo mật khẩu ẩn
+            txtPassword.UseSystemPasswordChar = true;
+
+            // Đặt TabIndex hợp lý
+            txtTenDangNhap.TabIndex = 0;
+            txtPassword.TabIndex = 1;
+            btnLogin.TabIndex = 2;
+
+            // Xử lý tab thủ công
+            txtTenDangNhap.KeyDown += (s, e) =>
+            {
+                if (e.KeyCode == Keys.Tab && !e.Shift)
+                {
+                    e.SuppressKeyPress = true;
+                    this.SelectNextControl(txtTenDangNhap, true, true, true, true);
+                }
+            };
         }
 
         private void btnClose_Click(object sender, EventArgs e)
@@ -58,7 +60,7 @@ namespace QLCHBanGaRan
                 // Đăng nhập thành công
                 MessageBox.Show("Đăng nhập thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.Hide();
-                frm_Main mainForm = new frm_Main(); // Truyền maND vào form chính nếu cần
+                frm_Main mainForm = new frm_Main(maND); // Truyền maND vào form chính nếu cần
                 mainForm.Show();
             }
             else
@@ -89,71 +91,71 @@ namespace QLCHBanGaRan
             if (txtPassword.UseSystemPasswordChar)
             {
                 txtPassword.UseSystemPasswordChar = false;
-                picEyeToggle.Image = global::QLCHBanGaRan.Properties.Resources.eye_open; // Đảm bảo có file eye_open
+                picEyeToggle.Image = global::QLCHBanGaRan.Properties.Resources.eye_open;
             }
             else
             {
                 txtPassword.UseSystemPasswordChar = true;
-                picEyeToggle.Image = global::QLCHBanGaRan.Properties.Resources.eye_closed; // Đảm bảo có file eye_closed
+                picEyeToggle.Image = global::QLCHBanGaRan.Properties.Resources.eye_closed;
             }
         }
 
-        //private void pnlLeft_MouseDown(object sender, MouseEventArgs e)
-        //{
-        //    if (e.Button == MouseButtons.Left)
-        //    {
-        //        isDragging = true;
-        //        lastCursorPosition = Cursor.Position;
-        //        lastFormPosition = this.Location;
-        //    }
-        //}
+        private void pnlLeft_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                isDragging = true;
+                lastCursorPosition = Cursor.Position;
+                lastFormPosition = this.Location;
+            }
+        }
 
-        //private void pnlLeft_MouseMove(object sender, MouseEventArgs e)
-        //{
-        //    if (isDragging)
-        //    {
-        //        Point currentCursorPosition = Cursor.Position;
-        //        int deltaX = currentCursorPosition.X - lastCursorPosition.X;
-        //        int deltaY = currentCursorPosition.Y - lastCursorPosition.Y;
-        //        this.Location = new Point(lastFormPosition.X + deltaX, lastFormPosition.Y + deltaY);
-        //    }
-        //}
+        private void pnlLeft_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (isDragging)
+            {
+                Point currentCursorPosition = Cursor.Position;
+                int deltaX = currentCursorPosition.X - lastCursorPosition.X;
+                int deltaY = currentCursorPosition.Y - lastCursorPosition.Y;
+                this.Location = new Point(lastFormPosition.X + deltaX, lastFormPosition.Y + deltaY);
+            }
+        }
 
-        //private void pnlLeft_MouseUp(object sender, MouseEventArgs e)
-        //{
-        //    if (e.Button == MouseButtons.Left)
-        //    {
-        //        isDragging = false;
-        //    }
-        //}
+        private void pnlLeft_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                isDragging = false;
+            }
+        }
 
-        //private void pnlRight_MouseDown(object sender, MouseEventArgs e)
-        //{
-        //    if (e.Button == MouseButtons.Left)
-        //    {
-        //        isDragging = true;
-        //        lastCursorPosition = Cursor.Position;
-        //        lastFormPosition = this.Location;
-        //    }
-        //}
+        private void pnlRight_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                isDragging = true;
+                lastCursorPosition = Cursor.Position;
+                lastFormPosition = this.Location;
+            }
+        }
 
-        //private void pnlRight_MouseMove(object sender, MouseEventArgs e)
-        //{
-        //    if (isDragging)
-        //    {
-        //        Point currentCursorPosition = Cursor.Position;
-        //        int deltaX = currentCursorPosition.X - lastCursorPosition.X;
-        //        int deltaY = currentCursorPosition.Y - lastCursorPosition.Y;
-        //        this.Location = new Point(lastFormPosition.X + deltaX, lastFormPosition.Y + deltaY);
-        //    }
-        //}
+        private void pnlRight_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (isDragging)
+            {
+                Point currentCursorPosition = Cursor.Position;
+                int deltaX = currentCursorPosition.X - lastCursorPosition.X;
+                int deltaY = currentCursorPosition.Y - lastCursorPosition.Y;
+                this.Location = new Point(lastFormPosition.X + deltaX, lastFormPosition.Y + deltaY);
+            }
+        }
 
-        //private void pnlRight_MouseUp(object sender, MouseEventArgs e)
-        //{
-        //    if (e.Button == MouseButtons.Left)
-        //    {
-        //        isDragging = false;
-        //    }
-        //}
+        private void pnlRight_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                isDragging = false;
+            }
+        }
     }
 }

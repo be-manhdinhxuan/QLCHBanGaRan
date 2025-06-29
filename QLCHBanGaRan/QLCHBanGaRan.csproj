@@ -49,6 +49,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Forms\frm_About.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frm_About.Designer.cs">
+      <DependentUpon>frm_About.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\frm_Connect.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -67,6 +73,12 @@
     <Compile Include="Forms\frm_Main.Designer.cs">
       <DependentUpon>frm_Main.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\frm_PrintInvoice.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frm_PrintInvoice.Designer.cs">
+      <DependentUpon>frm_PrintInvoice.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\frm_Splash.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -77,13 +89,73 @@
     <Compile Include="lib\cls_EmployeeManagement.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UCSystems\UC_Category.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UCSystems\UC_Category.Designer.cs">
+      <DependentUpon>UC_Category.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UCSystems\UC_Home.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UCSystems\UC_Home.Designer.cs">
+      <DependentUpon>UC_Home.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UCSystems\UC_Noti.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UCSystems\UC_Noti.Designer.cs">
+      <DependentUpon>UC_Noti.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UCSystems\UC_Order.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UCSystems\UC_Order.Designer.cs">
+      <DependentUpon>UC_Order.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UCSystems\UC_Personnel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UCSystems\UC_Personnel.Designer.cs">
+      <DependentUpon>UC_Personnel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UCSystems\UC_Product.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UCSystems\UC_Product.Designer.cs">
+      <DependentUpon>UC_Product.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UCSystems\UC_Report.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UCSystems\UC_Report.Designer.cs">
+      <DependentUpon>UC_Report.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UCSystems\UC_Salary.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UCSystems\UC_Salary.Designer.cs">
+      <DependentUpon>UC_Salary.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UCSystems\UC_System.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UCSystems\UC_System.Designer.cs">
+      <DependentUpon>UC_System.cs</DependentUpon>
+    </Compile>
     <Compile Include="Utilities\DatabaseHelper.cs" />
     <Compile Include="Utilities\LoadingAnimation.cs" />
     <Compile Include="Utilities\LoadingOverlay.cs">
       <SubType>Form</SubType>
     </Compile>
+    <EmbeddedResource Include="Forms\frm_About.resx">
+      <DependentUpon>frm_About.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frm_Login.resx">
       <DependentUpon>frm_Login.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frm_Main.resx">
+      <DependentUpon>frm_Main.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -95,6 +167,12 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="UCSystems\UC_Home.resx">
+      <DependentUpon>UC_Home.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UCSystems\UC_Order.resx">
+      <DependentUpon>UC_Order.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="config.env">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -141,6 +219,45 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\logo_login.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\system_task_32px.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\graph_report_32px.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\sorting_answers_32px.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\money_32px.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\conference_32px.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\kawaii_french_fries_32px.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\shopping_cart_32px.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\home_32px.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\restore_down_24px.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\subtract_24px.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\btnLogout.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\banner_main.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\banner_home.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

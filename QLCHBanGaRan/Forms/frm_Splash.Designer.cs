@@ -32,6 +32,7 @@ namespace QLCHBanGaRan.Forms
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            this.Icon = global::QLCHBanGaRan.Properties.Resources.logo;
             this.label1 = new System.Windows.Forms.Label();
             this.lblStatus = new System.Windows.Forms.Label();
             this.btnClose = new System.Windows.Forms.Button();

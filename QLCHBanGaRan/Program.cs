@@ -1,4 +1,5 @@
-﻿using System;
+﻿using QLCHBanGaRan.Forms;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,7 +17,7 @@ namespace QLCHBanGaRan
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Forms.frm_Splash());
+            Application.Run(new frm_Splash());
         }
     }
 }
