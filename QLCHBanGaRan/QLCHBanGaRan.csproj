@@ -55,11 +55,23 @@
     <Compile Include="Forms\frm_About.Designer.cs">
       <DependentUpon>frm_About.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\frm_ChangePassword.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frm_ChangePassword.Designer.cs">
+      <DependentUpon>frm_ChangePassword.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\frm_Connect.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\frm_Connect.Designer.cs">
       <DependentUpon>frm_Connect.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frm_InvoiceDetails.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frm_InvoiceDetails.Designer.cs">
+      <DependentUpon>frm_InvoiceDetails.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\frm_Login.cs">
       <SubType>Form</SubType>
@@ -79,11 +91,23 @@
     <Compile Include="Forms\frm_PrintInvoice.Designer.cs">
       <DependentUpon>frm_PrintInvoice.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\frm_Setting.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frm_Setting.Designer.cs">
+      <DependentUpon>frm_Setting.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\frm_Splash.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\frm_Splash.Designer.cs">
       <DependentUpon>frm_Splash.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frm_UserPermission.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frm_UserPermission.Designer.cs">
+      <DependentUpon>frm_UserPermission.cs</DependentUpon>
     </Compile>
     <Compile Include="lib\cls_DatabaseManager.cs" />
     <Compile Include="lib\cls_EmployeeManagement.cs" />
@@ -156,6 +180,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frm_Main.resx">
       <DependentUpon>frm_Main.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frm_PrintInvoice.resx">
+      <DependentUpon>frm_PrintInvoice.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frm_Setting.resx">
+      <DependentUpon>frm_Setting.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -258,6 +288,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\banner_home.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\password_120px.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,6 +1,6 @@
 ﻿namespace QLCHBanGaRan.Forms
 {
-    partial class frm_PrintInvoice
+    partial class frm_InvoiceDetails
     {
         /// <summary>
         /// Required designer variable.
@@ -102,7 +102,7 @@
             this.panelRight.Size = new System.Drawing.Size(4, 538);
             this.panelRight.TabIndex = 8;
             // 
-            // frm_PrintInvoice
+            // frm_InvoiceDetails
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -114,10 +114,10 @@
             this.Controls.Add(this.panelHeader);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = global::QLCHBanGaRan.Properties.Resources.logo;
-            this.Name = "frm_PrintInoice";
+            this.Name = "frm_InvoiceDetails";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "In hoá đơn";
-            this.Load += new System.EventHandler(this.frm_PrintInvoice_Load);
+            this.Text = "Chi tiết hóa đơn gà rán";
+            this.Load += new System.EventHandler(this.frm_InvoiceDetails_Load);
             this.panelHeader.ResumeLayout(false);
             this.panelHeader.PerformLayout();
             this.ResumeLayout(false);
