@@ -10,6 +10,8 @@ namespace QLCHBanGaRan.Forms
             InitializeComponent();
         }
 
+        public string numReceipt { get; set; } // Add this property to resolve the error
+
         private void frm_InvoiceDetails_Load(object sender, EventArgs e)
         {
             // Tạm thời không có logic báo cáo

@@ -111,8 +111,73 @@
     </Compile>
     <Compile Include="lib\cls_DatabaseManager.cs" />
     <Compile Include="lib\cls_EmployeeManagement.cs" />
+    <Compile Include="lib\cls_EmployeeTitleManagement.cs" />
+    <Compile Include="lib\cls_EnCrypt.cs" />
+    <Compile Include="lib\cls_NCC.cs" />
+    <Compile Include="lib\cls_Product.cs" />
+    <Compile Include="lib\cls_Report.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UCFunction\UC_DrinkManager.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UCFunction\UC_DrinkManager.Designer.cs">
+      <DependentUpon>UC_DrinkManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UCFunction\UC_FoodManager.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UCFunction\UC_FoodManager.Designer.cs">
+      <DependentUpon>UC_FoodManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UCFunction\UC_InvoiceDetails.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UCFunction\UC_InvoiceDetails.Designer.cs">
+      <DependentUpon>UC_InvoiceDetails.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UCFunction\UC_NCCManager.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UCFunction\UC_NCCManager.Designer.cs">
+      <DependentUpon>UC_NCCManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UCFunction\UC_OfficeManager.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UCFunction\UC_OfficeManager.Designer.cs">
+      <DependentUpon>UC_OfficeManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UCFunction\UC_PersonnelManager.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UCFunction\UC_PersonnelManager.Designer.cs">
+      <DependentUpon>UC_PersonnelManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UCFunction\UC_ProductType.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UCFunction\UC_ProductType.Designer.cs">
+      <DependentUpon>UC_ProductType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UCFunction\UC_ProfilePersonnelManager.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UCFunction\UC_ProfilePersonnelManager.Designer.cs">
+      <DependentUpon>UC_ProfilePersonnelManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UCFunction\UC_TimeSheetManager.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UCFunction\UC_TimeSheetManager.Designer.cs">
+      <DependentUpon>UC_TimeSheetManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UCFunction\UC_UserManager.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UCFunction\UC_UserManager.Designer.cs">
+      <DependentUpon>UC_UserManager.cs</DependentUpon>
+    </Compile>
     <Compile Include="UCSystems\UC_Category.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -197,6 +262,27 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="UCFunction\UC_DrinkManager.resx">
+      <DependentUpon>UC_DrinkManager.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UCFunction\UC_FoodManager.resx">
+      <DependentUpon>UC_FoodManager.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UCFunction\UC_OfficeManager.resx">
+      <DependentUpon>UC_OfficeManager.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UCFunction\UC_PersonnelManager.resx">
+      <DependentUpon>UC_PersonnelManager.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UCFunction\UC_ProfilePersonnelManager.resx">
+      <DependentUpon>UC_ProfilePersonnelManager.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UCFunction\UC_TimeSheetManager.resx">
+      <DependentUpon>UC_TimeSheetManager.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UCFunction\UC_UserManager.resx">
+      <DependentUpon>UC_UserManager.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UCSystems\UC_Home.resx">
       <DependentUpon>UC_Home.cs</DependentUpon>
     </EmbeddedResource>
@@ -291,6 +377,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\password_120px.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\left_round_32px.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

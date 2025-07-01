@@ -44,7 +44,6 @@
             this.label5 = new System.Windows.Forms.Label();
             this.panelHeader.SuspendLayout();
             this.panel1.SuspendLayout();
-            this.Icon = global::QLCHBanGaRan.Properties.Resources.logo;
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -65,6 +64,7 @@
             this.btnClose.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnClose.FlatAppearance.BorderSize = 0;
             this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnClose.Image = global::QLCHBanGaRan.Properties.Resources.btn_close;
             this.btnClose.Location = new System.Drawing.Point(551, 0);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(32, 28);
@@ -174,7 +174,7 @@
             this.label4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(0)))), ((int)(((byte)(42)))));
             this.label4.Location = new System.Drawing.Point(180, 226);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(232, 20);
+            this.label4.Size = new System.Drawing.Size(274, 20);
             this.label4.TabIndex = 16;
             this.label4.Text = "Liên hệ hỗ trợ: manhbeo.it8@gmail.com";
             // 
@@ -185,7 +185,7 @@
             this.label5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(0)))), ((int)(((byte)(42)))));
             this.label5.Location = new System.Drawing.Point(180, 252);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(100, 20);
+            this.label5.Size = new System.Drawing.Size(188, 20);
             this.label5.TabIndex = 17;
             this.label5.Text = "Facebook: Đinh Xuân Mạnh";
             this.label5.Click += new System.EventHandler(this.label5_Click);
@@ -207,6 +207,7 @@
             this.Controls.Add(this.panelLeft);
             this.Controls.Add(this.panelHeader);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Icon = global::QLCHBanGaRan.Properties.Resources.logo;
             this.Name = "frm_About";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Về chúng tôi";

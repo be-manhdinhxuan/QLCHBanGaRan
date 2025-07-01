@@ -2,13 +2,14 @@
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace QLCHBanGaRan.lib
 {
     class cls_DatabaseManager
     {
-        public static readonly string connectionString = File.ReadAllText("config.env").Trim(); // Thay private thành public
+        public static readonly string connectionString = File.ReadAllText("config.env").Trim();
 
         public static void Connect()
         {
@@ -114,6 +115,24 @@ namespace QLCHBanGaRan.lib
                 }
             }
             return result;
+        }
+
+        // Thêm phương thức kiểm tra trùng lặp
+        public static bool CheckDuplicate(string table, string column, string value, string condition = "")
+        {
+            string query = $"SELECT COUNT(*) FROM {table} WHERE {column} = @Value {condition}";
+            SqlParameter[] parameters = { new SqlParameter("@Value", value) };
+            object result = ExecuteScalar(query, parameters);
+            return Convert.ToInt32(result) > 0;
+        }
+
+        // Thêm phương thức tạo mã ngẫu nhiên
+        public static string GenerateRandomMaND(int length = 10)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            Random random = new Random();
+            return new string(Enumerable.Repeat(chars, length)
+              .Select(s => s[random.Next(s.Length)]).ToArray());
         }
     }
 }

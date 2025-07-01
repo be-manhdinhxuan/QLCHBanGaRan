@@ -96,7 +96,7 @@ namespace QLCHBanGaRan.lib
 
         public static DataTable ShowEmployees()
         {
-            string query = "SELECT * FROM NhanVien";
+            string query = "SELECT MaNV, TenNV, NgaySinh, GioiTinh, DiaChi, SDT, Email, CMND, TrangThai FROM NhanVien";
             return cls_DatabaseManager.TableRead(query);
         }
 
@@ -106,16 +106,16 @@ namespace QLCHBanGaRan.lib
             return cls_DatabaseManager.TableRead(query);
         }
 
-        public static bool DeleteEmployee(int nhanVienID)
+        public static bool DeleteEmployee(string maNV)
         {
             try
             {
-                if (CheckInHoSoNhanVien(nhanVienID) && CheckInNhanVienBoPhan(nhanVienID) && CheckInNhanVienChucDanh(nhanVienID) && CheckInNguoiDung(nhanVienID) && CheckInHoaDon(nhanVienID))
+                if (CheckInHoSoNhanVien(maNV) && CheckInNhanVienBoPhan(maNV) && CheckInNhanVienChucDanh(maNV) && CheckInNguoiDung(maNV) && CheckInHoaDon(maNV))
                 {
                     string query = "DELETE FROM NhanVien WHERE MaNV = @MaNV";
                     SqlParameter[] parameters = new SqlParameter[]
                     {
-                        new SqlParameter("@MaNV", SqlDbType.NVarChar, 10) { Value = nhanVienID }
+                        new SqlParameter("@MaNV", SqlDbType.NVarChar, 10) { Value = maNV }
                     };
                     cls_DatabaseManager.ExecuteNonQuery(query, parameters);
                     return true;
@@ -128,56 +128,56 @@ namespace QLCHBanGaRan.lib
             }
         }
 
-        public static bool CheckInHoSoNhanVien(int nhanVienID)
+        public static bool CheckInHoSoNhanVien(string maNV)
         {
             string query = "SELECT MaNV FROM HoSoNhanVien WHERE MaNV = @MaNV";
             SqlParameter[] parameters = new SqlParameter[]
             {
-                new SqlParameter("@MaNV", SqlDbType.NVarChar, 10) { Value = nhanVienID }
+                new SqlParameter("@MaNV", SqlDbType.NVarChar, 10) { Value = maNV }
             };
             DataTable dt = cls_DatabaseManager.TableRead(query, parameters);
             return dt.Rows.Count == 0;
         }
 
-        public static bool CheckInNhanVienBoPhan(int nhanVienID)
+        public static bool CheckInNhanVienBoPhan(string maNV)
         {
             string query = "SELECT MaNV FROM NhanVienBoPhan WHERE MaNV = @MaNV";
             SqlParameter[] parameters = new SqlParameter[]
             {
-                new SqlParameter("@MaNV", SqlDbType.NVarChar, 10) { Value = nhanVienID }
+                new SqlParameter("@MaNV", SqlDbType.NVarChar, 10) { Value = maNV }
             };
             DataTable dt = cls_DatabaseManager.TableRead(query, parameters);
             return dt.Rows.Count == 0;
         }
 
-        public static bool CheckInNhanVienChucDanh(int nhanVienID)
+        public static bool CheckInNhanVienChucDanh(string maNV)
         {
             string query = "SELECT MaNV FROM NhanVienChucDanh WHERE MaNV = @MaNV";
             SqlParameter[] parameters = new SqlParameter[]
             {
-                new SqlParameter("@MaNV", SqlDbType.NVarChar, 10) { Value = nhanVienID }
+                new SqlParameter("@MaNV", SqlDbType.NVarChar, 10) { Value = maNV }
             };
             DataTable dt = cls_DatabaseManager.TableRead(query, parameters);
             return dt.Rows.Count == 0;
         }
 
-        public static bool CheckInNguoiDung(int nhanVienID)
+        public static bool CheckInNguoiDung(string maNV)
         {
             string query = "SELECT MaNV FROM NguoiDung WHERE MaNV = @MaNV";
             SqlParameter[] parameters = new SqlParameter[]
             {
-                new SqlParameter("@MaNV", SqlDbType.NVarChar, 10) { Value = nhanVienID }
+                new SqlParameter("@MaNV", SqlDbType.NVarChar, 10) { Value = maNV }
             };
             DataTable dt = cls_DatabaseManager.TableRead(query, parameters);
             return dt.Rows.Count == 0;
         }
 
-        public static bool CheckInHoaDon(int nhanVienID)
+        public static bool CheckInHoaDon(string maNV)
         {
             string query = "SELECT MaNV FROM HoaDon WHERE MaNV = @MaNV";
             SqlParameter[] parameters = new SqlParameter[]
             {
-                new SqlParameter("@MaNV", SqlDbType.NVarChar, 10) { Value = nhanVienID }
+                new SqlParameter("@MaNV", SqlDbType.NVarChar, 10) { Value = maNV }
             };
             DataTable dt = cls_DatabaseManager.TableRead(query, parameters);
             return dt.Rows.Count == 0;
@@ -189,13 +189,14 @@ namespace QLCHBanGaRan.lib
             return cls_DatabaseManager.TableRead(query);
         }
 
-        public static bool UpdateEmployee(int nhanVienID, string maNV, string tenNV, DateTime ngaySinh, bool gioiTinh, string diaChi, string sdt, string email, string cmnd, int trangThai)
+        public static bool UpdateEmployee(string maNVCu, string maNV, string tenNV, DateTime ngaySinh, bool gioiTinh, string diaChi, string sdt, string email, string cmnd, int trangThai)
         {
             try
             {
-                string query = "EXEC sp_CapNhatNhanVien @MaNV, @TenNV, @NgaySinh, @GioiTinh, @DiaChi, @SDT, @Email, @CMND, @TrangThai, @MaNVCu";
+                string query = "EXEC sp_CapNhatNhanVien @MaNVCu, @MaNV, @TenNV, @NgaySinh, @GioiTinh, @DiaChi, @SDT, @Email, @CMND, @TrangThai";
                 SqlParameter[] parameters = new SqlParameter[]
                 {
+                    new SqlParameter("@MaNVCu", SqlDbType.NVarChar, 10) { Value = maNVCu },
                     new SqlParameter("@MaNV", SqlDbType.NVarChar, 10) { Value = maNV },
                     new SqlParameter("@TenNV", SqlDbType.NVarChar, 50) { Value = tenNV },
                     new SqlParameter("@NgaySinh", SqlDbType.Date) { Value = ngaySinh },
@@ -204,8 +205,7 @@ namespace QLCHBanGaRan.lib
                     new SqlParameter("@SDT", SqlDbType.NVarChar, 10) { Value = (object)sdt ?? DBNull.Value },
                     new SqlParameter("@Email", SqlDbType.NVarChar, 100) { Value = (object)email ?? DBNull.Value },
                     new SqlParameter("@CMND", SqlDbType.NVarChar, 12) { Value = (object)cmnd ?? DBNull.Value },
-                    new SqlParameter("@TrangThai", SqlDbType.Int) { Value = trangThai },
-                    new SqlParameter("@MaNVCu", SqlDbType.NVarChar, 10) { Value = nhanVienID }
+                    new SqlParameter("@TrangThai", SqlDbType.Int) { Value = trangThai }
                 };
                 cls_DatabaseManager.ExecuteNonQuery(query, parameters);
                 return true;
