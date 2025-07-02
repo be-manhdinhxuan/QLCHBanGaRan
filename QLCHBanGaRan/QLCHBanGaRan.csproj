@@ -290,6 +290,9 @@
     <EmbeddedResource Include="UCFunction\UC_UserManager.resx">
       <DependentUpon>UC_UserManager.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UCSystems\UC_Category.resx">
+      <DependentUpon>UC_Category.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UCSystems\UC_Home.resx">
       <DependentUpon>UC_Home.cs</DependentUpon>
     </EmbeddedResource>
@@ -301,6 +304,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UCSystems\UC_Salary.resx">
       <DependentUpon>UC_Salary.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UCSystems\UC_System.resx">
+      <DependentUpon>UC_System.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="config.env">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -444,6 +450,21 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\groups_120px.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\administrative_tools_120px.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\add_120px.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\delete_120px.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\edit_120px.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\list_120px.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

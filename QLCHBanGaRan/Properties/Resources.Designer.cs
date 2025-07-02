@@ -63,6 +63,16 @@ namespace QLCHBanGaRan.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap add_120px {
+            get {
+                object obj = ResourceManager.GetObject("add_120px", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap add_shopping_cart_120px {
             get {
                 object obj = ResourceManager.GetObject("add_shopping_cart_120px", resourceCulture);
@@ -76,6 +86,16 @@ namespace QLCHBanGaRan.Properties {
         internal static System.Drawing.Bitmap admin_settings_male_120px {
             get {
                 object obj = ResourceManager.GetObject("admin_settings_male_120px", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap administrative_tools_120px {
+            get {
+                object obj = ResourceManager.GetObject("administrative_tools_120px", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -166,6 +186,26 @@ namespace QLCHBanGaRan.Properties {
         internal static System.Drawing.Bitmap contact_card_100px {
             get {
                 object obj = ResourceManager.GetObject("contact_card_100px", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap delete_120px {
+            get {
+                object obj = ResourceManager.GetObject("delete_120px", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap edit_120px {
+            get {
+                object obj = ResourceManager.GetObject("edit_120px", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -276,6 +316,16 @@ namespace QLCHBanGaRan.Properties {
         internal static System.Drawing.Bitmap left_round_32px {
             get {
                 object obj = ResourceManager.GetObject("left_round_32px", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap list_120px {
+            get {
+                object obj = ResourceManager.GetObject("list_120px", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
