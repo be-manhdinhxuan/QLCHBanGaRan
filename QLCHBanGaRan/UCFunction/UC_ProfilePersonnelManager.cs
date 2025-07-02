@@ -1,13 +1,15 @@
-﻿using System;
+﻿using QLCHBanGaRan.lib;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
 using System.Data;
+using System.Data.SqlClient;
+using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Text.RegularExpressions;
 
 namespace QLCHBanGaRan.UCFunction
 {
@@ -48,15 +50,16 @@ namespace QLCHBanGaRan.UCFunction
 
         private void _formatDT()
         {
-            dtListProfile.Columns[1].Width = 150;
-            dtListProfile.Columns[2].Width = 100;
-            dtListProfile.Columns[3].Width = 80;
-            dtListProfile.Columns[4].Width = 150;
-            dtListProfile.Columns[5].Width = 100;
-            dtListProfile.Columns[6].Width = 150;
-            dtListProfile.Columns[7].Width = 100;
-            dtListProfile.Columns[8].Width = 80;
-            dtListProfile.Columns[9].Width = 100;
+            dtListProfile.Columns[0].Width = 60; // MaNV
+            dtListProfile.Columns[1].Width = 150; // TenNV
+            dtListProfile.Columns[2].Width = 100; // NgaySinh
+            dtListProfile.Columns[3].Width = 80;  // GioiTinh
+            dtListProfile.Columns[4].Width = 150; // DiaChi
+            dtListProfile.Columns[5].Width = 100; // SDT
+            dtListProfile.Columns[6].Width = 150; // Email
+            dtListProfile.Columns[7].Width = 100; // CMND
+            dtListProfile.Columns[8].Width = 80;  // TrangThai
+            dtListProfile.Columns[9].Width = 100; // ChucDanh
         }
 
         private void btnBack_Click(object sender, EventArgs e)
@@ -70,22 +73,45 @@ namespace QLCHBanGaRan.UCFunction
         {
             AutoValidate = AutoValidate.EnableAllowFocusChange;
 
-            // Load dữ liệu từ bảng NhanVien và ChucDanh
-            DataTable dtNhanVien = lib.cls_Employess._getEmployeeList();
-            DataTable dtChucDanh = lib.cls_Employess._getChucDanhList();
-
+            // Load dữ liệu từ bảng NhanVien
+            DataTable dtNhanVien = cls_EmployeeManagement.ShowEmployees();
             cmbTenNV.DataSource = dtNhanVien;
             cmbTenNV.ValueMember = "MaNV";
             cmbTenNV.DisplayMember = "TenNV";
 
+            // Load danh sách chức danh
+            DataTable dtChucDanh = cls_EmployeeTitleManagement.GetTitles();
             cmbMaChucDanh.DataSource = dtChucDanh;
             cmbMaChucDanh.ValueMember = "MaChucDanh";
             cmbMaChucDanh.DisplayMember = "TenChucDanh";
 
+            // Cài đặt giá trị mặc định cho combo box giới tính và trạng thái
+            cmbGioiTinh.Items.AddRange(new string[] { "Nữ", "Nam" }); // 0: Nữ, 1: Nam
+            cmbTrangThai.Items.AddRange(new string[] { "Đã nghỉ", "Đang làm" }); // 0: Đã nghỉ, 1: Đang làm
+
             _reset();
             _sttButton(true, false, true, false, false, false);
             _formatDT();
-            dtListProfile.DataSource = lib.cls_Employess._showProfileInfo();
+            dtListProfile.DataSource = cls_EmployeeManagement.ShowEmployees();
+            dtListProfile.Columns["GioiTinh"].Visible = false; // Ẩn cột GioiTinh thô để xử lý hiển thị
+            dtListProfile.Columns["TrangThai"].Visible = false; // Ẩn cột TrangThai thô
+            dtListProfile.Columns.Add("GioiTinhText", "Giới tính");
+            dtListProfile.Columns.Add("TrangThaiText", "Trạng thái");
+            FormatDataGridView();
+        }
+
+        private void FormatDataGridView()
+        {
+            foreach (DataGridViewRow row in dtListProfile.Rows)
+            {
+                if (!row.IsNewRow)
+                {
+                    bool gioiTinh = Convert.ToBoolean(row.Cells["GioiTinh"].Value);
+                    row.Cells["GioiTinhText"].Value = gioiTinh ? "Nam" : "Nữ";
+                    int trangThai = Convert.ToInt32(row.Cells["TrangThai"].Value);
+                    row.Cells["TrangThaiText"].Value = trangThai == 1 ? "Đang làm" : "Đã nghỉ";
+                }
+            }
         }
 
         private void btnThem_Click(object sender, EventArgs e)
@@ -108,19 +134,24 @@ namespace QLCHBanGaRan.UCFunction
             }
             else
             {
-                bool delProfile = lib.cls_Employess._delEmployee(maNV);
+                bool delProfile = cls_EmployeeManagement.DeleteEmployee(maNV);
                 if (delProfile)
                 {
                     MessageBox.Show("Xóa nhân viên thành công.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     _reset();
                     _sttButton(true, false, true, false, false, false);
                     _formatDT();
-                    dtListProfile.DataSource = lib.cls_Employess._showProfileInfo();
+                    dtListProfile.DataSource = cls_EmployeeManagement.ShowEmployees();
+                    dtListProfile.Columns["GioiTinh"].Visible = false;
+                    dtListProfile.Columns["TrangThai"].Visible = false;
+                    dtListProfile.Columns["GioiTinhText"].Visible = true;
+                    dtListProfile.Columns["TrangThaiText"].Visible = true;
+                    FormatDataGridView();
                     maNV = "";
                 }
                 else
                 {
-                    MessageBox.Show("Đã có lỗi xảy ra. Vui lòng kiểm tra và thử lại", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Không thể xóa nhân viên này vì có liên kết dữ liệu. Vui lòng kiểm tra lại.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -139,27 +170,42 @@ namespace QLCHBanGaRan.UCFunction
             {
                 string maNV = cmbTenNV.SelectedValue.ToString();
                 string tenNV = cmbTenNV.Text;
-                string ngaySinh = dtpNgaySinh.Value.ToString("yyyy-MM-dd");
-                int gioiTinh = cmbGioiTinh.SelectedIndex; // 1: Nam, 0: Nữ
+                DateTime ngaySinh = dtpNgaySinh.Value;
+                bool gioiTinh = cmbGioiTinh.SelectedIndex == 1; // 1: Nam, 0: Nữ
                 string diaChi = txtDiaChi.Text;
                 string sdt = txtSDT.Text;
                 string email = txtEmail.Text;
                 string cmnd = txtCMND.Text;
-                int trangThai = cmbTrangThai.SelectedIndex; // 1: Đang làm, 0: Đã nghỉ
+                int trangThai = cmbTrangThai.SelectedIndex == 1 ? 1 : 0; // 1: Đang làm, 0: Đã nghỉ
                 string maChucDanh = cmbMaChucDanh.SelectedValue.ToString();
+
+                // Thêm chức danh vào NhanVienChucDanh nếu chưa có
+                if (check == 1 && !cls_EmployeeTitleManagement.GetEmployeeTitles().AsEnumerable().Any(r => r.Field<string>("MaNV") == maNV))
+                {
+                    cls_EmployeeTitleManagement.InsertEmployeeTitle(maNV, Convert.ToInt32(maChucDanh));
+                }
+                else if (check == 2)
+                {
+                    cls_EmployeeTitleManagement.UpdateEmployeeTitle(maNV, Convert.ToInt32(maChucDanh));
+                }
 
                 if (check == 1)
                 {
-                    if (lib.cls_Employess._checkEmployee(maNV))
+                    if (!cls_EmployeeManagement.ShowEmployees().AsEnumerable().Any(r => r.Field<string>("MaNV") == maNV))
                     {
-                        bool addProfile = lib.cls_Employess._addEmployee(maNV, tenNV, ngaySinh, gioiTinh, diaChi, sdt, email, cmnd, trangThai, maChucDanh);
+                        bool addProfile = cls_EmployeeManagement.AddEmployee(maNV, tenNV, ngaySinh, gioiTinh, diaChi, sdt, email, cmnd, trangThai);
                         if (addProfile)
                         {
                             MessageBox.Show("Thêm nhân viên thành công.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             _reset();
                             _sttButton(true, false, true, false, false, false);
                             _formatDT();
-                            dtListProfile.DataSource = lib.cls_Employess._showProfileInfo();
+                            dtListProfile.DataSource = cls_EmployeeManagement.ShowEmployees();
+                            dtListProfile.Columns["GioiTinh"].Visible = false;
+                            dtListProfile.Columns["TrangThai"].Visible = false;
+                            dtListProfile.Columns["GioiTinhText"].Visible = true;
+                            dtListProfile.Columns["TrangThaiText"].Visible = true;
+                            FormatDataGridView();
                         }
                         else
                         {
@@ -173,14 +219,20 @@ namespace QLCHBanGaRan.UCFunction
                 }
                 else
                 {
-                    bool updateProfile = lib.cls_Employess._updateEmployee(maNV, tenNV, ngaySinh, gioiTinh, diaChi, sdt, email, cmnd, trangThai, maChucDanh);
+                    string maNVCu = maNV; // Giữ nguyên mã nhân viên cũ khi cập nhật
+                    bool updateProfile = cls_EmployeeManagement.UpdateEmployee(maNVCu, maNV, tenNV, ngaySinh, gioiTinh, diaChi, sdt, email, cmnd, trangThai);
                     if (updateProfile)
                     {
                         MessageBox.Show("Cập nhật nhân viên thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         _reset();
                         _sttButton(true, false, true, false, false, false);
                         _formatDT();
-                        dtListProfile.DataSource = lib.cls_Employess._showProfileInfo();
+                        dtListProfile.DataSource = cls_EmployeeManagement.ShowEmployees();
+                        dtListProfile.Columns["GioiTinh"].Visible = false;
+                        dtListProfile.Columns["TrangThai"].Visible = false;
+                        dtListProfile.Columns["GioiTinhText"].Visible = true;
+                        dtListProfile.Columns["TrangThaiText"].Visible = true;
+                        FormatDataGridView();
                         rowSelected = -1;
                     }
                     else
@@ -205,13 +257,23 @@ namespace QLCHBanGaRan.UCFunction
                 maNV = dtListProfile.Rows[index].Cells[0].Value.ToString();
                 cmbTenNV.SelectedValue = maNV;
                 dtpNgaySinh.Value = Convert.ToDateTime(dtListProfile.Rows[index].Cells[2].Value);
-                cmbGioiTinh.SelectedIndex = Convert.ToInt32(dtListProfile.Rows[index].Cells[3].Value) == 1 ? 0 : 1;
+                cmbGioiTinh.SelectedIndex = Convert.ToBoolean(dtListProfile.Rows[index].Cells[3].Value) ? 1 : 0; // 1: Nam, 0: Nữ
                 txtDiaChi.Text = dtListProfile.Rows[index].Cells[4].Value.ToString();
                 txtSDT.Text = dtListProfile.Rows[index].Cells[5].Value.ToString();
                 txtEmail.Text = dtListProfile.Rows[index].Cells[6].Value.ToString();
                 txtCMND.Text = dtListProfile.Rows[index].Cells[7].Value.ToString();
-                cmbTrangThai.SelectedIndex = Convert.ToInt32(dtListProfile.Rows[index].Cells[8].Value);
-                cmbMaChucDanh.SelectedValue = dtListProfile.Rows[index].Cells[9].Value.ToString();
+                cmbTrangThai.SelectedIndex = Convert.ToInt32(dtListProfile.Rows[index].Cells[8].Value) == 1 ? 1 : 0; // 1: Đang làm, 0: Đã nghỉ
+                // Lấy MaChucDanh từ NhanVienChucDanh
+                string query = "SELECT MaChucDanh FROM NhanVienChucDanh WHERE MaNV = @MaNV";
+                SqlParameter[] parameters = new SqlParameter[]
+                {
+                    new SqlParameter("@MaNV", SqlDbType.NVarChar, 10) { Value = maNV }
+                };
+                DataTable dtChucDanh = cls_DatabaseManager.TableRead(query, parameters);
+                if (dtChucDanh.Rows.Count > 0)
+                {
+                    cmbMaChucDanh.SelectedValue = dtChucDanh.Rows[0]["MaChucDanh"].ToString();
+                }
                 rowSelected = index;
                 btnSua.Enabled = true;
             }
