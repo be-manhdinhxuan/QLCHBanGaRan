@@ -45,9 +45,6 @@ namespace QLCHBanGaRan.UCFunction
             _sttButton(true, false, true, false, false, false);
             AutoValidate = AutoValidate.EnableAllowFocusChange;
             dtList.DataSource = cls_EmployeeTitleManagement.GetEmployeeTitles();
-            cmbBoPhan.DataSource = cls_EmployeeTitleManagement.GetDepartments();
-            cmbBoPhan.ValueMember = "MaBoPhan";
-            cmbBoPhan.DisplayMember = "TenBoPhan";
             cmbChucDanh.DataSource = cls_EmployeeTitleManagement.GetTitles();
             cmbChucDanh.ValueMember = "MaChucDanh";
             cmbChucDanh.DisplayMember = "TenChucDanh";
@@ -57,17 +54,6 @@ namespace QLCHBanGaRan.UCFunction
         {
             _sttButton(true, false, true, false, false, false);
             Forms.frm_Main.Instance.pnlContainer.Controls["UC_Personnel"].BringToFront();
-        }
-
-        private void cmbBoPhan_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (cmbBoPhan.SelectedValue != null)
-            {
-                DataTable getNVBPID = cls_EmployeeTitleManagement.GetEmployeesByDepartment(Convert.ToInt32(cmbBoPhan.SelectedValue));
-                cmbTenNV.ValueMember = "MaNV";
-                cmbTenNV.DisplayMember = "TenNV";
-                cmbTenNV.DataSource = getNVBPID;
-            }
         }
 
         private void btnThem_Click(object sender, EventArgs e)
@@ -158,19 +144,6 @@ namespace QLCHBanGaRan.UCFunction
             errorProvider.Clear();
         }
 
-        private void cmbBoPhan_Validating(object sender, CancelEventArgs e)
-        {
-            if (cmbBoPhan.SelectedValue == null)
-            {
-                errorProvider.SetError(cmbBoPhan, "Vui lòng chọn bộ phận.");
-                e.Cancel = true;
-            }
-            else
-            {
-                errorProvider.SetError(cmbBoPhan, "");
-            }
-        }
-
         private void cmbTenNV_Validating(object sender, CancelEventArgs e)
         {
             if (cmbTenNV.SelectedValue == null)
@@ -203,7 +176,6 @@ namespace QLCHBanGaRan.UCFunction
             {
                 int index = dtList.CurrentCell.RowIndex;
                 _maNV = dtList.Rows[index].Cells["MaNV"].Value.ToString();
-                cmbBoPhan.SelectedValue = dtList.Rows[index].Cells["MaBoPhan"].Value; // Giả định cột MaBoPhan tồn tại
                 cmbTenNV.SelectedValue = dtList.Rows[index].Cells["MaNV"].Value.ToString();
                 cmbChucDanh.SelectedValue = dtList.Rows[index].Cells["MaChucDanh"].Value; // Giả định cột MaChucDanh tồn tại
                 btnSua.Enabled = true;

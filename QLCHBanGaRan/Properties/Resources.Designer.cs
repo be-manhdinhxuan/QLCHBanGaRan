@@ -63,6 +63,16 @@ namespace QLCHBanGaRan.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap admin_settings_male_120px {
+            get {
+                object obj = ResourceManager.GetObject("admin_settings_male_120px", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap banner {
             get {
                 object obj = ResourceManager.GetObject("banner", resourceCulture);
@@ -296,6 +306,16 @@ namespace QLCHBanGaRan.Properties {
         internal static System.Drawing.Bitmap password_120px {
             get {
                 object obj = ResourceManager.GetObject("password_120px", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap planner_120px {
+            get {
+                object obj = ResourceManager.GetObject("planner_120px", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

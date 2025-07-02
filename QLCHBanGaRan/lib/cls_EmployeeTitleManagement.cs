@@ -11,18 +11,10 @@ namespace QLCHBanGaRan.lib
         // Lấy danh sách nhân viên - chức danh
         public static DataTable GetEmployeeTitles()
         {
-            string query = "SELECT nvcd.MaNV, nv.TenNV, bp.TenBoPhan, cd.TenChucDanh " +
+            string query = "SELECT nvcd.MaNV, nv.TenNV, cd.TenChucDanh " +
                            "FROM NhanVienChucDanh nvcd " +
                            "JOIN NhanVien nv ON nvcd.MaNV = nv.MaNV " +
-                           "JOIN BoPhan bp ON nvcd.MaBoPhan = bp.MaBoPhan " +
                            "JOIN ChucDanh cd ON nvcd.MaChucDanh = cd.MaChucDanh";
-            return cls_DatabaseManager.TableRead(query);
-        }
-
-        // Lấy danh sách bộ phận
-        public static DataTable GetDepartments()
-        {
-            string query = "SELECT MaBoPhan, TenBoPhan FROM BoPhan";
             return cls_DatabaseManager.TableRead(query);
         }
 
@@ -31,20 +23,6 @@ namespace QLCHBanGaRan.lib
         {
             string query = "SELECT MaChucDanh, TenChucDanh FROM ChucDanh";
             return cls_DatabaseManager.TableRead(query);
-        }
-
-        // Lấy danh sách nhân viên theo bộ phận
-        public static DataTable GetEmployeesByDepartment(int maBoPhan)
-        {
-            string query = "SELECT nv.MaNV, nv.TenNV " +
-                           "FROM NhanVien nv " +
-                           "JOIN NhanVienBoPhan nvbp ON nv.MaNV = nvbp.MaNV " +
-                           "WHERE nvbp.MaBoPhan = @MaBoPhan";
-            SqlParameter[] parameters = new SqlParameter[]
-            {
-                new SqlParameter("@MaBoPhan", SqlDbType.Int) { Value = maBoPhan }
-            };
-            return cls_DatabaseManager.TableRead(query, parameters);
         }
 
         // Thêm nhân viên - chức danh

@@ -38,8 +38,6 @@
             this.btnBack = new System.Windows.Forms.Button();
             this.grpDanhSach = new System.Windows.Forms.GroupBox();
             this.dtList = new System.Windows.Forms.DataGridView();
-            this.BoPhanID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.TenBoPhan = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TenNV = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TenChucDanh = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.NhanVienID = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -52,11 +50,13 @@
             this.grpThongTin = new System.Windows.Forms.GroupBox();
             this.cmbChucDanh = new System.Windows.Forms.ComboBox();
             this.lblChucDanh = new System.Windows.Forms.Label();
-            this.cmbBoPhan = new System.Windows.Forms.ComboBox();
-            this.lblTenBoPhan = new System.Windows.Forms.Label();
             this.cmbTenNV = new System.Windows.Forms.ComboBox();
             this.lblTenNhanVien = new System.Windows.Forms.Label();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
+            this.grpDanhSach.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dtList)).BeginInit();
+            this.grpThongTin.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             this.SuspendLayout();
             // 
             // lblTitle
@@ -115,8 +115,6 @@
             this.dtList.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.dtList.ColumnHeadersHeight = 50;
             this.dtList.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.BoPhanID,
-            this.TenBoPhan,
             this.TenNV,
             this.TenChucDanh,
             this.NhanVienID,
@@ -153,22 +151,6 @@
             this.dtList.Size = new System.Drawing.Size(799, 327);
             this.dtList.TabIndex = 1;
             this.dtList.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dtList_CellClick);
-            // 
-            // BoPhanID
-            // 
-            this.BoPhanID.DataPropertyName = "BoPhanID";
-            this.BoPhanID.HeaderText = "BoPhanID";
-            this.BoPhanID.Name = "BoPhanID";
-            this.BoPhanID.ReadOnly = true;
-            this.BoPhanID.Visible = false;
-            // 
-            // TenBoPhan
-            // 
-            this.TenBoPhan.DataPropertyName = "TenBoPhan";
-            this.TenBoPhan.HeaderText = "TenBoPhan";
-            this.TenBoPhan.Name = "TenBoPhan";
-            this.TenBoPhan.ReadOnly = true;
-            this.TenBoPhan.Visible = false;
             // 
             // TenNV
             // 
@@ -274,8 +256,6 @@
             // 
             this.grpThongTin.Controls.Add(this.cmbChucDanh);
             this.grpThongTin.Controls.Add(this.lblChucDanh);
-            this.grpThongTin.Controls.Add(this.cmbBoPhan);
-            this.grpThongTin.Controls.Add(this.lblTenBoPhan);
             this.grpThongTin.Controls.Add(this.cmbTenNV);
             this.grpThongTin.Controls.Add(this.lblTenNhanVien);
             this.grpThongTin.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
@@ -292,7 +272,7 @@
             this.cmbChucDanh.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbChucDanh.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular);
             this.cmbChucDanh.FormattingEnabled = true;
-            this.cmbChucDanh.Location = new System.Drawing.Point(112, 102);
+            this.cmbChucDanh.Location = new System.Drawing.Point(112, 68);
             this.cmbChucDanh.Name = "cmbChucDanh";
             this.cmbChucDanh.Size = new System.Drawing.Size(234, 28);
             this.cmbChucDanh.TabIndex = 77;
@@ -302,40 +282,18 @@
             // 
             this.lblChucDanh.AutoSize = true;
             this.lblChucDanh.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular);
-            this.lblChucDanh.Location = new System.Drawing.Point(6, 105);
+            this.lblChucDanh.Location = new System.Drawing.Point(6, 71);
             this.lblChucDanh.Name = "lblChucDanh";
             this.lblChucDanh.Size = new System.Drawing.Size(79, 20);
             this.lblChucDanh.TabIndex = 76;
             this.lblChucDanh.Text = "Chức danh";
-            // 
-            // cmbBoPhan
-            // 
-            this.cmbBoPhan.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbBoPhan.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular);
-            this.cmbBoPhan.FormattingEnabled = true;
-            this.cmbBoPhan.Location = new System.Drawing.Point(112, 34);
-            this.cmbBoPhan.Name = "cmbBoPhan";
-            this.cmbBoPhan.Size = new System.Drawing.Size(234, 28);
-            this.cmbBoPhan.TabIndex = 75;
-            this.cmbBoPhan.SelectedIndexChanged += new System.EventHandler(this.cmbBoPhan_SelectedIndexChanged);
-            this.cmbBoPhan.Validating += new System.ComponentModel.CancelEventHandler(this.cmbBoPhan_Validating);
-            // 
-            // lblTenBoPhan
-            // 
-            this.lblTenBoPhan.AutoSize = true;
-            this.lblTenBoPhan.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular);
-            this.lblTenBoPhan.Location = new System.Drawing.Point(6, 37);
-            this.lblTenBoPhan.Name = "lblTenBoPhan";
-            this.lblTenBoPhan.Size = new System.Drawing.Size(64, 20);
-            this.lblTenBoPhan.TabIndex = 74;
-            this.lblTenBoPhan.Text = "Bộ phận";
             // 
             // cmbTenNV
             // 
             this.cmbTenNV.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbTenNV.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular);
             this.cmbTenNV.FormattingEnabled = true;
-            this.cmbTenNV.Location = new System.Drawing.Point(112, 68);
+            this.cmbTenNV.Location = new System.Drawing.Point(112, 34);
             this.cmbTenNV.Name = "cmbTenNV";
             this.cmbTenNV.Size = new System.Drawing.Size(234, 28);
             this.cmbTenNV.TabIndex = 73;
@@ -345,7 +303,7 @@
             // 
             this.lblTenNhanVien.AutoSize = true;
             this.lblTenNhanVien.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular);
-            this.lblTenNhanVien.Location = new System.Drawing.Point(6, 71);
+            this.lblTenNhanVien.Location = new System.Drawing.Point(6, 37);
             this.lblTenNhanVien.Name = "lblTenNhanVien";
             this.lblTenNhanVien.Size = new System.Drawing.Size(99, 20);
             this.lblTenNhanVien.TabIndex = 72;
@@ -393,15 +351,11 @@
         private System.Windows.Forms.Button btnSua;
         private System.Windows.Forms.Button btnThem;
         private System.Windows.Forms.GroupBox grpThongTin;
-        private System.Windows.Forms.ComboBox cmbBoPhan;
-        private System.Windows.Forms.Label lblTenBoPhan;
-        private System.Windows.Forms.ComboBox cmbTenNV;
-        private System.Windows.Forms.Label lblTenNhanVien;
         private System.Windows.Forms.ComboBox cmbChucDanh;
         private System.Windows.Forms.Label lblChucDanh;
+        private System.Windows.Forms.ComboBox cmbTenNV;
+        private System.Windows.Forms.Label lblTenNhanVien;
         private System.Windows.Forms.DataGridView dtList;
-        private System.Windows.Forms.DataGridViewTextBoxColumn BoPhanID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn TenBoPhan;
         private System.Windows.Forms.DataGridViewTextBoxColumn TenNV;
         private System.Windows.Forms.DataGridViewTextBoxColumn TenChucDanh;
         private System.Windows.Forms.DataGridViewTextBoxColumn NhanVienID;
