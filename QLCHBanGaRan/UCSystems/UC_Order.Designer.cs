@@ -26,6 +26,7 @@
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
+        // Trong InitializeComponent()
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
@@ -40,11 +41,6 @@
             this.txtSearch = new System.Windows.Forms.TextBox();
             this.grpListProduct = new System.Windows.Forms.GroupBox();
             this.dtChoose = new System.Windows.Forms.DataGridView();
-            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.grpInfoInvoice = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanelInfoInvoice = new System.Windows.Forms.TableLayoutPanel();
             this.lblUser = new System.Windows.Forms.Label();
@@ -112,15 +108,14 @@
             this.dtSearch.AllowUserToDeleteRows = false;
             this.dtSearch.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dtSearch.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.MaSP,
-            this.TenSP,
-            this.GiaTien,
-            this.SoLuong,
-            this.GiamGia});
+    this.MaSP,
+    this.TenSP,
+    this.GiaTien,
+    this.SoLuong,
+    this.GiamGia});
             this.dtSearch.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dtSearch.Location = new System.Drawing.Point(3, 80);
             this.dtSearch.Name = "dtSearch";
-            this.dtSearch.ReadOnly = true;
             this.dtSearch.RowHeadersVisible = false;
             this.dtSearch.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dtSearch.Size = new System.Drawing.Size(428, 267);
@@ -204,56 +199,18 @@
             this.dtChoose.AllowUserToAddRows = false;
             this.dtChoose.AllowUserToDeleteRows = false;
             this.dtChoose.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dtChoose.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.dataGridViewTextBoxColumn1,
-            this.dataGridViewTextBoxColumn2,
-            this.dataGridViewTextBoxColumn3,
-            this.dataGridViewTextBoxColumn4,
-            this.dataGridViewTextBoxColumn5});
             this.dtChoose.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dtChoose.Location = new System.Drawing.Point(3, 23);
             this.dtChoose.Name = "dtChoose";
-            this.dtChoose.ReadOnly = true;
             this.dtChoose.RowHeadersVisible = false;
             this.dtChoose.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dtChoose.Size = new System.Drawing.Size(429, 324);
             this.dtChoose.TabIndex = 0;
-            // 
-            // dataGridViewTextBoxColumn1
-            // 
-            this.dataGridViewTextBoxColumn1.HeaderText = "Mã SP";
-            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
-            this.dataGridViewTextBoxColumn1.ReadOnly = true;
-            this.dataGridViewTextBoxColumn1.Width = 70;
-            // 
-            // dataGridViewTextBoxColumn2
-            // 
-            this.dataGridViewTextBoxColumn2.HeaderText = "Tên SP";
-            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
-            this.dataGridViewTextBoxColumn2.ReadOnly = true;
-            this.dataGridViewTextBoxColumn2.Width = 150;
-            // 
-            // dataGridViewTextBoxColumn3
-            // 
-            this.dataGridViewTextBoxColumn3.HeaderText = "Số lượng";
-            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
-            this.dataGridViewTextBoxColumn3.ReadOnly = true;
-            this.dataGridViewTextBoxColumn3.Width = 80;
-            // 
-            // dataGridViewTextBoxColumn4
-            // 
-            this.dataGridViewTextBoxColumn4.HeaderText = "Giá tiền";
-            this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
-            this.dataGridViewTextBoxColumn4.ReadOnly = true;
-            // 
-            // dataGridViewTextBoxColumn5
-            // 
-            this.dataGridViewTextBoxColumn5.HeaderText = "Giảm giá";
-            this.dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
-            this.dataGridViewTextBoxColumn5.ReadOnly = true;
-            // 
-            // grpInfoInvoice
-            // 
+            this.dtChoose.ReadOnly = false; // Thêm để cho phép chỉnh sửa toàn bộ grid
+            this.dtChoose.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnKeystrokeOrF2; // Cho phép chỉnh sửa khi gõ phím
+                                                                                                    // 
+                                                                                                    // grpInfoInvoice
+                                                                                                    // 
             this.grpInfoInvoice.Controls.Add(this.tableLayoutPanelInfoInvoice);
             this.grpInfoInvoice.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grpInfoInvoice.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold);
@@ -270,8 +227,6 @@
             this.tableLayoutPanelInfoInvoice.ColumnCount = 2;
             this.tableLayoutPanelInfoInvoice.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 130F));
             this.tableLayoutPanelInfoInvoice.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanelInfoInvoice.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 130F));
-            this.tableLayoutPanelInfoInvoice.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanelInfoInvoice.Controls.Add(this.lblUser, 0, 0);
             this.tableLayoutPanelInfoInvoice.Controls.Add(this.txtUser, 1, 0);
             this.tableLayoutPanelInfoInvoice.Controls.Add(this.lblEmployess, 0, 1);
@@ -280,8 +235,6 @@
             this.tableLayoutPanelInfoInvoice.Location = new System.Drawing.Point(3, 23);
             this.tableLayoutPanelInfoInvoice.Name = "tableLayoutPanelInfoInvoice";
             this.tableLayoutPanelInfoInvoice.RowCount = 2;
-            this.tableLayoutPanelInfoInvoice.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 36F));
-            this.tableLayoutPanelInfoInvoice.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 36F));
             this.tableLayoutPanelInfoInvoice.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 36F));
             this.tableLayoutPanelInfoInvoice.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 36F));
             this.tableLayoutPanelInfoInvoice.Size = new System.Drawing.Size(428, 116);
@@ -530,7 +483,7 @@
             // 
             // btnDelProduct
             // 
-            this.btnDelProduct.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(28)))), ((int)(((byte)(36)))));
+            this.btnDelProduct.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(28)))), ((int)(((byte)(42)))));
             this.btnDelProduct.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnDelProduct.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold);
             this.btnDelProduct.ForeColor = System.Drawing.Color.White;
@@ -683,7 +636,6 @@
             this.tableLayoutPanelRight.ResumeLayout(false);
             this.panelActionButtons.ResumeLayout(false);
             this.ResumeLayout(false);
-
         }
 
         #endregion
@@ -721,11 +673,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn GiaTien;
         private System.Windows.Forms.DataGridViewTextBoxColumn SoLuong;
         private System.Windows.Forms.DataGridViewTextBoxColumn GiamGia;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn5;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanelInfoInvoice;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanelPayment;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanelMain;
