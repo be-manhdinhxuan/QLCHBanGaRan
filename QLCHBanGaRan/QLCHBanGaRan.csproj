@@ -296,6 +296,9 @@
     <EmbeddedResource Include="UCSystems\UC_Order.resx">
       <DependentUpon>UC_Order.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UCSystems\UC_Report.resx">
+      <DependentUpon>UC_Report.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UCSystems\UC_Salary.resx">
       <DependentUpon>UC_Salary.cs</DependentUpon>
     </EmbeddedResource>
@@ -417,6 +420,30 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\planner_120px.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\statistics_120px.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\red_shopping_basket_120px.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\receive_cash_120px.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\money_120px.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\add_shopping_cart_120px.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\user_120px.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bill_120px.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\groups_120px.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
