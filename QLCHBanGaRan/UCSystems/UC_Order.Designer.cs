@@ -108,11 +108,11 @@
             this.dtSearch.AllowUserToDeleteRows = false;
             this.dtSearch.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dtSearch.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-    this.MaSP,
-    this.TenSP,
-    this.GiaTien,
-    this.SoLuong,
-    this.GiamGia});
+            this.MaSP,
+            this.TenSP,
+            this.GiaTien,
+            this.SoLuong,
+            this.GiamGia});
             this.dtSearch.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dtSearch.Location = new System.Drawing.Point(3, 80);
             this.dtSearch.Name = "dtSearch";
@@ -206,11 +206,9 @@
             this.dtChoose.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dtChoose.Size = new System.Drawing.Size(429, 324);
             this.dtChoose.TabIndex = 0;
-            this.dtChoose.ReadOnly = false; // Thêm để cho phép chỉnh sửa toàn bộ grid
-            this.dtChoose.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnKeystrokeOrF2; // Cho phép chỉnh sửa khi gõ phím
-                                                                                                    // 
-                                                                                                    // grpInfoInvoice
-                                                                                                    // 
+            // 
+            // grpInfoInvoice
+            // 
             this.grpInfoInvoice.Controls.Add(this.tableLayoutPanelInfoInvoice);
             this.grpInfoInvoice.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grpInfoInvoice.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold);
@@ -636,6 +634,7 @@
             this.tableLayoutPanelRight.ResumeLayout(false);
             this.panelActionButtons.ResumeLayout(false);
             this.ResumeLayout(false);
+
         }
 
         #endregion

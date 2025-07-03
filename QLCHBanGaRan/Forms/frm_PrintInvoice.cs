@@ -1,35 +1,80 @@
-﻿using System;
+﻿using CrystalDecisions.CrystalReports.Engine;
+using QLCHBanGaRan.lib;
+using System;
+using System.Data;
+using System.Data.SqlClient;
 using System.Windows.Forms;
-//using CrystalDecisions.CrystalReports.Engine;
 
 namespace QLCHBanGaRan.Forms
 {
     public partial class frm_PrintInvoice : Form
     {
-        public frm_PrintInvoice()
+        private string maHD;
+
+        public frm_PrintInvoice(string maHD)
         {
             InitializeComponent();
+            this.maHD = maHD;
         }
 
         private void frm_PrintInvoice_Load(object sender, EventArgs e)
         {
-            // Tải báo cáo hóa đơn (giả định bạn có file .rpt)
+            if (string.IsNullOrEmpty(maHD))
+            {
+                MessageBox.Show("Không tìm thấy mã hóa đơn!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                this.Close();
+                return;
+            }
+
             try
             {
-                //ReportDocument report = new ReportDocument();
-                //report.Load(@"path\to\your\rp_PrintInvoice.rpt"); // Thay bằng đường dẫn thực tế đến file .rpt
-                //rpInvoice.ReportSource = report;
-                //rpInvoice.Refresh();
+                // Tải báo cáo
+                ReportDocument report = new ReportDocument();
+                report.Load(@"D:\source\repos\BTL\QLCHBanGaRan\InvoiceReport.rpt");
+
+                // Lấy dữ liệu từ CSDL
+                string queryHoaDon = "SELECT MaHD, MaNV, NgayLapHD, TongTien FROM HoaDon WHERE MaHD = @MaHD";
+                SqlParameter[] parametersHoaDon = new SqlParameter[] { new SqlParameter("@MaHD", maHD) };
+                DataTable dtHoaDon = cls_DatabaseManager.TableRead(queryHoaDon, parametersHoaDon);
+
+                // Kiểm tra dữ liệu
+                if (dtHoaDon.Rows.Count == 0)
+                {
+                    MessageBox.Show("Không tìm thấy hóa đơn với mã: " + maHD, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    this.Close();
+                    return;
+                }
+
+                // Gán dữ liệu vào Dataset
+                InvoiceDataset dataset = new InvoiceDataset();
+                if (dtHoaDon.Rows.Count > 0)
+                {
+                    DataRow row = dtHoaDon.Rows[0];
+                    decimal tongTien = row["TongTien"] != DBNull.Value ? row.Field<decimal>("TongTien") : 0;
+                    dataset.HoaDon.AddHoaDonRow(
+                        row.Field<string>("MaHD"),
+                        row.Field<string>("MaNV"),
+                        row.Field<DateTime>("NgayLapHD"),
+                        tongTien
+                    );
+                }
+
+                // Gán Dataset vào báo cáo
+                report.SetDataSource(dataset);
+
+                // Hiển thị báo cáo
+                rpInvoice.ReportSource = report;
+                rpInvoice.Refresh();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi tải báo cáo: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Lỗi khi tải hóa đơn: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                this.Close();
             }
         }
 
         private void btnClose_Click(object sender, EventArgs e)
         {
-            // Đóng form khi nhấn nút Close
             this.Close();
         }
     }

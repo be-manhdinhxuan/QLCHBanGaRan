@@ -28,13 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frm_InvoiceDetails));
             this.panelHeader = new System.Windows.Forms.Panel();
             this.btnClose = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.panelLeft = new System.Windows.Forms.Panel();
             this.panelFooter = new System.Windows.Forms.Panel();
             this.panelRight = new System.Windows.Forms.Panel();
+            this.rpInvoice = new CrystalDecisions.Windows.Forms.CrystalReportViewer();
             this.panelHeader.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -55,7 +55,7 @@
             this.btnClose.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnClose.FlatAppearance.BorderSize = 0;
             this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnClose.Image = ((System.Drawing.Image)(resources.GetObject("btnClose.Image")));
+            this.btnClose.Image = global::QLCHBanGaRan.Properties.Resources.btn_close;
             this.btnClose.Location = new System.Drawing.Point(445, 0);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(32, 28);
@@ -71,9 +71,9 @@
             this.label1.ForeColor = System.Drawing.Color.White;
             this.label1.Location = new System.Drawing.Point(156, 4);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(165, 21);
+            this.label1.Size = new System.Drawing.Size(102, 21);
             this.label1.TabIndex = 0;
-            this.label1.Text = "CHI TIẾT HÓA ĐƠN GÀ RÁN";
+            this.label1.Text = "IN HÓA ĐƠN";
             // 
             // panelLeft
             // 
@@ -102,21 +102,43 @@
             this.panelRight.Size = new System.Drawing.Size(4, 538);
             this.panelRight.TabIndex = 8;
             // 
+            // rpInvoice
+            // 
+            this.rpInvoice.ActiveViewIndex = -1;
+            this.rpInvoice.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.rpInvoice.Cursor = System.Windows.Forms.Cursors.Default;
+            this.rpInvoice.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.rpInvoice.Location = new System.Drawing.Point(4, 28);
+            this.rpInvoice.Name = "rpInvoice";
+            this.rpInvoice.Size = new System.Drawing.Size(469, 538);
+            this.rpInvoice.TabIndex = 9;
+            this.rpInvoice.ShowCloseButton = false;         // Ẩn nút Close
+            this.rpInvoice.ShowCopyButton = false;          // Ẩn nút Copy
+            this.rpInvoice.ShowExportButton = false;        // Ẩn nút Export
+            this.rpInvoice.ShowGroupTreeButton = false;     // Ẩn nút Group Tree
+            this.rpInvoice.ShowPageNavigateButtons = false; // Ẩn nút điều hướng trang
+            this.rpInvoice.ShowPrintButton = false;         // Ẩn nút Print
+            this.rpInvoice.ShowRefreshButton = false;       // Ẩn nút Refresh
+            this.rpInvoice.ShowTextSearchButton = false;    // Ẩn nút Search
+            this.rpInvoice.ShowZoomButton = false;          // Ẩn nút Zoom
+            this.rpInvoice.ToolPanelView = CrystalDecisions.Windows.Forms.ToolPanelViewType.None; // Ẩn toàn bộ thanh công cụ
+            // 
             // frm_PrintInvoice
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(477, 570);
+            this.Controls.Add(this.rpInvoice);
             this.Controls.Add(this.panelRight);
             this.Controls.Add(this.panelFooter);
             this.Controls.Add(this.panelLeft);
             this.Controls.Add(this.panelHeader);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = global::QLCHBanGaRan.Properties.Resources.logo;
-            this.Name = "frm_PrintInoice";
+            this.Name = "frm_PrintInvoice";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "In hoá đơn";
+            this.Text = "In hóa đơn";
             this.Load += new System.EventHandler(this.frm_PrintInvoice_Load);
             this.panelHeader.ResumeLayout(false);
             this.panelHeader.PerformLayout();
@@ -132,7 +154,6 @@
         private System.Windows.Forms.Panel panelLeft;
         private System.Windows.Forms.Panel panelFooter;
         private System.Windows.Forms.Panel panelRight;
-        // Tạm thời vô hiệu hóa Crystal Reports
-        // private CrystalDecisions.Windows.Forms.CrystalReportViewer rpInvoice;
+        private CrystalDecisions.Windows.Forms.CrystalReportViewer rpInvoice;
     }
 }

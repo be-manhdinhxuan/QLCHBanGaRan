@@ -1,4 +1,6 @@
-﻿using QLCHBanGaRan.lib;
+﻿using CrystalDecisions.CrystalReports.Engine;
+using QLCHBanGaRan.Forms;
+using QLCHBanGaRan.lib;
 using System;
 using System.Data;
 using System.Data.SqlClient;
@@ -428,7 +430,14 @@ namespace QLCHBanGaRan.UCSystems
 
         private void btnPrintInvoice_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Chức năng in hóa đơn đang được vô hiệu hóa tạm thời.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if (string.IsNullOrEmpty(maHD))
+            {
+                MessageBox.Show("Vui lòng lưu hóa đơn trước khi in!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            frm_PrintInvoice printForm = new frm_PrintInvoice(maHD);
+            printForm.ShowDialog();
         }
 
         private void txtReceive_TextChanged(object sender, EventArgs e)
@@ -483,5 +492,6 @@ namespace QLCHBanGaRan.UCSystems
                 txtSearch.ForeColor = System.Drawing.Color.Gray;
             }
         }
+
     }
 }
