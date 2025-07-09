@@ -14,6 +14,7 @@ namespace QLCHBanGaRan.UCFunction
 {
     public partial class UC_FoodManager : UserControl
     {
+        public event EventHandler ProductAdded;
         private int check = 0;
         private string productType = "DoAn"; // Mặc định là món ăn
 
@@ -22,22 +23,33 @@ namespace QLCHBanGaRan.UCFunction
             InitializeComponent();
         }
 
-        private void btnBack_Click(object sender, EventArgs e)
+        public void btnBack_Click(object sender, EventArgs e)
         {
             _reset();
             _sttButton(true, true, true, false, false, false);
-            Forms.frm_Main.Instance.pnlContainer.Controls["UC_Product"].BringToFront();
+            // Quay lại UC_Product
+            Forms.frm_Main.Instance.btnProduct_Click(null, null); // Gọi sự kiện btnProduct_Click để hiển thị UC_Product
+
+            // Kích hoạt sự kiện khi món ăn được thêm thành công (nếu cần)
+            ProductAdded?.Invoke(this, EventArgs.Empty);
         }
 
         private void _formatDT()
         {
-            dtListProduct.Columns["MaSanPham"].HeaderText = productType == "DoAn" ? "MaMon" : "MaDoUong";
-            dtListProduct.Columns["TenSanPham"].HeaderText = productType == "DoAn" ? "TenMon" : "TenDoUong";
-            dtListProduct.Columns["MaNCC"].Width = 60;
-            dtListProduct.Columns["TenNhaCungCap"].Width = 300;
-            dtListProduct.Columns["GiaTien"].Width = 100;
-            dtListProduct.Columns["GiamGia"].Width = 80;
-            dtListProduct.Columns["SoLuong"].Width = 80;
+            if (dtListProduct.Columns.Contains("MaMon"))
+                dtListProduct.Columns["MaMon"].HeaderText = productType == "DoAn" ? "MaMon" : "MaDoUong";
+            if (dtListProduct.Columns.Contains("TenMon"))
+                dtListProduct.Columns["TenMon"].HeaderText = productType == "DoAn" ? "TenMon" : "TenDoUong";
+            if (dtListProduct.Columns.Contains("MaNCC"))
+                dtListProduct.Columns["MaNCC"].Width = 60;
+            if (dtListProduct.Columns.Contains("TenNCC"))
+                dtListProduct.Columns["TenNCC"].Width = 300;
+            if (dtListProduct.Columns.Contains("GiaTien"))
+                dtListProduct.Columns["GiaTien"].Width = 100;
+            if (dtListProduct.Columns.Contains("GiamGia"))
+                dtListProduct.Columns["GiamGia"].Width = 80;
+            if (dtListProduct.Columns.Contains("SoLuong"))
+                dtListProduct.Columns["SoLuong"].Width = 80;
         }
 
         private void _reset()
@@ -62,47 +74,28 @@ namespace QLCHBanGaRan.UCFunction
         private string _genIdProduct()
         {
             DataTable dt = productType == "DoAn" ? cls_Product._getIDDoAn() : cls_Product._getIDDoUong();
-            int temp = 0;
+            int maxId = 0;
 
-            if (dt.Rows.Count == 0)
+            if (dt != null && dt.Rows.Count > 0)
             {
-                temp = 1;
-            }
-            else if (dt.Rows.Count == 1 && int.Parse(dt.Rows[0][0].ToString().Substring(1, 3)) == 1)
-            {
-                temp = 2;
-            }
-            else if (dt.Rows.Count == 1 && int.Parse(dt.Rows[0][0].ToString().Substring(1, 3)) > 1)
-            {
-                temp = 1;
-            }
-            else
-            {
-                for (int i = 0; i < dt.Rows.Count - 1; i++)
+                foreach (DataRow row in dt.Rows)
                 {
-                    if (int.Parse(dt.Rows[i + 1][0].ToString().Substring(1, 3)) - int.Parse(dt.Rows[i][0].ToString().Substring(1, 3)) > 1)
+                    string id = row[0].ToString();
+                    if (id.StartsWith(productType == "DoAn" ? "M" : "DU"))
                     {
-                        temp = int.Parse(dt.Rows[i][0].ToString().Substring(1, 3)) + 1;
-                        break;
+                        int num = int.Parse(id.Substring(1)); // Lấy số sau prefix (M hoặc DU)
+                        maxId = Math.Max(maxId, num);
                     }
                 }
-
-                if (temp == 0)
-                {
-                    temp = int.Parse(dt.Rows[dt.Rows.Count - 1][0].ToString().Substring(1, 3)) + 1;
-                }
             }
+            maxId++; // Tăng lên 1 cho mã mới
 
             string prefix = productType == "DoAn" ? "M" : "DU";
-            if (temp < 10)
-            {
-                return prefix + "00" + temp;
-            }
-            if (temp < 100)
-            {
-                return prefix + "0" + temp;
-            }
-            return prefix + temp;
+            if (maxId < 10)
+                return prefix + "00" + maxId;
+            if (maxId < 100)
+                return prefix + "0" + maxId;
+            return prefix + maxId;
         }
 
         private void _sttButton(bool add, bool edit, bool delete, bool update, bool cancel, bool grpinfo)
@@ -122,9 +115,17 @@ namespace QLCHBanGaRan.UCFunction
             _formatDT();
             _sttButton(true, true, true, false, false, false);
             _reset();
-            cmbNhaCungCap.DataSource = cls_Product._showNCC();
-            cmbNhaCungCap.ValueMember = "MaNCC";
-            cmbNhaCungCap.DisplayMember = "TenNCC";
+            DataTable nccData = cls_Product._showNCC();
+            if (nccData != null && nccData.Rows.Count > 0)
+            {
+                cmbNhaCungCap.DataSource = nccData;
+                cmbNhaCungCap.ValueMember = "MaNCC";
+                cmbNhaCungCap.DisplayMember = "TenNCC";
+            }
+            else
+            {
+                MessageBox.Show("Không có dữ liệu nhà cung cấp!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
 
             // Thêm ComboBox để chọn loại sản phẩm
             var items = new[] {
@@ -146,8 +147,35 @@ namespace QLCHBanGaRan.UCFunction
 
         private void LoadProductList()
         {
-            dtListProduct.DataSource = productType == "DoAn" ? cls_Product._showDoAn() : cls_Product._showDoUong();
-            dtListProduct.Columns["MaNCC"].Visible = false; // Ẩn cột MaNCC
+            DataTable dt = productType == "DoAn" ? cls_Product._showDoAn() : cls_Product._showDoUong();
+            if (dt == null || dt.Rows.Count == 0)
+            {
+                MessageBox.Show("Không có dữ liệu sản phẩm để hiển thị!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                dtListProduct.DataSource = null; // Xóa DataSource nếu không có dữ liệu
+            }
+            else
+            {
+                dtListProduct.DataSource = dt;
+                dtListProduct.Columns["MaNCC"].Visible = false; // Ẩn cột MaNCC
+
+                // Debug: In ra các cột hiện có
+                Console.WriteLine("Cột trong dtListProduct:");
+                foreach (DataGridViewColumn col in dtListProduct.Columns)
+                {
+                    Console.WriteLine(col.Name);
+                }
+
+                // Kiểm tra cấu trúc cột
+                string maColumn = productType == "DoAn" ? "MaMon" : "MaDoUong";
+                string tenColumn = productType == "DoAn" ? "TenMon" : "TenDoUong";
+                if (!dt.Columns.Contains(maColumn) || !dt.Columns.Contains(tenColumn) ||
+                    !dt.Columns.Contains("GiaTien") || !dt.Columns.Contains("MaNCC") ||
+                    !dt.Columns.Contains("GiamGia") || !dt.Columns.Contains("SoLuong"))
+                {
+                    MessageBox.Show($"Cấu trúc dữ liệu không đúng. Thiếu cột: {maColumn}, {tenColumn}, GiaTien, MaNCC, GiamGia, hoặc SoLuong.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    dtListProduct.DataSource = null;
+                }
+            }
         }
 
         private void btnSua_Click(object sender, EventArgs e)
@@ -164,12 +192,32 @@ namespace QLCHBanGaRan.UCFunction
 
                 int index = dtListProduct.CurrentCell.RowIndex;
                 txtMaMonAn.Enabled = false;
-                txtMaMonAn.Text = dtListProduct.Rows[index].Cells[productType == "DoAn" ? "MaMon" : "MaDoUong"].Value.ToString();
-                txtTenMonAn.Text = dtListProduct.Rows[index].Cells[productType == "DoAn" ? "TenMon" : "TenDoUong"].Value.ToString();
-                txtGiaTien.Text = dtListProduct.Rows[index].Cells["GiaTien"].Value.ToString();
-                cmbNhaCungCap.SelectedValue = dtListProduct.Rows[index].Cells["MaNCC"].Value.ToString();
-                txtGiamGia.Text = dtListProduct.Rows[index].Cells["GiamGia"].Value.ToString();
-                txtSoLuong.Text = dtListProduct.Rows[index].Cells["SoLuong"].Value.ToString();
+
+                // Kiểm tra productType và cột phù hợp
+                string maColumn = productType == "DoAn" ? "MaMon" : "MaDoUong";
+                string tenColumn = productType == "DoAn" ? "TenMon" : "TenDoUong";
+
+                // Debug: In ra productType và cột kiểm tra
+                Console.WriteLine($"productType: {productType}, Checking column: {maColumn}");
+
+                if (dtListProduct.Columns.Contains(maColumn) && dtListProduct.Columns.Contains(tenColumn) &&
+                    dtListProduct.Columns.Contains("GiaTien") && dtListProduct.Columns.Contains("MaNCC") &&
+                    dtListProduct.Columns.Contains("GiamGia") && dtListProduct.Columns.Contains("SoLuong"))
+                {
+                    txtMaMonAn.Text = dtListProduct.Rows[index].Cells[maColumn].Value?.ToString() ?? "";
+                    txtTenMonAn.Text = dtListProduct.Rows[index].Cells[tenColumn].Value?.ToString() ?? "";
+                    txtGiaTien.Text = dtListProduct.Rows[index].Cells["GiaTien"].Value?.ToString() ?? "";
+                    if (cmbNhaCungCap.SelectedValue != null && dtListProduct.Rows[index].Cells["MaNCC"].Value != null)
+                        cmbNhaCungCap.SelectedValue = dtListProduct.Rows[index].Cells["MaNCC"].Value.ToString();
+                    txtGiamGia.Text = dtListProduct.Rows[index].Cells["GiamGia"].Value?.ToString() ?? "";
+                    txtSoLuong.Text = dtListProduct.Rows[index].Cells["SoLuong"].Value?.ToString() ?? "";
+                }
+                else
+                {
+                    MessageBox.Show($"Dữ liệu sản phẩm không đầy đủ. Thiếu cột: {maColumn}, {tenColumn}, GiaTien, MaNCC, GiamGia, hoặc SoLuong.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    _reset();
+                    _sttButton(true, true, true, false, false, false);
+                }
             }
         }
 
@@ -220,10 +268,10 @@ namespace QLCHBanGaRan.UCFunction
             {
                 if (check == 1)
                 {
-                    string genMaSP = _genIdProduct();
+                    string genMaSP = txtMaMonAn.Text; // Sử dụng mã đã tạo từ btnThem
                     bool addProduct = productType == "DoAn"
-                        ? cls_Product._addDoAn(genMaSP, txtTenMonAn.Text, cmbNhaCungCap.SelectedValue.ToString(), decimal.Parse(txtGiaTien.Text), int.Parse(txtGiamGia.Text), int.Parse(txtSoLuong.Text))
-                        : cls_Product._addDoUong(genMaSP, txtTenMonAn.Text, cmbNhaCungCap.SelectedValue.ToString(), decimal.Parse(txtGiaTien.Text), int.Parse(txtGiamGia.Text), int.Parse(txtSoLuong.Text));
+                        ? cls_Product._addDoAn(genMaSP, txtTenMonAn.Text, cmbNhaCungCap.SelectedValue?.ToString(), decimal.Parse(txtGiaTien.Text), int.Parse(txtGiamGia.Text), int.Parse(txtSoLuong.Text))
+                        : cls_Product._addDoUong(genMaSP, txtTenMonAn.Text, cmbNhaCungCap.SelectedValue?.ToString(), decimal.Parse(txtGiaTien.Text), int.Parse(txtGiamGia.Text), int.Parse(txtSoLuong.Text));
 
                     if (addProduct)
                     {
@@ -236,14 +284,14 @@ namespace QLCHBanGaRan.UCFunction
                     }
                     else
                     {
-                        MessageBox.Show("Không thể thêm sản phẩm này. Vui lòng kiểm tra lại !", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("Không thể thêm sản phẩm này. Vui lòng kiểm tra lại hoặc đảm bảo mã không trùng!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
                 else
                 {
                     bool updateProduct = productType == "DoAn"
-                        ? cls_Product._updateDoAn(txtMaMonAn.Text, txtTenMonAn.Text, cmbNhaCungCap.SelectedValue.ToString(), decimal.Parse(txtGiaTien.Text), int.Parse(txtGiamGia.Text), int.Parse(txtSoLuong.Text))
-                        : cls_Product._updateDoUong(txtMaMonAn.Text, txtTenMonAn.Text, cmbNhaCungCap.SelectedValue.ToString(), decimal.Parse(txtGiaTien.Text), int.Parse(txtGiamGia.Text), int.Parse(txtSoLuong.Text));
+                        ? cls_Product._updateDoAn(txtMaMonAn.Text, txtTenMonAn.Text, cmbNhaCungCap.SelectedValue?.ToString(), decimal.Parse(txtGiaTien.Text), int.Parse(txtGiamGia.Text), int.Parse(txtSoLuong.Text))
+                        : cls_Product._updateDoUong(txtMaMonAn.Text, txtTenMonAn.Text, cmbNhaCungCap.SelectedValue?.ToString(), decimal.Parse(txtGiaTien.Text), int.Parse(txtGiamGia.Text), int.Parse(txtSoLuong.Text));
                     if (updateProduct)
                     {
                         MessageBox.Show("Cập nhật thành công !", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -283,8 +331,8 @@ namespace QLCHBanGaRan.UCFunction
             check = 1;
             _sttButton(false, false, false, true, true, true);
             txtMaMonAn.Enabled = false;
-            txtMaMonAn.Text = _genIdProduct();
-            txtSoLuong.Focus();
+            txtMaMonAn.Text = _genIdProduct(); // Tạo mã mới tự động
+            txtTenMonAn.Focus(); // Focus vào trường tên để dễ nhập
         }
 
         private void txtSoLuong_Validating(object sender, CancelEventArgs e)

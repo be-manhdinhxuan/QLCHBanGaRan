@@ -9,15 +9,19 @@ namespace QLCHBanGaRan.lib
         // Hiển thị danh sách món ăn
         public static DataTable _showDoAn()
         {
-            string query = "SELECT MaMon, TenMon, MaNCC, TenNCC, GiaTien, GiamGia, SoLuong FROM DoAn da JOIN NhaCungCap ncc ON da.MaNCC = ncc.MaNCC";
-            return cls_DatabaseManager.TableRead(query);
+            string query = "SELECT da.MaMon, da.TenMon, da.MaNCC, ncc.TenNCC, da.GiaTien, da.GiamGia, da.SoLuong " +
+                           "FROM DoAn da " +
+                           "JOIN NhaCungCap ncc ON da.MaNCC = ncc.MaNCC";
+            return cls_DatabaseManager.TableRead(query, null);
         }
 
         // Hiển thị danh sách đồ uống
         public static DataTable _showDoUong()
         {
-            string query = "SELECT MaDoUong, TenDoUong, MaNCC, TenNCC, GiaTien, GiamGia, SoLuong FROM DoUong du JOIN NhaCungCap ncc ON du.MaNCC = ncc.MaNCC";
-            return cls_DatabaseManager.TableRead(query);
+            string query = "SELECT du.MaDoUong, du.TenDoUong, du.MaNCC, ncc.TenNCC, du.GiaTien, du.GiamGia, du.SoLuong " +
+                           "FROM DoUong du " +
+                           "JOIN NhaCungCap ncc ON du.MaNCC = ncc.MaNCC";
+            return cls_DatabaseManager.TableRead(query, null);
         }
 
         // Hiển thị danh sách nhà cung cấp
@@ -138,7 +142,10 @@ namespace QLCHBanGaRan.lib
         // Tìm kiếm món ăn
         public static DataTable _searchDoAn(string tenMon)
         {
-            string query = "SELECT MaMon, TenMon, MaNCC, TenNCC, GiaTien, GiamGia, SoLuong FROM DoAn da JOIN NhaCungCap ncc ON da.MaNCC = ncc.MaNCC WHERE TenMon LIKE @TenMon1 OR TenMon LIKE @TenMon2 OR TenMon LIKE @TenMon3";
+            string query = "SELECT da.MaMon, da.TenMon, da.MaNCC, ncc.TenNCC, da.GiaTien, da.GiamGia, da.SoLuong " +
+                           "FROM DoAn da " +
+                           "JOIN NhaCungCap ncc ON da.MaNCC = ncc.MaNCC " +
+                           "WHERE TenMon LIKE @TenMon1 OR TenMon LIKE @TenMon2 OR TenMon LIKE @TenMon3";
             SqlParameter[] parameters = new SqlParameter[]
             {
                 new SqlParameter("@TenMon1", SqlDbType.NVarChar, 100) { Value = tenMon + "%" },
@@ -151,7 +158,10 @@ namespace QLCHBanGaRan.lib
         // Tìm kiếm đồ uống
         public static DataTable _searchDoUong(string tenDoUong)
         {
-            string query = "SELECT MaDoUong, TenDoUong, MaNCC, TenNCC, GiaTien, GiamGia, SoLuong FROM DoUong du JOIN NhaCungCap ncc ON du.MaNCC = ncc.MaNCC WHERE TenDoUong LIKE @TenDoUong1 OR TenDoUong LIKE @TenDoUong2 OR TenDoUong LIKE @TenDoUong3";
+            string query = "SELECT du.MaDoUong, du.TenDoUong, du.MaNCC, ncc.TenNCC, du.GiaTien, du.GiamGia, du.SoLuong " +
+                           "FROM DoUong du " +
+                           "JOIN NhaCungCap ncc ON du.MaNCC = ncc.MaNCC " +
+                           "WHERE TenDoUong LIKE @TenDoUong1 OR TenDoUong LIKE @TenDoUong2 OR TenDoUong LIKE @TenDoUong3";
             SqlParameter[] parameters = new SqlParameter[]
             {
                 new SqlParameter("@TenDoUong1", SqlDbType.NVarChar, 100) { Value = tenDoUong + "%" },
@@ -238,7 +248,7 @@ namespace QLCHBanGaRan.lib
                 string query = "INSERT INTO LoaiSanPham (TenLoaiSP) VALUES (@TenLoaiSP)";
                 SqlParameter[] parameters = new SqlParameter[]
                 {
-            new SqlParameter("@TenLoaiSP", SqlDbType.NVarChar, 100) { Value = tenLoaiSP }
+                    new SqlParameter("@TenLoaiSP", SqlDbType.NVarChar, 100) { Value = tenLoaiSP }
                 };
                 cls_DatabaseManager.ExecuteNonQuery(query, parameters);
                 return true;
@@ -257,8 +267,8 @@ namespace QLCHBanGaRan.lib
                 string query = "UPDATE LoaiSanPham SET TenLoaiSP = @TenLoaiSP WHERE LoaiSPID = @LoaiSPID";
                 SqlParameter[] parameters = new SqlParameter[]
                 {
-            new SqlParameter("@TenLoaiSP", SqlDbType.NVarChar, 100) { Value = tenLoaiSP },
-            new SqlParameter("@LoaiSPID", SqlDbType.Int) { Value = loaiSPID }
+                    new SqlParameter("@TenLoaiSP", SqlDbType.NVarChar, 100) { Value = tenLoaiSP },
+                    new SqlParameter("@LoaiSPID", SqlDbType.Int) { Value = loaiSPID }
                 };
                 cls_DatabaseManager.ExecuteNonQuery(query, parameters);
                 return true;
@@ -277,7 +287,7 @@ namespace QLCHBanGaRan.lib
                 string query = "DELETE FROM LoaiSanPham WHERE LoaiSPID = @LoaiSPID";
                 SqlParameter[] parameters = new SqlParameter[]
                 {
-            new SqlParameter("@LoaiSPID", SqlDbType.Int) { Value = loaiSPID }
+                    new SqlParameter("@LoaiSPID", SqlDbType.Int) { Value = loaiSPID }
                 };
                 cls_DatabaseManager.ExecuteNonQuery(query, parameters);
                 return true;

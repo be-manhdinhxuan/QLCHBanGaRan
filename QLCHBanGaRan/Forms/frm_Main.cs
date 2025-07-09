@@ -1,4 +1,5 @@
-﻿using QLCHBanGaRan.UCSystems;
+﻿using QLCHBanGaRan.UCFunction;
+using QLCHBanGaRan.UCSystems;
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
@@ -51,6 +52,12 @@ namespace QLCHBanGaRan.Forms
 
             // Đặt tiêu đề mặc định là "Trang chủ" khi vào Home
             this.Text = "Trang chủ";
+
+            // Đăng ký sự kiện từ UC_FoodManager (nằm trong UC_Product)
+            if (_Product.Controls.Count > 0 && _Product.Controls[0] is UC_FoodManager foodManager)
+            {
+                foodManager.ProductAdded += FoodManager_ProductAdded;
+            }
 
             // Chỉ giữ lại những event handler cần thiết
             this.SizeChanged += Frm_Main_SizeChanged;
@@ -109,13 +116,18 @@ namespace QLCHBanGaRan.Forms
             this.Text = "Trang chủ";
         }
 
-        private void btnOrder_Click(object sender, EventArgs e)
+        public void btnOrder_Click(object sender, EventArgs e)
         {
             moveSidePanel(btnOrder);
             if (_Order.Visible)
             {
                 addControlsToPanel(_Order);
                 this.Text = "Gọi món";
+                // Làm mới dữ liệu khi hiển thị lại UC_Order
+                if (_Order is UC_Order orderControl)
+                {
+                    orderControl.RefreshProductList(); // Gọi phương thức làm mới
+                }
             }
             else
             {
@@ -124,13 +136,18 @@ namespace QLCHBanGaRan.Forms
             }
         }
 
-        private void btnProduct_Click(object sender, EventArgs e)
+        public void btnProduct_Click(object sender, EventArgs e)
         {
             moveSidePanel(btnProduct);
             if (_Product.Visible)
             {
                 addControlsToPanel(_Product);
                 this.Text = "Sản phẩm";
+                // Đảm bảo UC_FoodManager trong UC_Product được đăng ký sự kiện (nếu cần)
+                if (_Product.Controls.Count > 0 && _Product.Controls[0] is UC_FoodManager foodManager)
+                {
+                    foodManager.ProductAdded += FoodManager_ProductAdded;
+                }
             }
             else
             {
@@ -393,6 +410,16 @@ namespace QLCHBanGaRan.Forms
             {
                 this.Location = workingArea.Location;
                 this.Size = workingArea.Size;
+            }
+        }
+
+        // Thêm phương thức xử lý sự kiện ProductAdded
+        private void FoodManager_ProductAdded(object sender, EventArgs e)
+        {
+            // Gửi tín hiệu đến UC_Order để làm mới
+            if (_Order is UC_Order orderControl)
+            {
+                orderControl.RefreshProductList(); // Gọi phương thức làm mới trong UC_Order
             }
         }
     }

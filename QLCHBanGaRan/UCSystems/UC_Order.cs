@@ -63,6 +63,13 @@ namespace QLCHBanGaRan.UCSystems
             return dt;
         }
 
+        // Thêm phương thức làm mới danh sách sản phẩm
+        public void RefreshProductList()
+        {
+            dtSearch.DataSource = LoadProducts(""); // Tải lại toàn bộ sản phẩm mà không lọc
+            ConfigureDataGridViewColumns(dtSearch); // Cấu hình cột
+        }
+
         private void txtSearch_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)Keys.Enter)
@@ -211,9 +218,9 @@ namespace QLCHBanGaRan.UCSystems
             dtSearch.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dtChoose.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
-            dtSearch.DataSource = LoadProducts("");
-            ConfigureDataGridViewColumns(dtSearch); // Cấu hình cột cho dtSearch
+            RefreshProductList(); // Tải dữ liệu ban đầu
             dtChoose.DataSource = tbOrder; // Gán DataSource sau khi khởi tạo
+            ConfigureDataGridViewColumns(dtSearch); // Cấu hình cột cho dtSearch
             ConfigureDataGridViewColumns(dtChoose); // Cấu hình cột cho dtChoose
 
             dtChoose.CellValueChanged += dtChoose_CellValueChanged;
@@ -310,8 +317,7 @@ namespace QLCHBanGaRan.UCSystems
             txtSearch.Focus();
 
             // Làm mới dữ liệu trong dtSearch sau khi hoàn tất
-            dtSearch.DataSource = LoadProducts(txtSearch.Text);
-            ConfigureDataGridViewColumns(dtSearch);
+            RefreshProductList();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -418,8 +424,7 @@ namespace QLCHBanGaRan.UCSystems
                     btnCancel.Enabled = false;
 
                     // Làm mới dữ liệu trong dtSearch sau khi lưu thành công
-                    //dtSearch.DataSource = LoadProducts(txtSearch.Text);
-                    //ConfigureDataGridViewColumns(dtSearch);
+                    RefreshProductList();
                 }
             }
             catch (SqlException ex)
@@ -492,6 +497,7 @@ namespace QLCHBanGaRan.UCSystems
                 txtSearch.ForeColor = System.Drawing.Color.Gray;
             }
         }
+
 
     }
 }
