@@ -1,15 +1,16 @@
-﻿using System;
+﻿using QLCHBanGaRan.lib;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
 using System.Data;
+using System.Data.SqlClient;
+using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Text.RegularExpressions;
-using System.Globalization;
-using QLCHBanGaRan.lib;
 
 namespace QLCHBanGaRan.UCFunction
 {
@@ -17,7 +18,6 @@ namespace QLCHBanGaRan.UCFunction
     {
         public event EventHandler ProductAdded;
         private int check = 0;
-        private string productType = "DoAn";
 
         public UC_FoodManager()
         {
@@ -48,6 +48,8 @@ namespace QLCHBanGaRan.UCFunction
                 dtListProduct.Columns["GiamGia"].Width = 80;
             if (dtListProduct.Columns.Contains("SoLuong"))
                 dtListProduct.Columns["SoLuong"].Width = 80;
+            if (dtListProduct.Columns.Contains("SoLuongDaBan"))
+                dtListProduct.Columns["SoLuongDaBan"].Width = 120; // Đặt chiều rộng cho cột mới
         }
 
         private void _reset()
@@ -69,39 +71,45 @@ namespace QLCHBanGaRan.UCFunction
                            .Where(c => c.GetType() == type);
         }
 
-        private string _genIdProduct(int index)
+        private string _genIdProduct()
         {
-            // Tạo mã mới dựa trên chỉ số
-            if (index < 10)
-                return "M00" + index;
-            if (index < 100)
-                return "M0" + index;
-            return "M" + index;
-        }
+            DataTable dt = _getIDProduct();
+            int temp = 1; // Bắt đầu từ 1 nếu không có dữ liệu
 
-        private void _reassignProductIds()
-        {
-            DataTable dt = cls_Product._showDoAn();
-            if (dt != null && dt.Rows.Count > 0)
+            if (dt.Rows.Count > 0)
             {
-                for (int i = 0; i < dt.Rows.Count; i++)
+                // Lấy số lớn nhất từ MaMon
+                int maxNumber = 0;
+                foreach (DataRow row in dt.Rows)
                 {
-                    string oldMaSanPham = dt.Rows[i]["MaMon"].ToString(); // Sử dụng MaMon từ DataTable
-                    string newMaSanPham = _genIdProduct(i + 1); // Bắt đầu từ M001
-
-                    if (oldMaSanPham != newMaSanPham)
+                    string maMon = row["MaMon"].ToString();
+                    if (maMon.StartsWith("M") && maMon.Length >= 4)
                     {
-                        // Cập nhật mã sản phẩm trong cơ sở dữ liệu
-                        if (!cls_Product._updateDoAnMaSanPham(oldMaSanPham, newMaSanPham))
+                        if (int.TryParse(maMon.Substring(1), out int num) && num > maxNumber)
                         {
-                            MessageBox.Show($"Không thể cập nhật mã sản phẩm {oldMaSanPham} thành {newMaSanPham}.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            return;
+                            maxNumber = num;
                         }
                     }
                 }
-                LoadProductList();
-                _formatDT();
+                temp = maxNumber + 1;
             }
+
+            // Định dạng mã
+            if (temp < 10)
+            {
+                return "M00" + temp;
+            }
+            if (temp < 100)
+            {
+                return "M0" + temp;
+            }
+            return "M" + temp;
+        }
+
+        private DataTable _getIDProduct()
+        {
+            string query = "SELECT MaMon FROM DoAn ORDER BY MaMon";
+            return cls_DatabaseManager.TableRead(query); // Giả sử cls_DatabaseManager có thể dùng cho DoAn
         }
 
         private void _sttButton(bool add, bool edit, bool delete, bool update, bool cancel, bool grpinfo)
@@ -134,8 +142,8 @@ namespace QLCHBanGaRan.UCFunction
             }
 
             var items = new[] {
-                new { Text = "Tên món", Value = "TenSanPham" }, // Sửa thành TenSanPham
-                new { Text = "Mã món", Value = "MaSanPham" }    // Sửa thành MaSanPham
+                new { Text = "Tên món", Value = "TenSanPham" },
+                new { Text = "Mã món", Value = "MaSanPham" }
             };
             cmbFilter.Items.Clear();
             cmbFilter.DataSource = items;
@@ -158,6 +166,12 @@ namespace QLCHBanGaRan.UCFunction
             }
             else
             {
+                // Đảm bảo cột SoLuongDaBan được thêm vào DataTable nếu chưa có
+                if (!dt.Columns.Contains("SoLuongDaBan"))
+                {
+                    dt.Columns.Add("SoLuongDaBan", typeof(int)).DefaultValue = 0; // Giá trị mặc định là 0
+                }
+
                 dtListProduct.DataSource = dt;
 
                 if (dtListProduct.Columns.Contains("MaNCC"))
@@ -167,13 +181,6 @@ namespace QLCHBanGaRan.UCFunction
                 {
                     dtListProduct.Columns["TenNhaCungCap"].HeaderText = "Nhà cung cấp";
                     dtListProduct.Columns["TenNhaCungCap"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-                }
-
-                Console.WriteLine($"Filter: {cmbFilter.SelectedValue}");
-                Console.WriteLine("Cột trong dtListProduct:");
-                foreach (DataGridViewColumn col in dtListProduct.Columns)
-                {
-                    Console.WriteLine(col.Name); // In ra tên cột để debug
                 }
 
                 if (!string.IsNullOrEmpty(txtTimKiem.Text))
@@ -205,15 +212,8 @@ namespace QLCHBanGaRan.UCFunction
                 int index = dtListProduct.CurrentCell.RowIndex;
                 txtMaMonAn.Enabled = false;
 
-                string maColumn = "MaSanPham"; // Sử dụng MaSanPham
-                string tenColumn = "TenSanPham"; // Sử dụng TenSanPham
-
-                Console.WriteLine($"maColumn: {maColumn}, tenColumn: {tenColumn}");
-                Console.WriteLine("Cột trong dtListProduct:");
-                foreach (DataGridViewColumn col in dtListProduct.Columns)
-                {
-                    Console.WriteLine(col.Name); // In ra tên cột để debug
-                }
+                string maColumn = "MaSanPham";
+                string tenColumn = "TenSanPham";
 
                 if (dtListProduct.Columns.Contains(maColumn) && dtListProduct.Columns.Contains(tenColumn) &&
                     dtListProduct.Columns.Contains("GiaTien") && dtListProduct.Columns.Contains("MaNCC") &&
@@ -226,7 +226,6 @@ namespace QLCHBanGaRan.UCFunction
                     if (cmbNhaCungCap.Items.Count > 0 && !string.IsNullOrEmpty(maNCCValue))
                     {
                         cmbNhaCungCap.SelectedValue = maNCCValue;
-                        Console.WriteLine($"Selected MaNCC: {cmbNhaCungCap.SelectedValue}, Display: {cmbNhaCungCap.Text}");
                     }
                     else
                     {
@@ -257,40 +256,85 @@ namespace QLCHBanGaRan.UCFunction
         {
             if (dtListProduct.SelectedRows.Count == 0)
             {
-                MessageBox.Show("Vui lòng chọn sản phẩm cần xóa !", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Vui lòng chọn sản phẩm cần xóa!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
             }
-            else
+
+            int index = dtListProduct.CurrentCell.RowIndex;
+            string maColumn = "MaSanPham";
+            if (!dtListProduct.Columns.Contains(maColumn))
             {
-                int index = dtListProduct.CurrentCell.RowIndex;
-                string maColumn = "MaSanPham"; // Sử dụng MaSanPham
+                MessageBox.Show($"Không tìm thấy cột {maColumn}. Vui lòng kiểm tra cấu hình DataGridView.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
-                if (!dtListProduct.Columns.Contains(maColumn))
+            string maMon = dtListProduct.Rows[index].Cells[maColumn].Value?.ToString() ?? "";
+
+            if (string.IsNullOrEmpty(maMon))
+            {
+                MessageBox.Show("Mã sản phẩm không hợp lệ!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // Xác nhận xóa
+            DialogResult result = MessageBox.Show($"Bạn có chắc chắn muốn xóa sản phẩm có mã {maMon}?", "Xác nhận xóa", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (result == DialogResult.Yes)
+            {
+                // Kiểm tra và xóa các bản ghi liên quan trong ChiTietHoaDon
+                if (_checkProductInCTHD(maMon))
                 {
-                    MessageBox.Show($"Không tìm thấy cột {maColumn}. Vui lòng kiểm tra cấu hình DataGridView.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
-                string maMon = dtListProduct.Rows[index].Cells[maColumn].Value?.ToString() ?? "";
-
-                DialogResult result = MessageBox.Show("Bạn có muốn xóa sản phẩm này?", "Thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (result == DialogResult.Yes)
-                {
-                    DataTable dtCTHD = cls_Product._checkDoAn(maMon);
-                    if (dtCTHD.Rows.Count > 0)
+                    if (_deleteRelatedChiTietHoaDon(maMon))
                     {
-                        MessageBox.Show("Vui lòng xóa sản phẩm trong ChiTietHoaDon", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    }
-                    else if (cls_Product._delDoAn(maMon))
-                    {
-                        MessageBox.Show(string.Format("Xóa thành công sản phẩm có mã {0}", maMon), "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        _reassignProductIds(); // Tái sắp xếp mã sau khi xóa
+                        if (_delProduct(maMon))
+                        {
+                            MessageBox.Show($"Xóa sản phẩm có mã {maMon} thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            LoadProductList(); // Tải lại danh sách sản phẩm
+                            _reset(); // Đặt lại các trường nhập liệu
+                        }
+                        else
+                        {
+                            MessageBox.Show($"Không thể xóa sản phẩm có mã {maMon}. Vui lòng thử lại!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
                     }
                     else
                     {
-                        MessageBox.Show("Không thể thực hiện xóa sản phẩm này khỏi CSDL. Vui lòng thử lại!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("Không thể xóa các bản ghi trong ChiTietHoaDon. Vui lòng thử lại!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
+                else if (_delProduct(maMon))
+                {
+                    MessageBox.Show($"Xóa sản phẩm có mã {maMon} thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    LoadProductList(); // Tải lại danh sách sản phẩm
+                    _reset(); // Đặt lại các trường nhập liệu
+                }
+                else
+                {
+                    MessageBox.Show($"Không thể xóa sản phẩm có mã {maMon}. Vui lòng thử lại!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
+        }
+
+        // Thêm các phương thức hỗ trợ tương tự như trong UC_DrinkManager
+        private bool _deleteRelatedChiTietHoaDon(string maMon)
+        {
+            string query = "DELETE FROM ChiTietHoaDon WHERE MaMon = @MaMon";
+            SqlParameter[] parameters = new SqlParameter[] { new SqlParameter("@MaMon", maMon) };
+            return cls_DatabaseManager.ExecuteNonQuery(query, parameters) > 0;
+        }
+
+        private bool _checkProductInCTHD(string maMon)
+        {
+            string query = "SELECT COUNT(*) FROM ChiTietHoaDon WHERE MaMon = @MaMon";
+            SqlParameter[] parameters = new SqlParameter[] { new SqlParameter("@MaMon", maMon) };
+            DataTable dt = cls_DatabaseManager.TableRead(query, parameters);
+            return dt.Rows[0].Field<int>(0) > 0;
+        }
+
+        private bool _delProduct(string maMon)
+        {
+            string query = "DELETE FROM DoAn WHERE MaMon = @MaMon";
+            SqlParameter[] parameters = new SqlParameter[] { new SqlParameter("@MaMon", maMon) };
+            return cls_DatabaseManager.ExecuteNonQuery(query, parameters) > 0;
         }
 
         private void btnCapNhat_Click(object sender, EventArgs e)
@@ -307,7 +351,7 @@ namespace QLCHBanGaRan.UCFunction
             {
                 if (check == 1)
                 {
-                    string genMaSP = txtMaMonAn.Text;
+                    string genMaSP = _genIdProduct();
                     decimal giaTien = decimal.Parse(txtGiaTien.Text, new CultureInfo("vi-VN"));
                     bool addProduct = cls_Product._addDoAn(genMaSP, txtTenMonAn.Text, cmbNhaCungCap.SelectedValue?.ToString(), giaTien, int.Parse(txtGiamGia.Text), int.Parse(txtSoLuong.Text));
 
@@ -328,7 +372,6 @@ namespace QLCHBanGaRan.UCFunction
                 else
                 {
                     decimal giaTien = decimal.Parse(txtGiaTien.Text, new CultureInfo("vi-VN"));
-                    Console.WriteLine($"GiaTien before update: {giaTien}");
                     bool updateProduct = cls_Product._updateDoAn(txtMaMonAn.Text, txtTenMonAn.Text, cmbNhaCungCap.SelectedValue?.ToString(), giaTien, int.Parse(txtGiamGia.Text), int.Parse(txtSoLuong.Text));
                     if (updateProduct)
                     {
@@ -373,7 +416,7 @@ namespace QLCHBanGaRan.UCFunction
             check = 1;
             _sttButton(false, false, false, true, true, true);
             txtMaMonAn.Enabled = false;
-            txtMaMonAn.Text = _genIdProduct(dtListProduct.Rows.Count + 1); // Tạo mã mới dựa trên số lượng hiện tại
+            txtMaMonAn.Text = _genIdProduct();
             txtTenMonAn.Focus();
         }
 

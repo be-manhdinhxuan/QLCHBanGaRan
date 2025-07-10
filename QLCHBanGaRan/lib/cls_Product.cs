@@ -9,7 +9,7 @@ namespace QLCHBanGaRan.lib
         // Hiển thị danh sách món ăn
         public static DataTable _showDoAn()
         {
-            string query = "SELECT da.MaMon, da.TenMon, da.MaNCC, ncc.TenNCC, da.GiaTien, da.GiamGia, da.SoLuong " +
+            string query = "SELECT da.MaMon, da.TenMon, da.MaNCC, ncc.TenNCC, da.GiaTien, da.GiamGia, da.SoLuong, da.SoLuongDaBan " +
                            "FROM DoAn da " +
                            "JOIN NhaCungCap ncc ON da.MaNCC = ncc.MaNCC";
             return cls_DatabaseManager.TableRead(query, null);

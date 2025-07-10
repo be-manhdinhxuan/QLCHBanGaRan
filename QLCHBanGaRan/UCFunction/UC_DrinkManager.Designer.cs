@@ -270,7 +270,7 @@
             // SoLuongDaBan
             // 
             this.SoLuongDaBan.DataPropertyName = "SoLuongDaBan";
-            this.SoLuongDaBan.HeaderText = "Số lượng đã bán";
+            this.SoLuongDaBan.HeaderText = "Đã bán";
             this.SoLuongDaBan.Name = "SoLuongDaBan";
             this.SoLuongDaBan.ReadOnly = true;
             // 

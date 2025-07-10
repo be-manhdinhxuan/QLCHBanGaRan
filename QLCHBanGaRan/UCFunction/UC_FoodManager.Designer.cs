@@ -26,8 +26,6 @@
         /// Required method for Designer support - do not modify 
         /// the contents of this method with the code editor.
         /// </summary>
-        // ... (phần mã khác giữ nguyên)
-
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
@@ -68,6 +66,7 @@
             this.GiaTien = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.GiamGia = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SoLuong = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SoLuongDaBan = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btnBack = new System.Windows.Forms.Button();
             this.lblTitle = new System.Windows.Forms.Label();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
@@ -278,7 +277,7 @@
             this.btnThem.Name = "btnThem";
             this.btnThem.Size = new System.Drawing.Size(125, 44);
             this.btnThem.TabIndex = 50;
-            this.btnThem.Text = "THÊM SẢN PHẨM";
+            this.btnThem.Text = "THÊM MÓN";
             this.btnThem.UseVisualStyleBackColor = false;
             this.btnThem.Click += new System.EventHandler(this.btnThem_Click);
             // 
@@ -382,7 +381,8 @@
             this.TenNhaCungCap,
             this.GiaTien,
             this.GiamGia,
-            this.SoLuong});
+            this.SoLuong,
+            this.SoLuongDaBan});
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
@@ -426,14 +426,14 @@
             // MaSanPham
             // 
             this.MaSanPham.DataPropertyName = "MaMon";
-            this.MaSanPham.HeaderText = "Mã sản phẩm";
+            this.MaSanPham.HeaderText = "Mã món";
             this.MaSanPham.Name = "MaSanPham";
             this.MaSanPham.ReadOnly = true;
             // 
             // TenSanPham
             // 
             this.TenSanPham.DataPropertyName = "TenMon";
-            this.TenSanPham.HeaderText = "Tên sản phẩm";
+            this.TenSanPham.HeaderText = "Tên món";
             this.TenSanPham.Name = "TenSanPham";
             this.TenSanPham.ReadOnly = true;
             // 
@@ -464,6 +464,13 @@
             this.SoLuong.HeaderText = "Số lượng";
             this.SoLuong.Name = "SoLuong";
             this.SoLuong.ReadOnly = true;
+            // 
+            // SoLuongDaBan
+            // 
+            this.SoLuongDaBan.DataPropertyName = "SoLuongDaBan";
+            this.SoLuongDaBan.HeaderText = "Đã bán";
+            this.SoLuongDaBan.Name = "SoLuongDaBan";
+            this.SoLuongDaBan.ReadOnly = true;
             // 
             // btnBack
             // 
@@ -561,5 +568,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn GiaTien;
         private System.Windows.Forms.DataGridViewTextBoxColumn GiamGia;
         private System.Windows.Forms.DataGridViewTextBoxColumn SoLuong;
+        private System.Windows.Forms.DataGridViewTextBoxColumn SoLuongDaBan;
     }
 }

@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -42,46 +43,36 @@ namespace QLCHBanGaRan.UCFunction
         private string _genIdProduct()
         {
             DataTable dt = _getIDProduct();
-            int temp = 0;
+            int temp = 1; // Bắt đầu từ 1 nếu không có dữ liệu
 
-            if (dt.Rows.Count == 0)
+            if (dt.Rows.Count > 0)
             {
-                temp = 1;
-            }
-            else if (dt.Rows.Count == 1 && int.Parse(dt.Rows[0][0].ToString().Substring(2, 3)) == 1)
-            {
-                temp = 2;
-            }
-            else if (dt.Rows.Count == 1 && int.Parse(dt.Rows[0][0].ToString().Substring(2, 3)) > 1)
-            {
-                temp = 1;
-            }
-            else
-            {
-                for (int i = 0; i < dt.Rows.Count - 1; i++)
+                // Lấy số lớn nhất từ MaDoUong
+                int maxNumber = 0;
+                foreach (DataRow row in dt.Rows)
                 {
-                    if (int.Parse(dt.Rows[i + 1][0].ToString().Substring(2, 3)) - int.Parse(dt.Rows[i][0].ToString().Substring(2, 3)) > 1)
+                    string maDoUong = row[0].ToString();
+                    if (maDoUong.StartsWith("DU") && maDoUong.Length >= 5)
                     {
-                        temp = int.Parse(dt.Rows[i][0].ToString().Substring(2, 3)) + 1;
-                        break;
+                        if (int.TryParse(maDoUong.Substring(2), out int num) && num > maxNumber)
+                        {
+                            maxNumber = num;
+                        }
                     }
                 }
-
-                if (temp == 0)
-                {
-                    temp = int.Parse(dt.Rows[dt.Rows.Count - 1][0].ToString().Substring(2, 3)) + 1;
-                }
+                temp = maxNumber + 1;
             }
 
+            // Định dạng mã
             if (temp < 10)
             {
-                return "SP00" + temp;
+                return "DU00" + temp;
             }
             if (temp < 100)
             {
-                return "SP0" + temp;
+                return "DU0" + temp;
             }
-            return "SP" + temp;
+            return "DU" + temp;
         }
 
         private DataTable _getIDProduct()
@@ -155,7 +146,7 @@ namespace QLCHBanGaRan.UCFunction
                 string tenNCC = dtListProduct.Rows[index].Cells["TenNhaCungCap"].Value.ToString();
                 DataTable dtNCC = _getNhaCungCap();
                 cmbNhaCungCap.SelectedValue = dtNCC.AsEnumerable()
-                    .FirstOrDefault(row => row.Field<string>("TenNCC") == tenNCC)?.Field<int>("MaNCC") ?? 0;
+                    .FirstOrDefault(row => row.Field<string>("TenNCC") == tenNCC)?.Field<string>("MaNCC") ?? "";
                 txtGiaTien.Text = dtListProduct.Rows[index].Cells["GiaTien"].Value.ToString();
                 txtGiamGia.Text = dtListProduct.Rows[index].Cells["GiamGia"].Value.ToString();
                 txtSoLuong.Text = dtListProduct.Rows[index].Cells["SoLuong"].Value.ToString();
@@ -184,7 +175,23 @@ namespace QLCHBanGaRan.UCFunction
                 {
                     if (_checkProductInCTHD(maDoUong))
                     {
-                        MessageBox.Show("Vui lòng xóa sản phẩm trong ChiTietHoaDon trước!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        if (_deleteRelatedChiTietHoaDon(maDoUong))
+                        {
+                            if (_delProduct(maDoUong))
+                            {
+                                MessageBox.Show(string.Format("Xóa thành công đồ uống có mã {0}", maDoUong), "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                dtListProduct.DataSource = _showProduct();
+                                _formatDT();
+                            }
+                            else
+                            {
+                                MessageBox.Show("Không thể xóa đồ uống này. Vui lòng thử lại!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("Không thể xóa các bản ghi trong ChiTietHoaDon. Vui lòng thử lại!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
                     }
                     else if (_delProduct(maDoUong))
                     {
@@ -198,6 +205,13 @@ namespace QLCHBanGaRan.UCFunction
                     }
                 }
             }
+        }
+
+        private bool _deleteRelatedChiTietHoaDon(string maDoUong)
+        {
+            string query = "DELETE FROM ChiTietHoaDon WHERE MaDoUong = @MaDoUong";
+            SqlParameter[] parameters = new SqlParameter[] { new SqlParameter("@MaDoUong", maDoUong) };
+            return cls_DatabaseManager.ExecuteNonQuery(query, parameters) > 0;
         }
 
         private bool _checkProductInCTHD(string maDoUong)
@@ -238,8 +252,35 @@ namespace QLCHBanGaRan.UCFunction
                 if (check == 1)
                 {
                     string genMaDoUong = _genIdProduct();
-                    if (_addProduct(genMaDoUong, txtTenDoUong.Text, Convert.ToInt32(cmbNhaCungCap.SelectedValue),
-                        int.Parse(txtGiaTien.Text), int.Parse(txtGiamGia.Text), int.Parse(txtSoLuong.Text)))
+                    decimal giaTien;
+                    if (!decimal.TryParse(txtGiaTien.Text.Replace(".", ","), NumberStyles.Any, CultureInfo.GetCultureInfo("vi-VN"), out giaTien))
+                    {
+                        MessageBox.Show("Giá tiền không hợp lệ. Vui lòng nhập số hợp lệ!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    string maNCC = cmbNhaCungCap.SelectedValue?.ToString() ?? "";
+                    if (string.IsNullOrEmpty(maNCC))
+                    {
+                        MessageBox.Show("Mã nhà cung cấp không hợp lệ! Vui lòng chọn nhà cung cấp hợp lệ!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    int giamGia;
+                    if (!int.TryParse(txtGiamGia.Text, out giamGia))
+                    {
+                        MessageBox.Show("Phần trăm giảm giá không hợp lệ. Vui lòng nhập số nguyên!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    int soLuong;
+                    if (!int.TryParse(txtSoLuong.Text, out soLuong))
+                    {
+                        MessageBox.Show("Số lượng không hợp lệ. Vui lòng nhập số nguyên!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    if (_addProduct(genMaDoUong, txtTenDoUong.Text, maNCC, giaTien, giamGia, soLuong))
                     {
                         MessageBox.Show("Thêm đồ uống thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         _reset();
@@ -255,8 +296,35 @@ namespace QLCHBanGaRan.UCFunction
                 }
                 else
                 {
-                    if (_updateProduct(txtMaDoUong.Text, txtTenDoUong.Text, Convert.ToInt32(cmbNhaCungCap.SelectedValue),
-                        int.Parse(txtGiaTien.Text), int.Parse(txtGiamGia.Text), int.Parse(txtSoLuong.Text)))
+                    decimal giaTien;
+                    if (!decimal.TryParse(txtGiaTien.Text.Replace(".", ","), NumberStyles.Any, CultureInfo.GetCultureInfo("vi-VN"), out giaTien))
+                    {
+                        MessageBox.Show("Giá tiền không hợp lệ. Vui lòng nhập số hợp lệ!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    string maNCC = cmbNhaCungCap.SelectedValue?.ToString() ?? "";
+                    if (string.IsNullOrEmpty(maNCC))
+                    {
+                        MessageBox.Show("Mã nhà cung cấp không hợp lệ! Vui lòng chọn nhà cung cấp hợp lệ!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    int giamGia;
+                    if (!int.TryParse(txtGiamGia.Text, out giamGia))
+                    {
+                        MessageBox.Show("Phần trăm giảm giá không hợp lệ. Vui lòng nhập số nguyên!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    int soLuong;
+                    if (!int.TryParse(txtSoLuong.Text, out soLuong))
+                    {
+                        MessageBox.Show("Số lượng không hợp lệ. Vui lòng nhập số nguyên!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    if (_updateProduct(txtMaDoUong.Text, txtTenDoUong.Text, maNCC, giaTien, giamGia, soLuong))
                     {
                         MessageBox.Show("Cập nhật thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         dtListProduct.DataSource = _showProduct();
@@ -273,7 +341,7 @@ namespace QLCHBanGaRan.UCFunction
             }
         }
 
-        private bool _addProduct(string maDoUong, string tenDoUong, int maNCC, int giaTien, int giamGia, int soLuong)
+        private bool _addProduct(string maDoUong, string tenDoUong, string maNCC, decimal giaTien, int giamGia, int soLuong)
         {
             string query = "INSERT INTO DoUong (MaDoUong, TenDoUong, MaNCC, GiaTien, GiamGia, SoLuong) VALUES (@MaDoUong, @TenDoUong, @MaNCC, @GiaTien, @GiamGia, @SoLuong)";
             SqlParameter[] parameters = new SqlParameter[]
@@ -288,7 +356,7 @@ namespace QLCHBanGaRan.UCFunction
             return cls_DatabaseManager.ExecuteNonQuery(query, parameters) > 0;
         }
 
-        private bool _updateProduct(string maDoUong, string tenDoUong, int maNCC, int giaTien, int giamGia, int soLuong)
+        private bool _updateProduct(string maDoUong, string tenDoUong, string maNCC, decimal giaTien, int giamGia, int soLuong)
         {
             string query = "UPDATE DoUong SET TenDoUong = @TenDoUong, MaNCC = @MaNCC, GiaTien = @GiaTien, GiamGia = @GiamGia, SoLuong = @SoLuong WHERE MaDoUong = @MaDoUong";
             SqlParameter[] parameters = new SqlParameter[]
@@ -305,7 +373,7 @@ namespace QLCHBanGaRan.UCFunction
 
         private DataTable _showProduct()
         {
-            string query = "SELECT du.MaDoUong, du.TenDoUong, ncc.TenNCC AS TenNhaCungCap, du.GiaTien, du.GiamGia, du.SoLuong " +
+            string query = "SELECT du.MaDoUong, du.TenDoUong, ncc.TenNCC AS TenNhaCungCap, du.GiaTien, du.GiamGia, du.SoLuong, du.SoLuongDaBan " +
                            "FROM DoUong du LEFT JOIN NhaCungCap ncc ON du.MaNCC = ncc.MaNCC";
             return cls_DatabaseManager.TableRead(query);
         }
@@ -323,9 +391,17 @@ namespace QLCHBanGaRan.UCFunction
             _formatDT();
             _sttButton(true, true, true, false, false, false);
             _reset();
-            cmbNhaCungCap.DataSource = _getNhaCungCap();
-            cmbNhaCungCap.ValueMember = "MaNCC";
-            cmbNhaCungCap.DisplayMember = "TenNCC";
+            DataTable dtNCC = _getNhaCungCap();
+            if (dtNCC.Rows.Count > 0)
+            {
+                cmbNhaCungCap.DataSource = dtNCC;
+                cmbNhaCungCap.ValueMember = "MaNCC";
+                cmbNhaCungCap.DisplayMember = "TenNCC";
+            }
+            else
+            {
+                MessageBox.Show("Không có dữ liệu nhà cung cấp. Vui lòng thêm nhà cung cấp trước!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
 
             cmbFilter.DisplayMember = "Text";
             cmbFilter.ValueMember = "Value";
@@ -371,15 +447,15 @@ namespace QLCHBanGaRan.UCFunction
 
         private void txtGiaTien_Validating(object sender, CancelEventArgs e)
         {
-            Regex regex = new Regex("^[0-9]+$");
+            Regex regex = new Regex("^[0-9]+(,[0-9]{1,2})?$");
             if (string.IsNullOrWhiteSpace(txtGiaTien.Text))
             {
                 errorProvidera.SetError(txtGiaTien, "Giá tiền không được trống.");
                 e.Cancel = true;
             }
-            else if (!regex.IsMatch(txtGiaTien.Text))
+            else if (!regex.IsMatch(txtGiaTien.Text.Replace(".", "")))
             {
-                errorProvidera.SetError(txtGiaTien, "Giá tiền đồ uống phải là số.");
+                errorProvidera.SetError(txtGiaTien, "Giá tiền đồ uống phải là số hợp lệ (ví dụ: 25000 hoặc 25000,00).");
                 e.Cancel = true;
             }
             else
