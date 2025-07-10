@@ -486,9 +486,9 @@
             this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(0)))), ((int)(((byte)(42)))));
             this.lblTitle.Location = new System.Drawing.Point(38, 9);
             this.lblTitle.Name = "lblTitle";
-            this.lblTitle.Size = new System.Drawing.Size(168, 21);
+            this.lblTitle.Size = new System.Drawing.Size(151, 21);
             this.lblTitle.TabIndex = 69;
-            this.lblTitle.Text = "QUẢN LÝ SẢN PHẨM";
+            this.lblTitle.Text = "QUẢN LÝ MÓN ĂN";
             // 
             // errorProvider
             // 

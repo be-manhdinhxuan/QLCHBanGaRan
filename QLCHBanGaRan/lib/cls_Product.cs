@@ -297,5 +297,26 @@ namespace QLCHBanGaRan.lib
                 return false;
             }
         }
+
+        // Cập nhật mã món ăn (MaMon) trong bảng DoAn
+        public static bool _updateDoAnMaSanPham(string oldMaSanPham, string newMaSanPham)
+        {
+            try
+            {
+                string query = "UPDATE DoAn SET MaMon = @NewMaSanPham WHERE MaMon = @OldMaSanPham";
+                SqlParameter[] parameters = new SqlParameter[]
+                {
+                    new SqlParameter("@OldMaSanPham", SqlDbType.NVarChar, 10) { Value = oldMaSanPham },
+                    new SqlParameter("@NewMaSanPham", SqlDbType.NVarChar, 10) { Value = newMaSanPham }
+                };
+                cls_DatabaseManager.ExecuteNonQuery(query, parameters);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error in _updateDoAnMaSanPham: " + ex.Message);
+                return false;
+            }
+        }
     }
 }
