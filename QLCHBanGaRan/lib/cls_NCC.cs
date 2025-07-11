@@ -56,16 +56,25 @@ namespace QLCHBanGaRan.lib
         {
             try
             {
-                string query = "DELETE FROM NhaCungCap WHERE MaNCC = @MaNCC";
-                SqlParameter[] parameters = new SqlParameter[]
+                string query = "EXEC sp_DelNCC @MaNCC";
+                SqlParameter[] parameters = new SqlParameter[] { new SqlParameter("@MaNCC", maNCC) };
+                using (SqlConnection conn = new SqlConnection(cls_DatabaseManager.connectionString))
                 {
-                    new SqlParameter("@MaNCC", maNCC)
-                };
-                int rowsAffected = cls_DatabaseManager.ExecuteNonQuery(query, parameters);
-                return rowsAffected > 0;
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@MaNCC", maNCC);
+                    int result = cmd.ExecuteNonQuery();
+                    return result > 0; // Trả về true nếu có dòng bị ảnh hưởng
+                }
             }
-            catch
+            catch (SqlException ex)
             {
+                Console.WriteLine($"Lỗi SQL khi xóa nhà cung cấp {maNCC}: {ex.Message}");
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Lỗi không xác định khi xóa nhà cung cấp {maNCC}: {ex.Message}");
                 return false;
             }
         }

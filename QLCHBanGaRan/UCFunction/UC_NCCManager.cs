@@ -57,23 +57,18 @@ namespace QLCHBanGaRan.UCFunction
                 int index = dtListNCC.CurrentCell.RowIndex;
                 string maNCC = dtListNCC.Rows[index].Cells["MaNCC"].Value.ToString();
 
-                DialogResult result = MessageBox.Show("Bạn muốn xóa nhà cung cấp này?", "Thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                DialogResult result = MessageBox.Show("Bạn muốn xóa nhà cung cấp này? Tất cả sản phẩm và hóa đơn liên quan sẽ bị xóa!", "Thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
                 if (result == DialogResult.Yes)
                 {
-                    DataTable dt = cls_NCC._checkNCC(maNCC);
-                    if (dt.Rows.Count > 0)
+                    if (cls_NCC._delNCC(maNCC))
                     {
-                        MessageBox.Show("Vui lòng xóa sản phẩm liên quan trước khi xóa nhà cung cấp này!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    }
-                    else if (cls_NCC._delNCC(maNCC))
-                    {
-                        MessageBox.Show("Xóa thành công nhà cung cấp!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        dtListNCC.DataSource = cls_NCC._showDetailNCC();
+                        MessageBox.Show("Xóa thành công nhà cung cấp và các bản ghi liên quan!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        dtListNCC.DataSource = cls_NCC._showDetailNCC(); // Làm mới ngay lập tức
                     }
                     else
                     {
-                        MessageBox.Show("Không thể thực hiện xóa nhà cung cấp này khỏi CSDL. Vui lòng thử lại!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("Không thể thực hiện xóa nhà cung cấp này ra khỏi CSDL. Vui lòng thử lại! (Chi tiết: Xem log hoặc liên hệ admin)", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
