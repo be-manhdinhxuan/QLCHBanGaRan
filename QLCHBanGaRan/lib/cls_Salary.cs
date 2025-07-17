@@ -14,13 +14,14 @@ namespace QLCHBanGaRan.lib
         }
 
         // Thêm chức danh
-        public static bool InsertChucDanh(string tenChucDanh, decimal luongCoBan, decimal phuCap)
+        public static bool InsertChucDanh(string maChucDanh, string tenChucDanh, decimal luongCoBan, decimal phuCap)
         {
             try
             {
-                string query = "INSERT INTO ChucDanh (TenChucDanh, LuongCoBan, PhuCap) VALUES (@TenChucDanh, @LuongCoBan, @PhuCap)";
+                string query = "INSERT INTO ChucDanh (MaChucDanh, TenChucDanh, LuongCoBan, PhuCap) VALUES (@MaChucDanh, @TenChucDanh, @LuongCoBan, @PhuCap)";
                 SqlParameter[] parameters = new SqlParameter[]
                 {
+                    new SqlParameter("@MaChucDanh", SqlDbType.NVarChar, 10) { Value = maChucDanh },
                     new SqlParameter("@TenChucDanh", SqlDbType.NVarChar, 100) { Value = tenChucDanh },
                     new SqlParameter("@LuongCoBan", SqlDbType.Decimal) { Value = luongCoBan },
                     new SqlParameter("@PhuCap", SqlDbType.Decimal) { Value = phuCap }
@@ -28,14 +29,15 @@ namespace QLCHBanGaRan.lib
                 cls_DatabaseManager.ExecuteNonQuery(query, parameters);
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine("InsertChucDanh Error - " + ex.Message);
                 return false;
             }
         }
 
         // Cập nhật chức danh
-        public static bool UpdateChucDanh(string tenChucDanh, decimal luongCoBan, decimal phuCap, int maChucDanh)
+        public static bool UpdateChucDanh(string tenChucDanh, decimal luongCoBan, decimal phuCap, string maChucDanh)
         {
             try
             {
@@ -45,51 +47,85 @@ namespace QLCHBanGaRan.lib
                     new SqlParameter("@TenChucDanh", SqlDbType.NVarChar, 100) { Value = tenChucDanh },
                     new SqlParameter("@LuongCoBan", SqlDbType.Decimal) { Value = luongCoBan },
                     new SqlParameter("@PhuCap", SqlDbType.Decimal) { Value = phuCap },
-                    new SqlParameter("@MaChucDanh", SqlDbType.Int) { Value = maChucDanh }
+                    new SqlParameter("@MaChucDanh", SqlDbType.NVarChar, 10) { Value = maChucDanh }
                 };
                 int rowsAffected = cls_DatabaseManager.ExecuteNonQuery(query, parameters);
                 return rowsAffected > 0;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine("UpdateChucDanh Error - " + ex.Message);
                 return false;
             }
         }
 
-        // Kiểm tra xem chức danh có được sử dụng trong NhanVienChucDanh không
-        public static bool CheckChucDanh(int maChucDanh)
+        // Kiểm tra xem chức danh có được sử dụng trong NhanVien không
+        public static bool CheckChucDanh(string maChucDanh)
         {
             try
             {
-                string query = "SELECT COUNT(*) FROM tbl_NhanVienChucDanh WHERE MaChucDanh = @MaChucDanh";
+                string query = "SELECT COUNT(*) FROM NhanVien WHERE MaChucDanh = @MaChucDanh";
                 SqlParameter[] parameters = new SqlParameter[]
                 {
-                    new SqlParameter("@MaChucDanh", SqlDbType.Int) { Value = maChucDanh }
+                    new SqlParameter("@MaChucDanh", SqlDbType.NVarChar, 10) { Value = maChucDanh }
                 };
                 DataTable dt = cls_DatabaseManager.TableRead(query, parameters);
                 return Convert.ToInt32(dt.Rows[0][0]) == 0; // Trả về true nếu không có bản ghi
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine("CheckChucDanh Error - " + ex.Message);
                 return false; // Giả định lỗi thì không cho xóa
             }
         }
 
-        // Xóa chức danh
-        public static bool DeleteChucDanh(int maChucDanh)
+        // Lấy danh sách nhân viên liên quan đến chức danh để hiển thị
+        public static DataTable GetNhanVienByMaChucDanh(string maChucDanh)
         {
             try
             {
+                string query = "SELECT MaNV, TenNV FROM NhanVien WHERE MaChucDanh = @MaChucDanh";
+                SqlParameter[] parameters = new SqlParameter[]
+                {
+                    new SqlParameter("@MaChucDanh", SqlDbType.NVarChar, 10) { Value = maChucDanh }
+                };
+                return cls_DatabaseManager.TableRead(query, parameters);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("GetNhanVienByMaChucDanh Error - " + ex.Message);
+                return null;
+            }
+        }
+
+        // Xóa chức danh (bao gồm xóa cascade nếu được yêu cầu)
+        public static bool DeleteChucDanh(string maChucDanh, bool deleteRelatedNhanVien = false)
+        {
+            try
+            {
+                if (deleteRelatedNhanVien)
+                {
+                    // Xóa các bản ghi trong NhanVien liên quan trước
+                    string deleteNhanVienQuery = "DELETE FROM NhanVien WHERE MaChucDanh = @MaChucDanh";
+                    SqlParameter[] nhanVienParams = new SqlParameter[]
+                    {
+                        new SqlParameter("@MaChucDanh", SqlDbType.NVarChar, 10) { Value = maChucDanh }
+                    };
+                    cls_DatabaseManager.ExecuteNonQuery(deleteNhanVienQuery, nhanVienParams);
+                }
+
+                // Xóa bản ghi trong ChucDanh
                 string query = "DELETE FROM ChucDanh WHERE MaChucDanh = @MaChucDanh";
                 SqlParameter[] parameters = new SqlParameter[]
                 {
-                    new SqlParameter("@MaChucDanh", SqlDbType.Int) { Value = maChucDanh }
+                    new SqlParameter("@MaChucDanh", SqlDbType.NVarChar, 10) { Value = maChucDanh }
                 };
                 int rowsAffected = cls_DatabaseManager.ExecuteNonQuery(query, parameters);
                 return rowsAffected > 0;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine("DeleteChucDanh Error - " + ex.Message);
                 return false;
             }
         }
@@ -226,8 +262,7 @@ namespace QLCHBanGaRan.lib
                                 c.LuongCoBan * (CAST(d.NgayTinhLuong AS FLOAT) / CAST(d.NgayCongChuan AS FLOAT)) + c.PhuCap * c.LuongCoBan / 100 AS [ThucLinh], 
                                 d.TrangThai
                                 FROM tbl_NhanVien a
-                                INNER JOIN tbl_NhanVienChucDanh b ON a.NhanVienID = b.NhanVienID
-                                INNER JOIN ChucDanh c ON c.MaChucDanh = b.MaChucDanh
+                                INNER JOIN ChucDanh c ON c.MaChucDanh = a.MaChucDanh
                                 LEFT JOIN tbl_ChiTietBanKeLuong d ON d.NhanVienID = a.NhanVienID AND d.ThangKeLuong = @Thang";
                 SqlParameter[] parameters = new SqlParameter[]
                 {

@@ -46,7 +46,7 @@
             this.grpQuanLyLuong.Controls.Add(this.grpQuanLyChucDanh);
             this.grpQuanLyLuong.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.grpQuanLyLuong.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(0)))), ((int)(((byte)(42)))));
-            this.grpQuanLyLuong.Location = new System.Drawing.Point(190, 72);
+            this.grpQuanLyLuong.Location = new System.Drawing.Point(184, 164);
             this.grpQuanLyLuong.Name = "grpQuanLyLuong";
             this.grpQuanLyLuong.Size = new System.Drawing.Size(536, 255);
             this.grpQuanLyLuong.TabIndex = 7;

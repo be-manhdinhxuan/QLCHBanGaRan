@@ -296,6 +296,9 @@
     <EmbeddedResource Include="UCFunction\UC_ProfilePersonnelManager.resx">
       <DependentUpon>UC_ProfilePersonnelManager.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UCFunction\UC_SalaryManager.resx">
+      <DependentUpon>UC_SalaryManager.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UCFunction\UC_TimeSheetManager.resx">
       <DependentUpon>UC_TimeSheetManager.cs</DependentUpon>
     </EmbeddedResource>
