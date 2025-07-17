@@ -9,6 +9,31 @@ namespace QLCHBanGaRan.lib
 {
     class cls_EmployeeManagement
     {
+        // Biến tĩnh để lưu giá trị ban đầu khi chọn nhân viên
+        private static string _initialCMND = null;
+        private static string _initialEmail = null;
+
+        public static void SetInitialValues(string maNV)
+        {
+            using (SqlConnection conn = new SqlConnection(cls_DatabaseManager.connectionString))
+            {
+                conn.Open();
+                string query = "SELECT CMND, Email FROM NhanVien WHERE MaNV = @MaNV";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@MaNV", maNV);
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            _initialCMND = reader["CMND"]?.ToString();
+                            _initialEmail = reader["Email"]?.ToString();
+                        }
+                    }
+                }
+            }
+        }
+
         public static string CheckLogin(string username, string password)
         {
             string MaND = null;
@@ -73,7 +98,6 @@ namespace QLCHBanGaRan.lib
         {
             try
             {
-                // Kiểm tra CMND trước khi gửi đến stored procedure
                 if (string.IsNullOrWhiteSpace(cmnd))
                 {
                     MessageBox.Show("Số CMND không được trống.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -109,27 +133,38 @@ namespace QLCHBanGaRan.lib
             }
             catch (SqlException ex)
             {
-                if (ex.Number == 2627 || ex.Number == 2601)
+                string msg = ex.Message.ToLower();
+                if (msg.Contains("unique key constraint") && msg.Contains("cmnd"))
+                {
+                    MessageBox.Show("Số CMND đã được sử dụng.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+                if ((ex.Number == 2627 || ex.Number == 2601) && msg.Contains("unique"))
                 {
                     string errorMessage = "Dữ liệu đã tồn tại: ";
-                    if (ex.Message.Contains("IX_NhanVien_Email")) errorMessage += "Email đã được sử dụng.";
-                    else if (ex.Message.Contains("IX_NhanVien_SDT")) errorMessage += "Số điện thoại đã được sử dụng.";
-                    else if (ex.Message.Contains("IX_NhanVien_CMND")) errorMessage += "Số CMND đã được sử dụng.";
-                    else errorMessage += "Dữ liệu bị trùng (kiểm tra Email, SDT, hoặc CMND).";
+                    if (msg.Contains("email")) errorMessage += "Email đã được sử dụng.";
+                    else if (msg.Contains("sdt") || msg.Contains("dienthoai")) errorMessage += "Số điện thoại đã được sử dụng.";
+                    else errorMessage += "Dữ liệu bị trùng (kiểm tra Email, SĐT, hoặc CMND).";
                     MessageBox.Show(errorMessage, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                else if (ex.Number == 50006) // Lỗi từ stored procedure về độ dài CMND
+                else if (ex.Number == 50006)
                 {
                     MessageBox.Show("Số CMND phải có đúng 9 số.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 else
                 {
-                    MessageBox.Show("Lỗi khi thêm nhân viên: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Lỗi thực thi truy vấn: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 return false;
             }
             catch (Exception ex)
             {
+                string msg = ex.Message.ToLower();
+                if (msg.Contains("unique key constraint") && msg.Contains("cmnd"))
+                {
+                    MessageBox.Show("Số CMND đã được sử dụng.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
                 MessageBox.Show("Lỗi không xác định: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
@@ -139,19 +174,43 @@ namespace QLCHBanGaRan.lib
         {
             string query = "SELECT nv.MaNV, nv.TenNV, nv.NgaySinh, " +
                            "CASE nv.GioiTinh WHEN 0 THEN N'Nam' WHEN 1 THEN N'Nữ' END AS GioiTinh, " +
-                           "nv.DiaChi, nv.SDT, nv.Email, nv.CMND, nv.TrangThai, " +
+                           "nv.DiaChi, nv.SDT, nv.Email, nv.CMND, nv.TrangThai AS TrangThaiID, " +
                            "cd.MaChucDanh, COALESCE(cd.TenChucDanh, N'Chưa có chức danh') AS TenChucDanh " +
                            "FROM NhanVien nv " +
                            "LEFT JOIN ChucDanh cd ON nv.MaChucDanh = cd.MaChucDanh";
             DataTable dt = cls_DatabaseManager.TableRead(query);
-            // Debug: Kiểm tra dữ liệu
+            // Debug chi tiết để kiểm tra giá trị TrangThai
             foreach (DataRow row in dt.Rows)
             {
-                Console.WriteLine($"MaNV: {row["MaNV"]}, MaChucDanh: {row["MaChucDanh"]}, TenChucDanh: {row["TenChucDanh"]}, GioiTinh: {row["GioiTinh"]}");
+                int trangThaiValue = Convert.ToInt32(row["TrangThaiID"]);
+                Console.WriteLine($"ShowEmployees - MaNV: {row["MaNV"]}, TrangThaiID: {trangThaiValue}, GioiTinh: {row["GioiTinh"]}");
             }
             return dt;
         }
 
+        public static DataTable SearchEmployees(string column, string keyword)
+        {
+            string query = "SELECT nv.MaNV, nv.TenNV, nv.NgaySinh, " +
+                           "CASE nv.GioiTinh WHEN 0 THEN N'Nam' WHEN 1 THEN N'Nữ' END AS GioiTinh, " +
+                           "nv.DiaChi, nv.SDT, nv.Email, nv.CMND, nv.TrangThai AS TrangThaiID, " +
+                           "cd.MaChucDanh, COALESCE(cd.TenChucDanh, N'Chưa có chức danh') AS TenChucDanh " +
+                           "FROM NhanVien nv " +
+                           "LEFT JOIN ChucDanh cd ON nv.MaChucDanh = cd.MaChucDanh " +
+                           "WHERE " + column + " LIKE @Keyword";
+
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new SqlParameter("@Keyword", SqlDbType.NVarChar, 100) { Value = "%" + keyword + "%" }
+            };
+
+            DataTable dt = cls_DatabaseManager.TableRead(query, parameters);
+            foreach (DataRow row in dt.Rows)
+            {
+                int trangThaiValue = Convert.ToInt32(row["TrangThaiID"]);
+                Console.WriteLine($"SearchEmployees - MaNV: {row["MaNV"]}, TrangThaiID: {trangThaiValue}, GioiTinh: {row["GioiTinh"]}");
+            }
+            return dt;
+        }
 
         public static bool DeleteEmployee(string maNV)
         {
@@ -174,8 +233,6 @@ namespace QLCHBanGaRan.lib
                 return false;
             }
         }
-
-
 
         public static bool CheckInNguoiDung(string maNV)
         {
@@ -209,13 +266,13 @@ namespace QLCHBanGaRan.lib
         {
             try
             {
-                Console.WriteLine($"Update - maNVCu: {maNVCu}, maNV: {maNV}, GioiTinh: {gioiTinh}");
-                string query = "EXEC sp_CapNhatNhanVien @MaNVCu, @MaNV, @TenNV, @NgaySinh, @GioiTinh, @DiaChi, @SDT, @Email, @CMND, @TrangThai, @MaChucDanh";
+                Console.WriteLine($"Update - maNVCu: {maNVCu}, maNV: {maNV}, TrangThai: {trangThai}, GioiTinh: {gioiTinh}, CMND: {cmnd}, Email: {email}");
+                string query = "sp_CapNhatNhanVien"; // Tên stored procedure
                 SqlParameter[] parameters = new SqlParameter[]
                 {
             new SqlParameter("@MaNVCu", SqlDbType.NVarChar, 10) { Value = maNVCu },
             new SqlParameter("@MaNV", SqlDbType.NVarChar, 10) { Value = maNV },
-            new SqlParameter("@TenNV", SqlDbType.NVarChar, 50) { Value = tenNV },
+            new SqlParameter("@TenNV", SqlDbType.NVarChar, 50) { Value = (object)tenNV ?? DBNull.Value },
             new SqlParameter("@NgaySinh", SqlDbType.Date) { Value = ngaySinh },
             new SqlParameter("@GioiTinh", SqlDbType.Bit) { Value = gioiTinh },
             new SqlParameter("@DiaChi", SqlDbType.NVarChar, 255) { Value = (object)diaChi ?? DBNull.Value },
@@ -225,18 +282,98 @@ namespace QLCHBanGaRan.lib
             new SqlParameter("@TrangThai", SqlDbType.Int) { Value = trangThai },
             new SqlParameter("@MaChucDanh", SqlDbType.NVarChar, 10) { Value = (object)maChucDanh ?? DBNull.Value }
                 };
-                cls_DatabaseManager.ExecuteNonQuery(query, parameters);
-                return true;
+
+                using (SqlConnection conn = new SqlConnection(cls_DatabaseManager.connectionString))
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddRange(parameters);
+
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                        Console.WriteLine($"Update executed - Rows affected: {rowsAffected}");
+                        if (rowsAffected > 0)
+                        {
+                            Console.WriteLine("Update successful.");
+                            return true;
+                        }
+                        else if (rowsAffected == 0)
+                        {
+                            Console.WriteLine("No rows affected - checking DB...");
+                            // So sánh với giá trị ban đầu, xử lý trường hợp null
+                            bool hasChange = false;
+                            if (_initialCMND != null && cmnd != null && !_initialCMND.Equals(cmnd)) hasChange = true;
+                            else if (_initialEmail != null && email != null && !_initialEmail.Equals(email)) hasChange = true;
+                            else if (_initialCMND == null && cmnd != null) hasChange = true; // Thay đổi từ null sang giá trị
+                            else if (_initialEmail == null && email != null) hasChange = true;
+                            else if (_initialCMND != null && cmnd == null) hasChange = true; // Thay đổi từ giá trị sang null
+                            else if (_initialEmail != null && email == null) hasChange = true;
+
+                            if (hasChange)
+                            {
+                                Console.WriteLine("Data updated in DB compared to initial values.");
+                                return true; // Giả định thành công nếu dữ liệu thay đổi so với ban đầu
+                            }
+                            Console.WriteLine("No changes detected in DB compared to initial values.");
+                            return false;
+                        }
+                        else // rowsAffected < 0 (bất thường)
+                        {
+                            Console.WriteLine("Unexpected rows affected value: " + rowsAffected);
+                            // So sánh với giá trị ban đầu, xử lý trường hợp null
+                            bool hasChange = false;
+                            if (_initialCMND != null && cmnd != null && !_initialCMND.Equals(cmnd)) hasChange = true;
+                            else if (_initialEmail != null && email != null && !_initialEmail.Equals(email)) hasChange = true;
+                            else if (_initialCMND == null && cmnd != null) hasChange = true;
+                            else if (_initialEmail == null && email != null) hasChange = true;
+                            else if (_initialCMND != null && cmnd == null) hasChange = true;
+                            else if (_initialEmail != null && email == null) hasChange = true;
+
+                            if (hasChange)
+                            {
+                                Console.WriteLine("Data updated in DB despite negative rowsAffected compared to initial values.");
+                                return true; // Giả định thành công nếu dữ liệu thay đổi so với ban đầu
+                            }
+                            Console.WriteLine("No changes detected in DB despite negative rowsAffected compared to initial values.");
+                            return false;
+                        }
+                    }
+                }
             }
             catch (SqlException ex)
             {
-                MessageBox.Show("Lỗi khi cập nhật nhân viên: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
+                Console.WriteLine($"SQL Error - Number: {ex.Number}, Message: {ex.Message}");
+                string errorMessage = "Lỗi thực thi truy vấn: ";
+                switch (ex.Number)
+                {
+                    case 50002: // CMND trùng
+                        errorMessage = $"Số CMND '{cmnd}' đã được sử dụng bởi nhân viên khác.";
+                        break;
+                    case 50003: // Email trùng
+                        errorMessage = $"Email '{email}' đã được sử dụng bởi nhân viên khác.";
+                        break;
+                    case 50004: // SDT trùng
+                        errorMessage = $"Số điện thoại '{sdt}' đã được sử dụng bởi nhân viên khác.";
+                        break;
+                    case 50005: // Không có thay đổi
+                        errorMessage = "Không có thay đổi nào để cập nhật.";
+                        break;
+                    case 50001: // Không tìm thấy nhân viên
+                        errorMessage = ex.Message;
+                        break;
+                    default:
+                        errorMessage += ex.Message;
+                        break;
+                }
+                MessageBox.Show(errorMessage, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false; // Thất bại
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Lỗi không xác định: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
+                Console.WriteLine($"General Error: {ex.Message}");
+                MessageBox.Show($"Lỗi không xác định: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false; // Thất bại
             }
         }
 

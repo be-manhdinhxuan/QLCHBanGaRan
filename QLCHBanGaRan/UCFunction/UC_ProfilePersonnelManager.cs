@@ -1,41 +1,68 @@
-﻿using QLCHBanGaRan.lib;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Data.SqlClient;
 using System.Drawing;
+using System.Data;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Text.RegularExpressions;
+using System.Globalization;
+using QLCHBanGaRan.lib;
 
 namespace QLCHBanGaRan.UCFunction
 {
     public partial class UC_ProfilePersonnelManager : UserControl
     {
-        private int rowSelected;
         private int check = 0;
-        private string maNV = "";
+        private string maNV = null;
 
         public UC_ProfilePersonnelManager()
         {
             InitializeComponent();
         }
 
+        private void _formatDT()
+        {
+            // Xóa cột TrangThaiID cũ nếu có
+            if (dtListProfile.Columns["TrangThaiID"] != null)
+            {
+                dtListProfile.Columns.Remove("TrangThaiID");
+            }
+
+            // Tạo cột checkbox mới
+            DataGridViewCheckBoxColumn chkColumn = new DataGridViewCheckBoxColumn
+            {
+                Name = "TrangThaiID",
+                HeaderText = "Đi làm",
+                DataPropertyName = "TrangThaiID",
+                TrueValue = 1,
+                FalseValue = 0,
+                Width = 70
+            };
+            dtListProfile.Columns.Add(chkColumn);
+
+            // Định dạng các cột khác
+            if (dtListProfile.Columns["MaNV"] != null) dtListProfile.Columns["MaNV"].Width = 60;
+            if (dtListProfile.Columns["TenNV"] != null) dtListProfile.Columns["TenNV"].Width = 120;
+            if (dtListProfile.Columns["CMND"] != null) dtListProfile.Columns["CMND"].Width = 100;
+            if (dtListProfile.Columns["SDT"] != null) dtListProfile.Columns["SDT"].Width = 110;
+        }
+
         private void _reset()
         {
-            cmbTenNV.SelectedIndex = -1;
-            dtpNgaySinh.Value = DateTime.Now;
-            cmbGioiTinh.SelectedIndex = -1;
-            txtDiaChi.Text = "";
-            txtSDT.Text = "";
-            txtEmail.Text = "";
+            txtTenNV.Text = "";
+            dtpNgaySinh.Value = DateTime.Now; // Đặt ngày mặc định (có thể điều chỉnh)
             txtCMND.Text = "";
-            cmbTrangThai.SelectedIndex = -1;
-            cmbMaChucDanh.SelectedIndex = -1;
-            errorProvider.Clear();
+            txtDiaChi.Text = "";
+            txtEmail.Text = "";
+            txtSDT.Text = "";
+            cbDiLam.Checked = false;
+            cmbGioiTinh.SelectedIndex = -1; // Làm trống hoặc đặt về giá trị mặc định
+            cmbChucDanh.SelectedIndex = -1; // Làm trống hoặc đặt về giá trị mặc định
+            errorProvider.Clear(); // Xóa thông báo lỗi
+            txtTimKiem.Focus();
         }
 
         private void _sttButton(bool add, bool edit, bool delete, bool update, bool cancel, bool grpinfo)
@@ -48,216 +75,200 @@ namespace QLCHBanGaRan.UCFunction
             grpThongTin.Enabled = grpinfo;
         }
 
-        private void _formatDT()
+        private IEnumerable<Control> GetAll(Control control, Type type)
         {
-            if (dtListProfile.Columns.Count > 9 && dtListProfile.Columns[9].Name == "TenChucDanh")
+            var controls = control.Controls.Cast<Control>();
+            return controls.SelectMany(ctrl => GetAll(ctrl, type))
+                           .Concat(controls)
+                           .Where(c => c.GetType() == type);
+        }
+
+        private string _genIdEmployess()
+        {
+            DataTable dt = cls_EmployeeManagement.GetIDEmployees();
+            int maxNumber = 0;
+
+            if (dt.Rows.Count > 0)
             {
-                dtListProfile.Columns[0].Width = 60; // MaNV
-                dtListProfile.Columns[1].Width = 150; // TenNV
-                dtListProfile.Columns[2].Width = 100; // NgaySinh
-                dtListProfile.Columns[3].Width = 80;  // GioiTinh
-                dtListProfile.Columns[4].Width = 150; // DiaChi
-                dtListProfile.Columns[5].Width = 100; // SDT
-                dtListProfile.Columns[6].Width = 150; // Email
-                dtListProfile.Columns[7].Width = 100; // CMND
-                dtListProfile.Columns[8].Width = 80;  // TrangThai
-                dtListProfile.Columns[9].Width = 100; // TenChucDanh (Chức danh)
+                // Lấy số lớn nhất từ MaNV (giả định định dạng NVxxx)
+                maxNumber = dt.Rows.Cast<DataRow>()
+                              .Max(row => int.Parse(row["MaNV"].ToString().Substring(2, 3)));
+            }
+
+            // Tăng số lên 1 và định dạng lại
+            int newNumber = maxNumber + 1;
+            if (newNumber < 10)
+            {
+                return "NV00" + newNumber;
+            }
+            if (newNumber < 100)
+            {
+                return "NV0" + newNumber;
+            }
+            return "NV" + newNumber;
+        }
+
+        private List<string> _checkAvailable(string maNV)
+        {
+            List<string> msg = new List<string>();
+            if (!cls_EmployeeManagement.CheckInNguoiDung(maNV))
+            {
+                msg.Add("Vui lòng xóa nhân viên này trong Người Dùng trước khi xóa nhân viên.");
+            }
+            if (!cls_EmployeeManagement.CheckInHoaDon(maNV))
+            {
+                msg.Add("Vui lòng xóa nhân viên này trong Hóa Đơn trước khi xóa nhân viên.");
+            }
+            return msg;
+        }
+
+        private void UC_ProfilePersonnelManager_Load(object sender, EventArgs e)
+        {
+            this.AutoValidate = AutoValidate.EnableAllowFocusChange;
+
+            // Tải danh sách giới tính (0 = Nam, 1 = Nữ)
+            var genderList = new[] {
+                new { GioiTinhID = 0, GioiTinh = "Nam" },
+                new { GioiTinhID = 1, GioiTinh = "Nữ" }
+            };
+            cmbGioiTinh.DataSource = genderList;
+            cmbGioiTinh.ValueMember = "GioiTinhID";
+            cmbGioiTinh.DisplayMember = "GioiTinh";
+
+            // Tải danh sách chức danh
+            cmbChucDanh.DataSource = cls_EmployeeManagement.GetChucDanh();
+            cmbChucDanh.ValueMember = "MaChucDanh";
+            cmbChucDanh.DisplayMember = "TenChucDanh";
+
+            // Tạm thời để AutoGenerateColumns = true để kiểm tra
+            dtListProfile.AutoGenerateColumns = false;
+            DataTable dt = cls_EmployeeManagement.ShowEmployees();
+            // Log để kiểm tra giá trị TrangThaiID
+            foreach (DataRow row in dt.Rows)
+            {
+                Console.WriteLine($"Load - MaNV: {row["MaNV"]}, TrangThaiID: {row["TrangThaiID"]}, Type: {row["TrangThaiID"].GetType()}");
+            }
+            dtListProfile.DataSource = dt;
+            _formatDT();
+
+            // Debug: Kiểm tra trạng thái checkbox sau khi load
+            Console.WriteLine("=== Debug Checkbox Status ===");
+            for (int i = 0; i < dtListProfile.Rows.Count; i++)
+            {
+                var checkboxValue = dtListProfile.Rows[i].Cells["TrangThaiID"].Value;
+                var dataRowValue = dt.Rows[i]["TrangThaiID"];
+                Console.WriteLine($"Row {i}: Checkbox Value = {checkboxValue} ({checkboxValue?.GetType()}), DataRow Value = {dataRowValue} ({dataRowValue?.GetType()})");
+            }
+            Console.WriteLine("=== End Debug ===");
+
+            _reset();
+            _sttButton(true, true, true, false, false, false);
+
+            cmbFilter.ValueMember = "Value";
+            cmbFilter.DisplayMember = "Text";
+            var items = new[] {
+                new { Text = "Tên NV", Value = "TenNV" },
+                new { Text = "Số CMND", Value = "CMND" },
+                new { Text = "Số điện thoại", Value = "SDT" }
+            };
+            cmbFilter.DataSource = items;
+
+            // Gán sự kiện CellClick
+            dtListProfile.CellClick += new DataGridViewCellEventHandler(dtListProfile_CellClick);
+        }
+
+        private void txtTimKiem_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                string searchText = txtTimKiem.Text.Trim();
+                if (!string.IsNullOrEmpty(searchText))
+                {
+                    string filterColumn = cmbFilter.SelectedValue?.ToString() ?? "TenNV";
+                    dtListProfile.DataSource = cls_EmployeeManagement.SearchEmployees(filterColumn, searchText);
+                    _formatDT();
+                }
+                else
+                {
+                    dtListProfile.DataSource = cls_EmployeeManagement.ShowEmployees();
+                    _formatDT();
+                }
             }
         }
 
         private void btnBack_Click(object sender, EventArgs e)
         {
             _reset();
-            _sttButton(true, false, true, false, false, false);
+            _sttButton(true, true, true, false, false, false);
             Forms.frm_Main.Instance.pnlContainer.Controls["UC_Personnel"].BringToFront();
-        }
-
-        private void UC_ProfilePersonnelManager_Load(object sender, EventArgs e)
-        {
-            AutoValidate = AutoValidate.EnableAllowFocusChange;
-
-            // Load dữ liệu từ bảng NhanVien
-            DataTable dtNhanVien = cls_EmployeeManagement.ShowEmployees();
-            cmbTenNV.DataSource = dtNhanVien.Copy(); // Sử dụng bản sao để tránh xung đột
-            cmbTenNV.ValueMember = "MaNV";
-            cmbTenNV.DisplayMember = "TenNV";
-
-            // Load danh sách chức danh
-            DataTable dtChucDanh = cls_EmployeeTitleManagement.GetTitles();
-            cmbMaChucDanh.DataSource = dtChucDanh;
-            cmbMaChucDanh.ValueMember = "MaChucDanh";
-            cmbMaChucDanh.DisplayMember = "TenChucDanh";
-
-            // Cài đặt giá trị mặc định cho combo box giới tính và trạng thái
-            cmbGioiTinh.Items.AddRange(new string[] { "Nữ", "Nam" }); // 0: Nữ, 1: Nam
-            cmbTrangThai.Items.AddRange(new string[] { "Đã nghỉ", "Đang làm" }); // 0: Đã nghỉ, 1: Đang làm
-
-            _reset();
-            _sttButton(true, false, true, false, false, false);
-            _formatDT();
-            dtListProfile.DataSource = dtNhanVien; // Gán trực tiếp DataTable
-            dtListProfile.Columns["GioiTinh"].Visible = false; // Ẩn cột GioiTinh thô
-            dtListProfile.Columns["TrangThai"].Visible = false; // Ẩn cột TrangThai thô
-
-            // Thêm cột tính toán cho GioiTinhText và TrangThaiText
-            if (!dtListProfile.Columns.Contains("GioiTinhText"))
-                dtListProfile.Columns.Add("GioiTinhText", "Giới tính");
-            if (!dtListProfile.Columns.Contains("TrangThaiText"))
-                dtListProfile.Columns.Add("TrangThaiText", "Trạng thái");
-
-            // Đảm bảo cột TenChucDanh hiển thị
-            if (dtListProfile.Columns.Contains("TenChucDanh"))
-            {
-                dtListProfile.Columns["TenChucDanh"].HeaderText = "Chức danh";
-                dtListProfile.Columns["TenChucDanh"].Visible = true;
-                dtListProfile.Columns["TenChucDanh"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill; // Tự động điều chỉnh kích thước
-            }
-            else
-            {
-                MessageBox.Show("Cột TenChucDanh không tồn tại trong DataTable!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-
-            FormatDataGridView();
-        }
-
-        private void FormatDataGridView()
-        {
-            foreach (DataGridViewRow row in dtListProfile.Rows)
-            {
-                if (!row.IsNewRow)
-                {
-                    bool gioiTinh = Convert.ToBoolean(row.Cells["GioiTinh"].Value);
-                    row.Cells["GioiTinhText"].Value = gioiTinh ? "Nam" : "Nữ";
-                    int trangThai = Convert.ToInt32(row.Cells["TrangThai"].Value);
-                    row.Cells["TrangThaiText"].Value = trangThai == 1 ? "Đang làm" : "Đã nghỉ";
-                }
-            }
         }
 
         private void btnThem_Click(object sender, EventArgs e)
         {
             check = 1;
             _sttButton(false, false, false, true, true, true);
+            txtMaNV.Text = _genIdEmployess(); // Gán mã nhân viên mới
+            txtMaNV.Enabled = false; // Không cho chỉnh sửa mã
+            _reset(); // Làm trống các trường khác, giữ txtMaNV
+            dtListProfile.Enabled = false; // Vô hiệu hóa dtListProfile khi đang thêm
+            txtTenNV.Focus(); // Đặt focus vào trường tên để người dùng nhập
         }
 
         private void btnSua_Click(object sender, EventArgs e)
         {
             check = 2;
-            _sttButton(false, false, false, true, true, true);
-        }
-
-        private void btnXoa_Click(object sender, EventArgs e)
-        {
-            if (string.IsNullOrEmpty(maNV))
+            if (dtListProfile.SelectedRows.Count == 0)
             {
-                MessageBox.Show("Vui lòng chọn nhân viên cần xóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Vui lòng chọn nhân viên cần sửa thông tin!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
             {
-                bool delProfile = cls_EmployeeManagement.DeleteEmployee(maNV);
-                if (delProfile)
-                {
-                    MessageBox.Show("Xóa nhân viên thành công.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    _reset();
-                    _sttButton(true, false, true, false, false, false);
-                    _formatDT();
-                    dtListProfile.DataSource = cls_EmployeeManagement.ShowEmployees();
-                    dtListProfile.Columns["GioiTinh"].Visible = false;
-                    dtListProfile.Columns["TrangThai"].Visible = false;
-                    dtListProfile.Columns["GioiTinhText"].Visible = true;
-                    dtListProfile.Columns["TrangThaiText"].Visible = true;
-                    FormatDataGridView();
-                    maNV = "";
-                }
-                else
-                {
-                    MessageBox.Show("Không thể xóa nhân viên này vì có liên kết dữ liệu. Vui lòng kiểm tra lại.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-        }
+                _sttButton(false, false, false, true, true, true);
+                txtTenNV.Focus();
+                int index = dtListProfile.CurrentCell.RowIndex;
+                maNV = dtListProfile.Rows[index].Cells["MaNV"].Value?.ToString();
+                txtMaNV.Text = maNV;
+                txtMaNV.Enabled = false; // Không cho chỉnh sửa mã
+                txtTenNV.Text = dtListProfile.Rows[index].Cells["TenNV"].Value?.ToString();
+                dtpNgaySinh.Value = Convert.ToDateTime(dtListProfile.Rows[index].Cells["NgaySinh"].Value);
+                txtCMND.Text = dtListProfile.Rows[index].Cells["CMND"].Value?.ToString();
+                txtDiaChi.Text = dtListProfile.Rows[index].Cells["DiaChi"].Value?.ToString();
+                txtEmail.Text = dtListProfile.Rows[index].Cells["Email"].Value?.ToString();
+                txtSDT.Text = dtListProfile.Rows[index].Cells["SDT"].Value?.ToString();
 
-        private void btnCapNhat_Click(object sender, EventArgs e)
-        {
-            if (!ValidateChildren())
-            {
-                var getChildControls = GetAll(this, typeof(ComboBox)).Concat(GetAll(this, typeof(TextBox)));
-                var listOfErrors = getChildControls.Select(c => errorProvider.GetError(c))
-                                                   .Where(s => !string.IsNullOrEmpty(s))
-                                                   .ToList();
-                MessageBox.Show("Vui lòng kiểm tra lại thông tin nhân viên:\n - " + string.Join("\n - ", listOfErrors.ToArray()), "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            else
-            {
-                string maNV = cmbTenNV.SelectedValue.ToString();
-                string tenNV = cmbTenNV.Text;
-                DateTime ngaySinh = dtpNgaySinh.Value;
-                bool gioiTinh = cmbGioiTinh.SelectedIndex == 1; // 1: Nam, 0: Nữ
-                string diaChi = txtDiaChi.Text;
-                string sdt = txtSDT.Text;
-                string email = txtEmail.Text;
-                string cmnd = txtCMND.Text;
-                int trangThai = cmbTrangThai.SelectedIndex == 1 ? 1 : 0; // 1: Đang làm, 0: Đã nghỉ
-                string maChucDanh = cmbMaChucDanh.SelectedValue.ToString();
+                // Ánh xạ đúng: 0 = Nam, 1 = Nữ
+                string gioiTinhText = dtListProfile.Rows[index].Cells["GioiTinh"].Value?.ToString();
+                int gioiTinhValue = gioiTinhText == "Nam" ? 0 : 1; // "Nam" = 0, "Nữ" = 1
+                cmbGioiTinh.SelectedValue = gioiTinhValue;
+                Console.WriteLine($"CellClick - maNV: {maNV}, GioiTinhText: {gioiTinhText}, GioiTinhValue: {gioiTinhValue}");
 
-                // Thêm chức danh vào NhanVienChucDanh nếu chưa có
-                if (check == 1 && !cls_EmployeeTitleManagement.GetEmployeeTitles().AsEnumerable().Any(r => r.Field<string>("MaNV") == maNV))
-                {
-                    cls_EmployeeTitleManagement.InsertEmployeeTitle(maNV, Convert.ToInt32(maChucDanh));
-                }
-                else if (check == 2)
-                {
-                    cls_EmployeeTitleManagement.UpdateEmployeeTitle(maNV, Convert.ToInt32(maChucDanh));
-                }
+                // Ánh xạ trạng thái đi làm
+                int trangThaiValue = Convert.ToInt32(dtListProfile.Rows[index].Cells["TrangThaiID"].Value);
+                cbDiLam.Checked = (trangThaiValue == 1); // Đảm bảo ánh xạ 1 = true, 0 = false
+                Console.WriteLine($"CellClick - maNV: {maNV}, TrangThaiID: {trangThaiValue}, cbDiLam.Checked: {cbDiLam.Checked}");
 
-                if (check == 1)
+                DataTable dt = dtListProfile.DataSource as DataTable;
+                if (dt != null && index < dt.Rows.Count)
                 {
-                    if (!cls_EmployeeManagement.ShowEmployees().AsEnumerable().Any(r => r.Field<string>("MaNV") == maNV))
+                    string maChucDanh = dt.Rows[index]["MaChucDanh"].ToString();
+                    if (!string.IsNullOrEmpty(maChucDanh))
                     {
-                        bool addProfile = cls_EmployeeManagement.AddEmployee(maNV, tenNV, ngaySinh, gioiTinh, diaChi, sdt, email, cmnd, trangThai, maChucDanh);
-                        if (addProfile)
+                        DataTable dtChucDanh = cmbChucDanh.DataSource as DataTable;
+                        DataRow[] rows = dtChucDanh?.Select($"MaChucDanh = '{maChucDanh.Replace("'", "''")}'");
+                        if (rows != null && rows.Length > 0)
                         {
-                            MessageBox.Show("Thêm nhân viên thành công.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            _reset();
-                            _sttButton(true, false, true, false, false, false);
-                            _formatDT();
-                            dtListProfile.DataSource = cls_EmployeeManagement.ShowEmployees();
-                            dtListProfile.Columns["GioiTinh"].Visible = false;
-                            dtListProfile.Columns["TrangThai"].Visible = false;
-                            dtListProfile.Columns["GioiTinhText"].Visible = true;
-                            dtListProfile.Columns["TrangThaiText"].Visible = true;
-                            FormatDataGridView();
+                            cmbChucDanh.SelectedValue = maChucDanh;
                         }
                         else
                         {
-                            MessageBox.Show("Không thể thêm nhân viên này. Vui lòng kiểm tra lại!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            cmbChucDanh.SelectedIndex = -1;
+                            Console.WriteLine($"Không tìm thấy MaChucDanh: {maChucDanh}");
                         }
                     }
                     else
                     {
-                        MessageBox.Show("Nhân viên này đã tồn tại. Vui lòng kiểm tra lại!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
-                else
-                {
-                    string maNVCu = maNV; // Giữ nguyên mã nhân viên cũ khi cập nhật
-                    bool updateProfile = cls_EmployeeManagement.UpdateEmployee(maNVCu, maNV, tenNV, ngaySinh, gioiTinh, diaChi, sdt, email, cmnd, trangThai, maChucDanh);
-                    if (updateProfile)
-                    {
-                        MessageBox.Show("Cập nhật nhân viên thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        _reset();
-                        _sttButton(true, false, true, false, false, false);
-                        _formatDT();
-                        dtListProfile.DataSource = cls_EmployeeManagement.ShowEmployees();
-                        dtListProfile.Columns["GioiTinh"].Visible = false;
-                        dtListProfile.Columns["TrangThai"].Visible = false;
-                        dtListProfile.Columns["GioiTinhText"].Visible = true;
-                        dtListProfile.Columns["TrangThaiText"].Visible = true;
-                        FormatDataGridView();
-                        rowSelected = -1;
-                    }
-                    else
-                    {
-                        MessageBox.Show("Không thể cập nhật nhân viên này. Vui lòng kiểm tra lại!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        cmbChucDanh.SelectedIndex = -1;
+                        Console.WriteLine("MaChucDanh rỗng");
                     }
                 }
             }
@@ -266,121 +277,180 @@ namespace QLCHBanGaRan.UCFunction
         private void btnHuyBo_Click(object sender, EventArgs e)
         {
             _reset();
-            _sttButton(true, false, true, false, false, false);
+            _sttButton(true, true, true, false, false, false);
+            dtListProfile.Enabled = true; // Khôi phục dtListProfile khi hủy
+            maNV = null; // Xóa biến maNV để tránh nhầm lẫn
         }
 
-        private void dtListProfile_CellClick(object sender, DataGridViewCellEventArgs e)
+        private void btnXoa_Click(object sender, EventArgs e)
         {
-            if (dtListProfile.Rows.Count > 0)
+            if (dtListProfile.SelectedRows.Count == 0 || string.IsNullOrEmpty(txtMaNV.Text))
             {
-                int index = dtListProfile.CurrentCell.RowIndex;
-                maNV = dtListProfile.Rows[index].Cells[0].Value.ToString();
-                cmbTenNV.SelectedValue = maNV;
-                dtpNgaySinh.Value = Convert.ToDateTime(dtListProfile.Rows[index].Cells[2].Value);
-                cmbGioiTinh.SelectedIndex = Convert.ToBoolean(dtListProfile.Rows[index].Cells[3].Value) ? 1 : 0; // 1: Nam, 0: Nữ
-                txtDiaChi.Text = dtListProfile.Rows[index].Cells[4].Value.ToString();
-                txtSDT.Text = dtListProfile.Rows[index].Cells[5].Value.ToString();
-                txtEmail.Text = dtListProfile.Rows[index].Cells[6].Value.ToString();
-                txtCMND.Text = dtListProfile.Rows[index].Cells[7].Value.ToString();
-                cmbTrangThai.SelectedIndex = Convert.ToInt32(dtListProfile.Rows[index].Cells[8].Value) == 1 ? 1 : 0; // 1: Đang làm, 0: Đã nghỉ
-                string tenChucDanh = dtListProfile.Rows[index].Cells[9].Value?.ToString() ?? "";
-                DataRow[] rows = ((DataTable)cmbMaChucDanh.DataSource).Select($"TenChucDanh = '{tenChucDanh.Replace("'", "''")}'"); // Tránh lỗi SQL Injection
-                if (rows.Length > 0)
+                MessageBox.Show("Vui lòng chọn nhân viên cần xóa!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            int index = dtListProfile.CurrentCell.RowIndex;
+            string maNV = dtListProfile.Rows[index].Cells["MaNV"].Value?.ToString();
+
+            // Thêm thông báo hỏi ý kiến trước khi xóa
+            DialogResult result = MessageBox.Show($"Bạn có chắc muốn xóa nhân viên {maNV} không?", "Xác nhận xóa", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (result == DialogResult.Yes)
+            {
+                var checkAvailable = _checkAvailable(maNV);
+                if (checkAvailable.Count > 0)
                 {
-                    cmbMaChucDanh.SelectedValue = rows[0]["MaChucDanh"];
+                    MessageBox.Show("Đã có lỗi xảy ra:\n - " + string.Join("\n - ", checkAvailable.ToArray()), "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 else
                 {
-                    cmbMaChucDanh.SelectedIndex = -1; // Đặt lại nếu không tìm thấy
+                    if (cls_EmployeeManagement.DeleteEmployee(maNV))
+                    {
+                        MessageBox.Show("Đã xóa thành công.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        dtListProfile.DataSource = cls_EmployeeManagement.ShowEmployees();
+                        _formatDT();
+                        _reset();
+                        _sttButton(true, false, false, false, false, false); // Vô hiệu hóa btnSua và btnXoa sau khi xóa
+                    }
+                    else
+                    {
+                        MessageBox.Show("Đã có lỗi xảy ra. Vui lòng kiểm tra lại", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
-                rowSelected = index;
-                btnSua.Enabled = true;
+            }
+            // Nếu chọn No hoặc hủy, không làm gì thêm
+        }
+
+        private void btnCapNhat_Click(object sender, EventArgs e)
+        {
+            // Kiểm tra tuổi >= 18
+            DateTime ngaySinhCheck = dtpNgaySinh.Value;
+            int tuoi = DateTime.Now.Year - ngaySinhCheck.Year;
+            if (ngaySinhCheck > DateTime.Now.AddYears(-tuoi)) tuoi--;
+            if (tuoi < 18)
+            {
+                MessageBox.Show("Nhân viên phải đủ 18 tuổi trở lên!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            if (!ValidateChildren())
+            {
+                var getChildControls = GetAll(this, typeof(TextBox)).Concat(GetAll(this, typeof(DateTimePicker)));
+                var listOfErrors = getChildControls.Select(c => errorProvider.GetError(c))
+                                                   .Where(s => !string.IsNullOrEmpty(s))
+                                                   .ToList();
+                MessageBox.Show("Vui lòng kiểm tra lại thông tin nhân viên:\n - " + string.Join("\n - ", listOfErrors.ToArray()), "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (check == 1) // Thêm mới
+            {
+                string genMaNV = txtMaNV.Text; // Sử dụng mã đã gán trong btnThem_Click
+                DateTime ngaySinh = dtpNgaySinh.Value;
+                bool gioiTinh = Convert.ToInt32(cmbGioiTinh.SelectedValue) == 1; // 1 = Nữ, 0 = Nam
+                int trangThai = cbDiLam.Checked ? 1 : 0;
+                string maChucDanh = cmbChucDanh.SelectedValue?.ToString() ?? "";
+
+                if (cls_EmployeeManagement.AddEmployee(genMaNV, txtTenNV.Text, ngaySinh, gioiTinh, txtDiaChi.Text, txtSDT.Text, txtEmail.Text, txtCMND.Text, trangThai, maChucDanh))
+                {
+                    MessageBox.Show("Thêm nhân viên thành công.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    _reset();
+                    _sttButton(true, true, true, false, false, false);
+                    _formatDT();
+                    dtListProfile.DataSource = cls_EmployeeManagement.ShowEmployees();
+                    dtListProfile.Enabled = true; // Khôi phục dtListProfile khi thêm thành công
+                    txtTimKiem.Focus();
+                }
+                else
+                {
+                    txtMaNV.Text = genMaNV; // Giữ mã vừa tạo
+                }
+            }
+            else // Cập nhật
+            {
+                DateTime ngaySinh = dtpNgaySinh.Value;
+                int gioiTinhValue = Convert.ToInt32(cmbGioiTinh.SelectedValue); // Lấy giá trị thô (0 hoặc 1)
+                bool gioiTinh = gioiTinhValue == 1; // 1 = Nữ, 0 = Nam
+                int trangThai = cbDiLam.Checked ? 1 : 0; // Đảm bảo lấy giá trị mới từ cbDiLam
+                Console.WriteLine($"btnCapNhat - maNV: {maNV}, TrangThai: {trangThai}, GioiTinhValue: {gioiTinhValue}, GioiTinh: {gioiTinh}, CMND: {txtCMND.Text}");
+                string maChucDanh = cmbChucDanh.SelectedValue?.ToString() ?? "";
+                bool isSuccess = cls_EmployeeManagement.UpdateEmployee(maNV, txtMaNV.Text, txtTenNV.Text, ngaySinh, gioiTinh, txtDiaChi.Text, txtSDT.Text, txtEmail.Text, txtCMND.Text, trangThai, maChucDanh);
+                Console.WriteLine($"Update result: {isSuccess}");
+                if (isSuccess)
+                {
+                    MessageBox.Show("Cập nhật thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    dtListProfile.DataSource = cls_EmployeeManagement.ShowEmployees(); // Làm mới dữ liệu
+                    dtListProfile.Refresh(); // Đảm bảo làm mới giao diện
+                    Application.DoEvents(); // Đảm bảo giao diện được cập nhật
+                                            // Tự động chọn lại dòng vừa cập nhật
+                    int targetRowIndex = -1;
+                    for (int i = 0; i < dtListProfile.Rows.Count; i++)
+                    {
+                        if (dtListProfile.Rows[i].Cells["MaNV"].Value?.ToString() == maNV && dtListProfile.Rows[i].Displayed)
+                        {
+                            targetRowIndex = i;
+                            break;
+                        }
+                    }
+                    if (targetRowIndex >= 0)
+                    {
+                        dtListProfile.ClearSelection();
+                        dtListProfile.Rows[targetRowIndex].Selected = true;
+                        dtListProfile.FirstDisplayedScrollingRowIndex = targetRowIndex; // Cuộn đến hàng
+                        dtListProfile_CellClick(dtListProfile, new DataGridViewCellEventArgs(0, targetRowIndex));
+                    }
+                    _reset();
+                    _sttButton(true, true, true, false, false, false);
+                    dtListProfile.Enabled = true; // Khôi phục dtListProfile khi cập nhật thành công
+                    txtTimKiem.Focus();
+                    maNV = null;
+                }
+                // Nếu thất bại, không làm gì thêm, giữ nguyên dữ liệu để người dùng sửa
             }
         }
 
-        private void cmbTenNV_Validating(object sender, CancelEventArgs e)
+
+        private void dtpNgaySinh_Validating(object sender, CancelEventArgs e)
         {
-            if (cmbTenNV.SelectedValue == null)
+            if (dtpNgaySinh.Value > DateTime.Now)
             {
-                errorProvider.SetError(cmbTenNV, "Vui lòng chọn tên nhân viên.");
+                errorProvider.SetError(dtpNgaySinh, "Ngày sinh không được lớn hơn ngày hiện tại.");
                 e.Cancel = true;
             }
             else
             {
-                errorProvider.SetError(cmbTenNV, "");
+                errorProvider.SetError(dtpNgaySinh, "");
             }
         }
 
-        private void cmbGioiTinh_Validating(object sender, CancelEventArgs e)
+        private void txtTenNV_Validating(object sender, CancelEventArgs e)
         {
-            if (cmbGioiTinh.SelectedIndex == -1)
+            if (string.IsNullOrWhiteSpace(txtTenNV.Text))
             {
-                errorProvider.SetError(cmbGioiTinh, "Vui lòng chọn Giới tính.");
+                errorProvider.SetError(txtTenNV, "Tên nhân viên không được trống.");
                 e.Cancel = true;
             }
             else
             {
-                errorProvider.SetError(cmbGioiTinh, "");
-            }
-        }
-
-        private void cmbTrangThai_Validating(object sender, CancelEventArgs e)
-        {
-            if (cmbTrangThai.SelectedIndex == -1)
-            {
-                errorProvider.SetError(cmbTrangThai, "Vui lòng chọn Trạng thái.");
-                e.Cancel = true;
-            }
-            else
-            {
-                errorProvider.SetError(cmbTrangThai, "");
-            }
-        }
-
-        private void cmbMaChucDanh_Validating(object sender, CancelEventArgs e)
-        {
-            if (cmbMaChucDanh.SelectedValue == null)
-            {
-                errorProvider.SetError(cmbMaChucDanh, "Vui lòng chọn Chức danh.");
-                e.Cancel = true;
-            }
-            else
-            {
-                errorProvider.SetError(cmbMaChucDanh, "");
-            }
-        }
-
-        private void txtSDT_Validating(object sender, CancelEventArgs e)
-        {
-            if (string.IsNullOrWhiteSpace(txtSDT.Text) || !Regex.IsMatch(txtSDT.Text, @"^[0-9]{10}$"))
-            {
-                errorProvider.SetError(txtSDT, "Vui lòng nhập SĐT hợp lệ (10 số).");
-                e.Cancel = true;
-            }
-            else
-            {
-                errorProvider.SetError(txtSDT, "");
-            }
-        }
-
-        private void txtEmail_Validating(object sender, CancelEventArgs e)
-        {
-            if (!string.IsNullOrWhiteSpace(txtEmail.Text) && !Regex.IsMatch(txtEmail.Text, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
-            {
-                errorProvider.SetError(txtEmail, "Vui lòng nhập Email hợp lệ.");
-                e.Cancel = true;
-            }
-            else
-            {
-                errorProvider.SetError(txtEmail, "");
+                errorProvider.SetError(txtTenNV, "");
             }
         }
 
         private void txtCMND_Validating(object sender, CancelEventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(txtCMND.Text) && !Regex.IsMatch(txtCMND.Text, @"^[0-9]{12}$"))
+            Regex regex = new Regex("^[0-9]+$");
+            if (string.IsNullOrWhiteSpace(txtCMND.Text))
             {
-                errorProvider.SetError(txtCMND, "Vui lòng nhập CMND/CCCD hợp lệ (12 số).");
+                errorProvider.SetError(txtCMND, "Số CMND không được trống.");
+                e.Cancel = true;
+            }
+            else if (!regex.IsMatch(txtCMND.Text))
+            {
+                errorProvider.SetError(txtCMND, "Số CMND phải là số.");
+                e.Cancel = true;
+            }
+            else if (txtCMND.Text.Length != 9)
+            {
+                errorProvider.SetError(txtCMND, "Số CMND phải có đúng 9 số.");
                 e.Cancel = true;
             }
             else
@@ -389,12 +459,122 @@ namespace QLCHBanGaRan.UCFunction
             }
         }
 
-        private IEnumerable<Control> GetAll(Control control, Type type)
+        private void txtDiaChi_Validating(object sender, CancelEventArgs e)
         {
-            var controls = control.Controls.Cast<Control>();
-            return controls.SelectMany(ctrl => GetAll(ctrl, type))
-                           .Concat(controls)
-                           .Where(c => c.GetType() == type);
+            if (string.IsNullOrWhiteSpace(txtDiaChi.Text))
+            {
+                errorProvider.SetError(txtDiaChi, "Địa chỉ không được trống.");
+                e.Cancel = true;
+            }
+            else if (txtDiaChi.Text.Length > 255)
+            {
+                errorProvider.SetError(txtDiaChi, "Địa chỉ không được quá 255 kí tự.");
+                e.Cancel = true;
+            }
+            else
+            {
+                errorProvider.SetError(txtDiaChi, "");
+            }
+        }
+
+        private void txtEmail_Validating(object sender, CancelEventArgs e)
+        {
+            Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
+            if (string.IsNullOrWhiteSpace(txtEmail.Text))
+            {
+                errorProvider.SetError(txtEmail, "Email không được trống.");
+                e.Cancel = true;
+            }
+            else if (!regex.IsMatch(txtEmail.Text))
+            {
+                errorProvider.SetError(txtEmail, "Email không đúng định dạng example@domain.com.");
+                e.Cancel = true;
+            }
+            else
+            {
+                errorProvider.SetError(txtEmail, "");
+            }
+        }
+
+        private void txtSDT_Validating(object sender, CancelEventArgs e)
+        {
+            Regex regex = new Regex("^[0-9]+$");
+            if (string.IsNullOrWhiteSpace(txtSDT.Text))
+            {
+                errorProvider.SetError(txtSDT, "Số điện thoại không được trống.");
+                e.Cancel = true;
+            }
+            else if (txtSDT.Text.Length > 11 || txtSDT.Text.Length < 10) // Hỗ trợ số điện thoại 10-11 số
+            {
+                errorProvider.SetError(txtSDT, "Số điện thoại không chính xác (10-11 số).");
+                e.Cancel = true;
+            }
+            else if (!regex.IsMatch(txtSDT.Text))
+            {
+                errorProvider.SetError(txtSDT, "Số điện thoại không chính xác.");
+                e.Cancel = true;
+            }
+            else
+            {
+                errorProvider.SetError(txtSDT, "");
+            }
+        }
+
+        private void dtListProfile_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (dtListProfile.Rows.Count > 0 && e.RowIndex >= 0)
+            {
+                int index = e.RowIndex;
+                maNV = dtListProfile.Rows[index].Cells["MaNV"].Value?.ToString();
+                txtMaNV.Text = maNV;
+                txtTenNV.Text = dtListProfile.Rows[index].Cells["TenNV"].Value?.ToString();
+                dtpNgaySinh.Value = Convert.ToDateTime(dtListProfile.Rows[index].Cells["NgaySinh"].Value);
+                txtCMND.Text = dtListProfile.Rows[index].Cells["CMND"].Value?.ToString();
+                txtDiaChi.Text = dtListProfile.Rows[index].Cells["DiaChi"].Value?.ToString();
+                txtEmail.Text = dtListProfile.Rows[index].Cells["Email"].Value?.ToString();
+                txtSDT.Text = dtListProfile.Rows[index].Cells["SDT"].Value?.ToString();
+
+                // Ánh xạ đúng: 0 = Nam, 1 = Nữ
+                string gioiTinhText = dtListProfile.Rows[index].Cells["GioiTinh"].Value?.ToString();
+                int gioiTinhValue = gioiTinhText == "Nam" ? 0 : 1; // "Nam" = 0, "Nữ" = 1
+                cmbGioiTinh.SelectedValue = gioiTinhValue;
+                Console.WriteLine($"CellClick - maNV: {maNV}, GioiTinhText: {gioiTinhText}, GioiTinhValue: {gioiTinhValue}");
+
+                // Ánh xạ trạng thái đi làm
+                int trangThaiValue = Convert.ToInt32(dtListProfile.Rows[index].Cells["TrangThaiID"].Value);
+                cbDiLam.Checked = (trangThaiValue == 1); // Đảm bảo ánh xạ 1 = true, 0 = false
+                Console.WriteLine($"CellClick - maNV: {maNV}, TrangThaiID: {trangThaiValue}, cbDiLam.Checked: {cbDiLam.Checked}");
+
+                // Lưu giá trị ban đầu từ cơ sở dữ liệu
+                cls_EmployeeManagement.SetInitialValues(maNV);
+
+                DataTable dt = dtListProfile.DataSource as DataTable;
+                if (dt != null && index < dt.Rows.Count)
+                {
+                    string maChucDanh = dt.Rows[index]["MaChucDanh"].ToString();
+                    if (!string.IsNullOrEmpty(maChucDanh))
+                    {
+                        DataTable dtChucDanh = cmbChucDanh.DataSource as DataTable;
+                        DataRow[] rows = dtChucDanh?.Select($"MaChucDanh = '{maChucDanh.Replace("'", "''")}'");
+                        if (rows != null && rows.Length > 0)
+                        {
+                            cmbChucDanh.SelectedValue = maChucDanh;
+                        }
+                        else
+                        {
+                            cmbChucDanh.SelectedIndex = -1;
+                            Console.WriteLine($"Không tìm thấy MaChucDanh: {maChucDanh}");
+                        }
+                    }
+                    else
+                    {
+                        cmbChucDanh.SelectedIndex = -1;
+                        Console.WriteLine("MaChucDanh rỗng");
+                    }
+                }
+
+                btnSua.Enabled = true;
+            }
         }
     }
 }

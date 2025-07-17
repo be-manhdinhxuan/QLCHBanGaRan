@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace QLCHBanGaRan.lib
 {
-    class cls_DatabaseManager
+    public class cls_DatabaseManager
     {
         public static readonly string connectionString = File.ReadAllText("config.env").Trim();
 
@@ -64,25 +64,29 @@ namespace QLCHBanGaRan.lib
             int rowsAffected = 0;
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                try
+                conn.Open();
+                using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    conn.Open();
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    cmd.CommandType = CommandType.Text; // Thay bằng CommandType.StoredProcedure nếu query là tên stored procedure
+                    if (parameters != null)
                     {
-                        if (parameters != null)
-                        {
-                            cmd.Parameters.AddRange(parameters);
-                        }
-                        rowsAffected = cmd.ExecuteNonQuery();
+                        cmd.Parameters.AddRange(parameters);
                     }
-                }
-                catch (SqlException ex)
-                {
-                    MessageBox.Show("Lỗi thực thi truy vấn: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Lỗi không xác định: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    try
+                    {
+                        rowsAffected = cmd.ExecuteNonQuery();
+                        Console.WriteLine($"ExecuteNonQuery - Rows affected: {rowsAffected}");
+                    }
+                    catch (SqlException ex)
+                    {
+                        Console.WriteLine($"ExecuteNonQuery Error - Number: {ex.Number}, Message: {ex.Message}");
+                        throw; // Ném lại ngoại lệ để xử lý ở cấp cao hơn
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"General ExecuteNonQuery Error: {ex.Message}");
+                        throw;
+                    }
                 }
             }
             return rowsAffected;
