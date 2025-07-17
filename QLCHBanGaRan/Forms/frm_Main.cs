@@ -9,7 +9,8 @@ namespace QLCHBanGaRan.Forms
 {
     public partial class frm_Main : Form
     {
-        public static string NguoiDungID;
+        public static string NguoiDungID; // Giữ biến tĩnh để tương thích với logic cũ nếu cần
+        public string CurrentMaND { get; set; } // Thêm thuộc tính để truyền maND
 
         bool checkPer;
 
@@ -39,7 +40,8 @@ namespace QLCHBanGaRan.Forms
             this.FormBorderStyle = FormBorderStyle.None; // Giữ nguyên border style
 
             addControlsToPanel(_Home);
-            NguoiDungID = NguoiDungID_Login;
+            NguoiDungID = NguoiDungID_Login; // Gán giá trị tĩnh
+            CurrentMaND = NguoiDungID_Login; // Gán giá trị cho thuộc tính mới
 
             // Ẩn tất cả các UC ban đầu
             _Order.Visible = false;
@@ -70,7 +72,7 @@ namespace QLCHBanGaRan.Forms
             {
                 if (_obj == null)
                 {
-                    _obj = new frm_Main(NguoiDungID);
+                    _obj = new frm_Main(NguoiDungID); // Sử dụng NguoiDungID tĩnh
                 }
                 return _obj;
             }
@@ -88,6 +90,7 @@ namespace QLCHBanGaRan.Forms
             if (result == DialogResult.OK)
             {
                 NguoiDungID = null;
+                CurrentMaND = null;
                 this.Dispose();
             }
             Application.Exit(); // Thoát ứng dụng
@@ -238,6 +241,7 @@ namespace QLCHBanGaRan.Forms
             if (result == DialogResult.OK)
             {
                 NguoiDungID = null;
+                CurrentMaND = null;
                 this.Hide(); // Ẩn form hiện tại thay vì Dispose
                 frm_Login loginForm = new frm_Login();
                 loginForm.ShowDialog();

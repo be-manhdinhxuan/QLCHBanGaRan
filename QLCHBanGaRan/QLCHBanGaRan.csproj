@@ -181,6 +181,12 @@
     <Compile Include="UCFunction\UC_SalaryManager.Designer.cs">
       <DependentUpon>UC_SalaryManager.cs</DependentUpon>
     </Compile>
+    <Compile Include="UCFunction\UC_TimeSheetEmployee.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UCFunction\UC_TimeSheetEmployee.Designer.cs">
+      <DependentUpon>UC_TimeSheetEmployee.cs</DependentUpon>
+    </Compile>
     <Compile Include="UCFunction\UC_TimeSheetManager.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -298,6 +304,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UCFunction\UC_SalaryManager.resx">
       <DependentUpon>UC_SalaryManager.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UCFunction\UC_TimeSheetEmployee.resx">
+      <DependentUpon>UC_TimeSheetEmployee.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UCFunction\UC_TimeSheetManager.resx">
       <DependentUpon>UC_TimeSheetManager.cs</DependentUpon>

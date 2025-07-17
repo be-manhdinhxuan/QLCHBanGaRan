@@ -25,13 +25,25 @@ namespace QLCHBanGaRan.UCSystems
 
         private void btnChamCong_Click(object sender, EventArgs e)
         {
-            if (!frm_Main.Instance.pnlContainer.Controls.ContainsKey("UC_TimeSheetManager"))
+            string controlName = "UC_TimeSheetEmployee";
+
+            // Giả định frm_Main có thuộc tính CurrentMaND để truyền vào UC_TimeSheetEmployee
+            string maND = frm_Main.Instance.CurrentMaND; // Điều chỉnh nguồn maND nếu khác
+            if (string.IsNullOrEmpty(maND))
             {
-                UC_TimeSheetManager timeSheetManager = new UC_TimeSheetManager();
-                timeSheetManager.Dock = DockStyle.Fill;
-                frm_Main.Instance.pnlContainer.Controls.Add(timeSheetManager);
+                MessageBox.Show("Vui lòng đăng nhập để sử dụng chức năng chấm công.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
-            frm_Main.Instance.pnlContainer.Controls["UC_TimeSheetManager"].BringToFront();
+
+            if (!frm_Main.Instance.pnlContainer.Controls.ContainsKey(controlName))
+            {
+                UC_TimeSheetEmployee timeSheetEmployee = new UC_TimeSheetEmployee(maND); // Truyền maND
+                timeSheetEmployee.Name = controlName;
+                timeSheetEmployee.Dock = DockStyle.Fill;
+                frm_Main.Instance.pnlContainer.Controls.Add(timeSheetEmployee);
+            }
+
+            frm_Main.Instance.pnlContainer.Controls[controlName].BringToFront();
         }
     }
 }
