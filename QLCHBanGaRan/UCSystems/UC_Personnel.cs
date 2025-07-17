@@ -34,15 +34,6 @@ namespace QLCHBanGaRan.UCSystems
             frm_Main.Instance.pnlContainer.Controls["UC_ProfilePersonnelManager"].BringToFront();
         }
 
-        private void btnChucDanh_Click(object sender, EventArgs e)
-        {
-            if (!frm_Main.Instance.pnlContainer.Controls.ContainsKey("UC_OfficeManager"))
-            {
-                UC_OfficeManager officeManager = new UC_OfficeManager();
-                officeManager.Dock = DockStyle.Fill;
-                frm_Main.Instance.pnlContainer.Controls.Add(officeManager);
-            }
-            frm_Main.Instance.pnlContainer.Controls["UC_OfficeManager"].BringToFront();
-        }
+        
     }
 }

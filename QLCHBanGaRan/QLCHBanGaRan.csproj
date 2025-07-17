@@ -163,12 +163,6 @@
     <Compile Include="UCFunction\UC_NCCManager.Designer.cs">
       <DependentUpon>UC_NCCManager.cs</DependentUpon>
     </Compile>
-    <Compile Include="UCFunction\UC_OfficeManager.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UCFunction\UC_OfficeManager.Designer.cs">
-      <DependentUpon>UC_OfficeManager.cs</DependentUpon>
-    </Compile>
     <Compile Include="UCFunction\UC_PersonnelManager.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -296,9 +290,6 @@
     <EmbeddedResource Include="UCFunction\UC_NCCManager.resx">
       <DependentUpon>UC_NCCManager.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UCFunction\UC_OfficeManager.resx">
-      <DependentUpon>UC_OfficeManager.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="UCFunction\UC_PersonnelManager.resx">
       <DependentUpon>UC_PersonnelManager.cs</DependentUpon>
     </EmbeddedResource>
@@ -319,6 +310,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UCSystems\UC_Order.resx">
       <DependentUpon>UC_Order.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UCSystems\UC_Personnel.resx">
+      <DependentUpon>UC_Personnel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UCSystems\UC_Product.resx">
       <DependentUpon>UC_Product.cs</DependentUpon>

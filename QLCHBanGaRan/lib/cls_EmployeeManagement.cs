@@ -94,6 +94,17 @@ namespace QLCHBanGaRan.lib
             return info;
         }
 
+        public static DataTable GetEmployeeByMaNV(string maNV)
+        {
+            // Logic truy vấn SQL để lấy thông tin nhân viên theo MaNV
+            string query = "SELECT MaNV, TenNV, NgaySinh, GioiTinh, SDT, DiaChi, Email, CMND, TrangThai, MaChucDanh FROM NhanVien WHERE MaNV = @MaNV";
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new SqlParameter("@MaNV", SqlDbType.NVarChar, 10) { Value = maNV }
+            };
+            return cls_DatabaseManager.TableRead(query, parameters);
+        }
+
         public static bool AddEmployee(string maNV, string tenNV, DateTime ngaySinh, bool gioiTinh, string diaChi, string sdt, string email, string cmnd, int trangThai, string maChucDanh)
         {
             try
