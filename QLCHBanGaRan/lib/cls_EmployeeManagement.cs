@@ -278,7 +278,7 @@ namespace QLCHBanGaRan.lib
             try
             {
                 Console.WriteLine($"Update - maNVCu: {maNVCu}, maNV: {maNV}, TrangThai: {trangThai}, GioiTinh: {gioiTinh}, CMND: {cmnd}, Email: {email}");
-                string query = "sp_CapNhatNhanVien"; // Tên stored procedure
+                string query = "sp_CapNhatNhanVien";
                 SqlParameter[] parameters = new SqlParameter[]
                 {
             new SqlParameter("@MaNVCu", SqlDbType.NVarChar, 10) { Value = maNVCu },
@@ -304,6 +304,7 @@ namespace QLCHBanGaRan.lib
 
                         int rowsAffected = cmd.ExecuteNonQuery();
                         Console.WriteLine($"Update executed - Rows affected: {rowsAffected}");
+
                         if (rowsAffected > 0)
                         {
                             Console.WriteLine("Update successful.");
@@ -312,27 +313,6 @@ namespace QLCHBanGaRan.lib
                         else if (rowsAffected == 0)
                         {
                             Console.WriteLine("No rows affected - checking DB...");
-                            // So sánh với giá trị ban đầu, xử lý trường hợp null
-                            bool hasChange = false;
-                            if (_initialCMND != null && cmnd != null && !_initialCMND.Equals(cmnd)) hasChange = true;
-                            else if (_initialEmail != null && email != null && !_initialEmail.Equals(email)) hasChange = true;
-                            else if (_initialCMND == null && cmnd != null) hasChange = true; // Thay đổi từ null sang giá trị
-                            else if (_initialEmail == null && email != null) hasChange = true;
-                            else if (_initialCMND != null && cmnd == null) hasChange = true; // Thay đổi từ giá trị sang null
-                            else if (_initialEmail != null && email == null) hasChange = true;
-
-                            if (hasChange)
-                            {
-                                Console.WriteLine("Data updated in DB compared to initial values.");
-                                return true; // Giả định thành công nếu dữ liệu thay đổi so với ban đầu
-                            }
-                            Console.WriteLine("No changes detected in DB compared to initial values.");
-                            return false;
-                        }
-                        else // rowsAffected < 0 (bất thường)
-                        {
-                            Console.WriteLine("Unexpected rows affected value: " + rowsAffected);
-                            // So sánh với giá trị ban đầu, xử lý trường hợp null
                             bool hasChange = false;
                             if (_initialCMND != null && cmnd != null && !_initialCMND.Equals(cmnd)) hasChange = true;
                             else if (_initialEmail != null && email != null && !_initialEmail.Equals(email)) hasChange = true;
@@ -343,10 +323,25 @@ namespace QLCHBanGaRan.lib
 
                             if (hasChange)
                             {
-                                Console.WriteLine("Data updated in DB despite negative rowsAffected compared to initial values.");
-                                return true; // Giả định thành công nếu dữ liệu thay đổi so với ban đầu
+                                Console.WriteLine("Data updated in DB compared to initial values.");
+                                return true;
                             }
-                            Console.WriteLine("No changes detected in DB despite negative rowsAffected compared to initial values.");
+                            else
+                            {
+                                Console.WriteLine("No changes detected in DB compared to initial values.");
+                                MessageBox.Show("Không có thay đổi nào được thực hiện.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                return false;
+                            }
+                        }
+                        else if (rowsAffected == -1)
+                        {
+                            Console.WriteLine("Unexpected rows affected: -1. Possible stored procedure issue.");
+                            MessageBox.Show("Lỗi khi cập nhật: Stored procedure có thể không hoạt động đúng. Vui lòng kiểm tra lại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return false;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Unexpected rows affected value: " + rowsAffected);
                             return false;
                         }
                     }
@@ -378,13 +373,13 @@ namespace QLCHBanGaRan.lib
                         break;
                 }
                 MessageBox.Show(errorMessage, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false; // Thất bại
+                return false;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"General Error: {ex.Message}");
                 MessageBox.Show($"Lỗi không xác định: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false; // Thất bại
+                return false;
             }
         }
 
