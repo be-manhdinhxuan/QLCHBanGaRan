@@ -503,6 +503,16 @@ namespace QLCHBanGaRan.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap statistics_cc {
+            get {
+                object obj = ResourceManager.GetObject("statistics_cc", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap subtract_24px {
             get {
                 object obj = ResourceManager.GetObject("subtract_24px", resourceCulture);

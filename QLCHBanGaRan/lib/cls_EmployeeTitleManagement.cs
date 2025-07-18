@@ -11,10 +11,9 @@ namespace QLCHBanGaRan.lib
         // Lấy danh sách nhân viên - chức danh
         public static DataTable GetEmployeeTitles()
         {
-            string query = "SELECT nvcd.MaNV, nv.TenNV, cd.TenChucDanh " +
-                           "FROM NhanVienChucDanh nvcd " +
-                           "JOIN NhanVien nv ON nvcd.MaNV = nv.MaNV " +
-                           "JOIN ChucDanh cd ON nvcd.MaChucDanh = cd.MaChucDanh";
+            string query = "SELECT nv.MaNV, nv.TenNV, nv.MaChucDanh, cd.TenChucDanh " +
+                           "FROM NhanVien nv " +
+                           "LEFT JOIN ChucDanh cd ON nv.MaChucDanh = cd.MaChucDanh";
             return cls_DatabaseManager.TableRead(query);
         }
 
@@ -25,32 +24,12 @@ namespace QLCHBanGaRan.lib
             return cls_DatabaseManager.TableRead(query);
         }
 
-        // Thêm nhân viên - chức danh
+        // Thêm nhân viên - chức danh (cập nhật MaChucDanh trong NhanVien)
         public static bool InsertEmployeeTitle(string maNV, int maChucDanh)
         {
             try
             {
-                string query = "INSERT INTO NhanVienChucDanh (MaNV, MaChucDanh) VALUES (@MaNV, @MaChucDanh)";
-                SqlParameter[] parameters = new SqlParameter[]
-                {
-                    new SqlParameter("@MaNV", SqlDbType.NVarChar, 10) { Value = maNV },
-                    new SqlParameter("@MaChucDanh", SqlDbType.Int) { Value = maChucDanh }
-                };
-                cls_DatabaseManager.ExecuteNonQuery(query, parameters);
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
-
-        // Cập nhật nhân viên - chức danh
-        public static bool UpdateEmployeeTitle(string maNV, int maChucDanh)
-        {
-            try
-            {
-                string query = "UPDATE NhanVienChucDanh SET MaChucDanh = @MaChucDanh WHERE MaNV = @MaNV";
+                string query = "UPDATE NhanVien SET MaChucDanh = @MaChucDanh WHERE MaNV = @MaNV";
                 SqlParameter[] parameters = new SqlParameter[]
                 {
                     new SqlParameter("@MaNV", SqlDbType.NVarChar, 10) { Value = maNV },
@@ -65,12 +44,32 @@ namespace QLCHBanGaRan.lib
             }
         }
 
-        // Xóa nhân viên - chức danh
+        // Cập nhật nhân viên - chức danh (cập nhật MaChucDanh trong NhanVien)
+        public static bool UpdateEmployeeTitle(string maNV, int maChucDanh)
+        {
+            try
+            {
+                string query = "UPDATE NhanVien SET MaChucDanh = @MaChucDanh WHERE MaNV = @MaNV";
+                SqlParameter[] parameters = new SqlParameter[]
+                {
+                    new SqlParameter("@MaNV", SqlDbType.NVarChar, 10) { Value = maNV },
+                    new SqlParameter("@MaChucDanh", SqlDbType.Int) { Value = maChucDanh }
+                };
+                int rowsAffected = cls_DatabaseManager.ExecuteNonQuery(query, parameters);
+                return rowsAffected > 0;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        // Xóa nhân viên - chức danh (đặt MaChucDanh về NULL hoặc giá trị mặc định)
         public static bool DeleteEmployeeTitle(string maNV)
         {
             try
             {
-                string query = "DELETE FROM NhanVienChucDanh WHERE MaNV = @MaNV";
+                string query = "UPDATE NhanVien SET MaChucDanh = NULL WHERE MaNV = @MaNV";
                 SqlParameter[] parameters = new SqlParameter[]
                 {
                     new SqlParameter("@MaNV", SqlDbType.NVarChar, 10) { Value = maNV }

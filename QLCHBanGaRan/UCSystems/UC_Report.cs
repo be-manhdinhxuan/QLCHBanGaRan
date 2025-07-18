@@ -21,8 +21,7 @@ namespace QLCHBanGaRan.UCSystems
 
         private void btnRpHoSoNV_Click(object sender, EventArgs e)
         {
-            // Tạm thời vô hiệu hóa
-            /*
+
             if (!Forms.frm_Main.Instance.pnlContainer.Controls.ContainsKey("UC_RpProfileAllEmployess"))
             {
                 UC_RpProfileAllEmployess profileAllEmployess = new UC_RpProfileAllEmployess();
@@ -30,10 +29,10 @@ namespace QLCHBanGaRan.UCSystems
                 Forms.frm_Main.Instance.pnlContainer.Controls.Add(profileAllEmployess);
             }
             Forms.frm_Main.Instance.pnlContainer.Controls["UC_RpProfileAllEmployess"].BringToFront();
-            */
+
         }
 
-        private void btnRp1NV_Click(object sender, EventArgs e)
+        private void btnRpChamCong_Click(object sender, EventArgs e)
         {
             // Tạm thời vô hiệu hóa
             /*

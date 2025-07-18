@@ -37,8 +37,8 @@
             this.btnRpSPDaBan = new System.Windows.Forms.Button();
             this.grpRpSanPham = new System.Windows.Forms.GroupBox();
             this.btnRpSanPham = new System.Windows.Forms.Button();
-            this.grpRpHoSo1NV = new System.Windows.Forms.GroupBox();
-            this.btnRp1NV = new System.Windows.Forms.Button();
+            this.grpRpChamCong = new System.Windows.Forms.GroupBox();
+            this.btnRpChamCong = new System.Windows.Forms.Button();
             this.grpRpHoSoNV = new System.Windows.Forms.GroupBox();
             this.btnRpHoSoNV = new System.Windows.Forms.Button();
             this.grpRpHoaDon = new System.Windows.Forms.GroupBox();
@@ -67,7 +67,7 @@
             this.grpRpDoanhThu.SuspendLayout();
             this.grpRpSPDaBan.SuspendLayout();
             this.grpRpSanPham.SuspendLayout();
-            this.grpRpHoSo1NV.SuspendLayout();
+            this.grpRpChamCong.SuspendLayout();
             this.grpRpHoSoNV.SuspendLayout();
             this.grpRpHoaDon.SuspendLayout();
             this.grpRpSPTonKho.SuspendLayout();
@@ -90,7 +90,7 @@
             this.grpThongKeBaoCao.Controls.Add(this.grpRpDoanhThu);
             this.grpThongKeBaoCao.Controls.Add(this.grpRpSPDaBan);
             this.grpThongKeBaoCao.Controls.Add(this.grpRpSanPham);
-            this.grpThongKeBaoCao.Controls.Add(this.grpRpHoSo1NV);
+            this.grpThongKeBaoCao.Controls.Add(this.grpRpChamCong);
             this.grpThongKeBaoCao.Controls.Add(this.grpRpHoSoNV);
             this.grpThongKeBaoCao.Controls.Add(this.grpRpHoaDon);
             this.grpThongKeBaoCao.Controls.Add(this.grpRpSPTonKho);
@@ -195,28 +195,28 @@
             this.btnRpSanPham.UseVisualStyleBackColor = true;
             this.btnRpSanPham.Click += new System.EventHandler(this.btnRpSanPham_Click);
             // 
-            // grpRpHoSo1NV
+            // grpRpChamCong
             // 
-            this.grpRpHoSo1NV.Controls.Add(this.btnRp1NV);
-            this.grpRpHoSo1NV.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.grpRpHoSo1NV.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(0)))), ((int)(((byte)(42)))));
-            this.grpRpHoSo1NV.Location = new System.Drawing.Point(225, 28);
-            this.grpRpHoSo1NV.Name = "grpRpHoSo1NV";
-            this.grpRpHoSo1NV.Size = new System.Drawing.Size(192, 183);
-            this.grpRpHoSo1NV.TabIndex = 3;
-            this.grpRpHoSo1NV.TabStop = false;
-            this.grpRpHoSo1NV.Text = "Hồ sơ một nhân viên";
+            this.grpRpChamCong.Controls.Add(this.btnRpChamCong);
+            this.grpRpChamCong.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.grpRpChamCong.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(0)))), ((int)(((byte)(42)))));
+            this.grpRpChamCong.Location = new System.Drawing.Point(225, 28);
+            this.grpRpChamCong.Name = "grpRpChamCong";
+            this.grpRpChamCong.Size = new System.Drawing.Size(192, 183);
+            this.grpRpChamCong.TabIndex = 3;
+            this.grpRpChamCong.TabStop = false;
+            this.grpRpChamCong.Text = "Thống kê chấm công";
             // 
-            // btnRp1NV
+            // btnRpChamCong
             // 
-            this.btnRp1NV.BackgroundImage = global::QLCHBanGaRan.Properties.Resources.user_120px;
-            this.btnRp1NV.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnRp1NV.Location = new System.Drawing.Point(32, 24);
-            this.btnRp1NV.Name = "btnRp1NV";
-            this.btnRp1NV.Size = new System.Drawing.Size(128, 136);
-            this.btnRp1NV.TabIndex = 0;
-            this.btnRp1NV.UseVisualStyleBackColor = true;
-            this.btnRp1NV.Click += new System.EventHandler(this.btnRp1NV_Click);
+            this.btnRpChamCong.BackgroundImage = global::QLCHBanGaRan.Properties.Resources.statistics_cc;
+            this.btnRpChamCong.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnRpChamCong.Location = new System.Drawing.Point(32, 24);
+            this.btnRpChamCong.Name = "btnRpChamCong";
+            this.btnRpChamCong.Size = new System.Drawing.Size(128, 136);
+            this.btnRpChamCong.TabIndex = 0;
+            this.btnRpChamCong.UseVisualStyleBackColor = true;
+            this.btnRpChamCong.Click += new System.EventHandler(this.btnRpChamCong_Click);
             // 
             // grpRpHoSoNV
             // 
@@ -410,18 +410,18 @@
             this.groupBox6.Size = new System.Drawing.Size(192, 183);
             this.groupBox6.TabIndex = 3;
             this.groupBox6.TabStop = false;
-            this.groupBox6.Text = "Hồ sơ một nhân viên";
+            this.groupBox6.Text = "Thống kê chấm công";
             // 
             // button5
             // 
-            this.button5.BackgroundImage = global::QLCHBanGaRan.Properties.Resources.user_120px;
+            this.button5.BackgroundImage = global::QLCHBanGaRan.Properties.Resources.statistics_cc;
             this.button5.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.button5.Location = new System.Drawing.Point(32, 24);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(128, 136);
             this.button5.TabIndex = 0;
             this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.btnRp1NV_Click);
+            this.button5.Click += new System.EventHandler(this.btnRpChamCong_Click);
             // 
             // groupBox7
             // 
@@ -506,7 +506,7 @@
             this.grpRpDoanhThu.ResumeLayout(false);
             this.grpRpSPDaBan.ResumeLayout(false);
             this.grpRpSanPham.ResumeLayout(false);
-            this.grpRpHoSo1NV.ResumeLayout(false);
+            this.grpRpChamCong.ResumeLayout(false);
             this.grpRpHoSoNV.ResumeLayout(false);
             this.grpRpHoaDon.ResumeLayout(false);
             this.grpRpSPTonKho.ResumeLayout(false);
@@ -534,8 +534,8 @@
         private System.Windows.Forms.Button btnRpSPDaBan;
         private System.Windows.Forms.GroupBox grpRpSanPham;
         private System.Windows.Forms.Button btnRpSanPham;
-        private System.Windows.Forms.GroupBox grpRpHoSo1NV;
-        private System.Windows.Forms.Button btnRp1NV;
+        private System.Windows.Forms.GroupBox grpRpChamCong;
+        private System.Windows.Forms.Button btnRpChamCong;
         private System.Windows.Forms.GroupBox grpRpDoanhThu;
         private System.Windows.Forms.Button btnRpDoanhThu;
         private System.Windows.Forms.GroupBox grpRpTienLuong;

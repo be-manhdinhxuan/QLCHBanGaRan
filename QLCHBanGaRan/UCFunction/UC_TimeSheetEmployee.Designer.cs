@@ -42,6 +42,7 @@
             this.btnBack = new System.Windows.Forms.Button();
             this.grpActions = new System.Windows.Forms.GroupBox();
             this.grpTimesheet = new System.Windows.Forms.GroupBox();
+            this.lblTitle = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvTimesheet)).BeginInit();
             this.grpActions.SuspendLayout();
             this.grpTimesheet.SuspendLayout();
@@ -193,11 +194,23 @@
             this.grpTimesheet.TabStop = false;
             this.grpTimesheet.Text = "Lịch sử chấm công";
             // 
+            // lblTitle
+            // 
+            this.lblTitle.AutoSize = true;
+            this.lblTitle.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(0)))), ((int)(((byte)(42)))));
+            this.lblTitle.Location = new System.Drawing.Point(38, 9);
+            this.lblTitle.Name = "lblTitle";
+            this.lblTitle.Size = new System.Drawing.Size(241, 21);
+            this.lblTitle.TabIndex = 71;
+            this.lblTitle.Text = "CHẤM CÔNG NHÂN VIÊN";
+            // 
             // UC_TimeSheetEmployee
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
+            this.Controls.Add(this.lblTitle);
             this.Controls.Add(this.grpTimesheet);
             this.Controls.Add(this.grpActions);
             this.Controls.Add(this.btnBack);
@@ -226,5 +239,6 @@
         private System.Windows.Forms.Button btnBack;
         private System.Windows.Forms.GroupBox grpActions;
         private System.Windows.Forms.GroupBox grpTimesheet;
+        private System.Windows.Forms.Label lblTitle;
     }
 }
