@@ -145,6 +145,24 @@
       <DependentUpon>rp_ProfileAllEmployess.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Report\rp_RevenueDay.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>rp_RevenueDay.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Report\rp_RevenueMonth.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>rp_RevenueMonth.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Report\rp_Salary.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>rp_Salary.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="UCFunction\UC_DrinkManager.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -186,6 +204,12 @@
     </Compile>
     <Compile Include="UCFunction\UC_RpProfileAllEmployess.Designer.cs">
       <DependentUpon>UC_RpProfileAllEmployess.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UCFunction\UC_RpSalary.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UCFunction\UC_RpSalary.Designer.cs">
+      <DependentUpon>UC_RpSalary.cs</DependentUpon>
     </Compile>
     <Compile Include="UCFunction\UC_SalaryManager.cs">
       <SubType>UserControl</SubType>
@@ -303,6 +327,18 @@
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>rp_ProfileAllEmployess.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Report\rp_RevenueDay.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>rp_RevenueDay.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Report\rp_RevenueMonth.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>rp_RevenueMonth.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Report\rp_Salary.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>rp_Salary.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="UCFunction\UC_DrinkManager.resx">
       <DependentUpon>UC_DrinkManager.cs</DependentUpon>
     </EmbeddedResource>
@@ -320,6 +356,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UCFunction\UC_RpProfileAllEmployess.resx">
       <DependentUpon>UC_RpProfileAllEmployess.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UCFunction\UC_RpSalary.resx">
+      <DependentUpon>UC_RpSalary.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UCFunction\UC_SalaryManager.resx">
       <DependentUpon>UC_SalaryManager.cs</DependentUpon>

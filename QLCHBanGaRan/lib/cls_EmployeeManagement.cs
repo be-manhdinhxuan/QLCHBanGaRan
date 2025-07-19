@@ -388,5 +388,20 @@ namespace QLCHBanGaRan.lib
             string query = "SELECT MaChucDanh, TenChucDanh FROM ChucDanh";
             return cls_DatabaseManager.TableRead(query);
         }
+
+        public static DataTable GetSalaryData(int thang)
+        {
+            string query = "SELECT nv.MaNV, nv.TenNV, cd.TenChucDanh, cd.LuongCoBan, cd.PhuCap, tkc.Thang, tkc.NgayDiLam, tkc.NgayNghi, tkc.TongLuong, tkc.ThucLinh, nv.MaChucDanh " +
+                           "FROM NhanVien nv " +
+                           "JOIN ChucDanh cd ON nv.MaChucDanh = cd.MaChucDanh " +
+                           "JOIN ThongKeChamCong tkc ON nv.MaNV = tkc.MaNV " +
+                           "WHERE tkc.Thang = @Thang";
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+        new SqlParameter("@Thang", SqlDbType.Int) { Value = thang }
+            };
+            return cls_DatabaseManager.TableRead(query, parameters);
+        }
     }
+
 }

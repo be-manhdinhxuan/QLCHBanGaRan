@@ -48,8 +48,7 @@ namespace QLCHBanGaRan.UCSystems
 
         private void btnRpSalary_Click(object sender, EventArgs e)
         {
-            // Tạm thời vô hiệu hóa
-            /*
+            
             if (!Forms.frm_Main.Instance.pnlContainer.Controls.ContainsKey("UC_RpSalary"))
             {
                 UC_RpSalary rpSalary = new UC_RpSalary();
@@ -57,7 +56,7 @@ namespace QLCHBanGaRan.UCSystems
                 Forms.frm_Main.Instance.pnlContainer.Controls.Add(rpSalary);
             }
             Forms.frm_Main.Instance.pnlContainer.Controls["UC_RpSalary"].BringToFront();
-            */
+            
         }
 
         private void btnRpSanPham_Click(object sender, EventArgs e)
