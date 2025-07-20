@@ -139,6 +139,12 @@
     <Compile Include="lib\cls_Salary.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Report\rp_Product.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>rp_Product.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Report\rp_ProfileAllEmployess.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -198,6 +204,12 @@
     </Compile>
     <Compile Include="UCFunction\UC_ProfilePersonnelManager.Designer.cs">
       <DependentUpon>UC_ProfilePersonnelManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UCFunction\UC_RpProduct.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UCFunction\UC_RpProduct.Designer.cs">
+      <DependentUpon>UC_RpProduct.cs</DependentUpon>
     </Compile>
     <Compile Include="UCFunction\UC_RpProfileAllEmployess.cs">
       <SubType>UserControl</SubType>
@@ -323,6 +335,10 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="Report\rp_Product.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>rp_Product.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Report\rp_ProfileAllEmployess.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>rp_ProfileAllEmployess.cs</LastGenOutput>
