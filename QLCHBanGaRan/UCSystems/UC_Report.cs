@@ -75,8 +75,7 @@ namespace QLCHBanGaRan.UCSystems
 
         private void btnRpSPDaBan_Click(object sender, EventArgs e)
         {
-            // Tạm thời vô hiệu hóa
-            /*
+            
             if (!Forms.frm_Main.Instance.pnlContainer.Controls.ContainsKey("UC_RpProductSold"))
             {
                 UC_RpProductSold rpProductSold = new UC_RpProductSold();
@@ -84,7 +83,7 @@ namespace QLCHBanGaRan.UCSystems
                 Forms.frm_Main.Instance.pnlContainer.Controls.Add(rpProductSold);
             }
             Forms.frm_Main.Instance.pnlContainer.Controls["UC_RpProductSold"].BringToFront();
-            */
+            
         }
 
         private void btnRpDoanhThu_Click(object sender, EventArgs e)

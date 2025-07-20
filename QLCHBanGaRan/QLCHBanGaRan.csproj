@@ -145,6 +145,12 @@
       <DependentUpon>rp_Product.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Report\rp_ProductSold.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>rp_ProductSold.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Report\rp_ProfileAllEmployess.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -210,6 +216,12 @@
     </Compile>
     <Compile Include="UCFunction\UC_RpProduct.Designer.cs">
       <DependentUpon>UC_RpProduct.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UCFunction\UC_RpProductSold.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UCFunction\UC_RpProductSold.Designer.cs">
+      <DependentUpon>UC_RpProductSold.cs</DependentUpon>
     </Compile>
     <Compile Include="UCFunction\UC_RpProfileAllEmployess.cs">
       <SubType>UserControl</SubType>
@@ -339,6 +351,10 @@
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>rp_Product.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Report\rp_ProductSold.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>rp_ProductSold.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Report\rp_ProfileAllEmployess.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>rp_ProfileAllEmployess.cs</LastGenOutput>
@@ -369,6 +385,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UCFunction\UC_ProfilePersonnelManager.resx">
       <DependentUpon>UC_ProfilePersonnelManager.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UCFunction\UC_RpProductSold.resx">
+      <DependentUpon>UC_RpProductSold.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UCFunction\UC_RpProfileAllEmployess.resx">
       <DependentUpon>UC_RpProfileAllEmployess.cs</DependentUpon>
