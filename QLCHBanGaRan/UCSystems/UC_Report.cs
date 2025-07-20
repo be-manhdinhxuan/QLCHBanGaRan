@@ -116,8 +116,6 @@ namespace QLCHBanGaRan.UCSystems
 
         private void btnRpSPTonKho_Click(object sender, EventArgs e)
         {
-            // Tạm thời vô hiệu hóa
-            /*
             if (!Forms.frm_Main.Instance.pnlContainer.Controls.ContainsKey("UC_RpProductInventory"))
             {
                 UC_RpProductInventory productInventory = new UC_RpProductInventory();
@@ -125,7 +123,7 @@ namespace QLCHBanGaRan.UCSystems
                 Forms.frm_Main.Instance.pnlContainer.Controls.Add(productInventory);
             }
             Forms.frm_Main.Instance.pnlContainer.Controls["UC_RpProductInventory"].BringToFront();
-            */
+            
         }
     }
 }

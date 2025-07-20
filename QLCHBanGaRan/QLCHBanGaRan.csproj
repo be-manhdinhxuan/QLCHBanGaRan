@@ -145,6 +145,12 @@
       <DependentUpon>rp_Product.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Report\rp_ProductInventory.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>rp_ProductInventory.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Report\rp_ProductSold.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -216,6 +222,12 @@
     </Compile>
     <Compile Include="UCFunction\UC_RpProduct.Designer.cs">
       <DependentUpon>UC_RpProduct.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UCFunction\UC_RpProductInventory.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UCFunction\UC_RpProductInventory.Designer.cs">
+      <DependentUpon>UC_RpProductInventory.cs</DependentUpon>
     </Compile>
     <Compile Include="UCFunction\UC_RpProductSold.cs">
       <SubType>UserControl</SubType>
@@ -350,6 +362,10 @@
     <EmbeddedResource Include="Report\rp_Product.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>rp_Product.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Report\rp_ProductInventory.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>rp_ProductInventory.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Report\rp_ProductSold.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
