@@ -6,69 +6,57 @@ using System.Windows.Forms;
 
 namespace QLCHBanGaRan.UCFunction
 {
-    public partial class UC_DeletedProducts : UserControl
+    public partial class UC_DeletedPositions : UserControl
     {
-        public UC_DeletedProducts()
+        public UC_DeletedPositions()
         {
             InitializeComponent();
-            // Gán sự kiện CellClick
             dtDeletedProducts.CellClick += new DataGridViewCellEventHandler(dtDeletedProducts_CellClick);
-            LoadDeletedProducts();
-            cbCategory.SelectedIndex = 0; // Mặc định chọn "Đồ ăn"
+            LoadDeletedPositions();
+            cbCategory.SelectedIndex = 0; // Mặc định chọn "Tên chức danh"
+            this.Name = "UC_DeletedPositions"; // Gán tên cho control
         }
 
-        private void btnBack_Click(object sender, EventArgs e)
-        {
-            Forms.frm_Main.Instance.pnlContainer.Controls["UC_Category"].BringToFront();
-        }
-
-        private void LoadDeletedProducts()
+        private void LoadDeletedPositions()
         {
             try
             {
-                string category = "";
+                string searchText = txtSearch.Text.Trim();
+                string searchColumn = "";
                 if (cbCategory.SelectedIndex >= 0)
                 {
-                    category = cbCategory.SelectedItem.ToString() == "Đồ ăn" ? "DoAn" : "DoUong";
+                    searchColumn = cbCategory.SelectedItem.ToString() == "Tên chức danh" ? "TenChucDanh" :
+                                  cbCategory.SelectedItem.ToString() == "Lương theo giờ" ? "LuongTheoGio" :
+                                  "ThuongChucDanh";
                 }
                 else
                 {
-                    category = "DoAn"; // Giá trị mặc định nếu không có mục nào được chọn
-                    cbCategory.SelectedIndex = 0; // Đặt lại mặc định
+                    searchColumn = "TenChucDanh"; // Giá trị mặc định
+                    cbCategory.SelectedIndex = 0;
                 }
 
-                string searchText = txtSearch.Text.Trim();
-                string idColumn = category == "DoAn" ? "MaMon" : "MaDoUong";
-                string nameColumn = category == "DoAn" ? "TenMon" : "TenDoUong";
-
                 string query = $@"
-                    SELECT {idColumn} AS MaSP, {nameColumn} AS TenSP, GiaTien, SoLuong, GiamGia 
-                    FROM {category} 
+                    SELECT MaChucDanh AS MaSP, TenChucDanh AS TenSP, LuongTheoGio, ThuongChucDanh 
+                    FROM ChucDanh 
                     WHERE IsDeleted = 1 
-                    {(string.IsNullOrEmpty(searchText) ? "" : $"AND {nameColumn} LIKE @SearchText")}";
+                    {(string.IsNullOrEmpty(searchText) ? "" : $"AND {searchColumn} LIKE @SearchText")}";
                 SqlParameter[] parameters = string.IsNullOrEmpty(searchText) ? null : new SqlParameter[] { new SqlParameter("@SearchText", $"%{searchText}%") };
                 DataTable dt = cls_DatabaseManager.TableRead(query, parameters);
 
-                // Gán DataSource trước
                 dtDeletedProducts.DataSource = dt;
 
-                // Tự động điều chỉnh cột và hàng
                 dtDeletedProducts.AutoResizeColumns();
                 dtDeletedProducts.AutoResizeRows();
 
-                // Kiểm tra và gán HeaderText một cách an toàn
                 if (dtDeletedProducts.Columns.Contains("MaSP"))
-                    dtDeletedProducts.Columns["MaSP"].HeaderText = "Mã sản phẩm";
+                    dtDeletedProducts.Columns["MaSP"].HeaderText = "Mã chức danh";
                 if (dtDeletedProducts.Columns.Contains("TenSP"))
-                    dtDeletedProducts.Columns["TenSP"].HeaderText = "Tên sản phẩm";
-                if (dtDeletedProducts.Columns.Contains("GiaTien"))
-                    dtDeletedProducts.Columns["GiaTien"].HeaderText = "Giá tiền";
-                if (dtDeletedProducts.Columns.Contains("SoLuong"))
-                    dtDeletedProducts.Columns["SoLuong"].HeaderText = "Số lượng";
-                if (dtDeletedProducts.Columns.Contains("GiamGia"))
-                    dtDeletedProducts.Columns["GiamGia"].HeaderText = "Giảm giá";
+                    dtDeletedProducts.Columns["TenSP"].HeaderText = "Tên chức danh";
+                if (dtDeletedProducts.Columns.Contains("LuongTheoGio"))
+                    dtDeletedProducts.Columns["LuongTheoGio"].HeaderText = "Lương theo giờ";
+                if (dtDeletedProducts.Columns.Contains("ThuongChucDanh"))
+                    dtDeletedProducts.Columns["ThuongChucDanh"].HeaderText = "Thưởng chức danh";
 
-                // Debug: Hiển thị số cột để kiểm tra
                 Console.WriteLine($"Số cột trong DataGridView: {dtDeletedProducts.Columns.Count}");
                 foreach (DataGridViewColumn col in dtDeletedProducts.Columns)
                 {
@@ -83,49 +71,45 @@ namespace QLCHBanGaRan.UCFunction
 
         private void dtDeletedProducts_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            // Kiểm tra nếu nhấp vào ô hợp lệ (không phải header)
             if (e.RowIndex >= 0)
             {
-                // Chọn hàng hiện tại
                 dtDeletedProducts.Rows[e.RowIndex].Selected = true;
             }
         }
 
         private void txtSearch_TextChanged(object sender, EventArgs e)
         {
-            LoadDeletedProducts();
+            LoadDeletedPositions();
         }
 
         private void cbCategory_SelectedIndexChanged(object sender, EventArgs e)
         {
-            LoadDeletedProducts();
+            LoadDeletedPositions();
         }
 
         private void btnRestore_Click(object sender, EventArgs e)
         {
             if (dtDeletedProducts.SelectedRows.Count == 0)
             {
-                MessageBox.Show("Vui lòng chọn ít nhất một sản phẩm để khôi phục!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Vui lòng chọn ít nhất một chức danh để khôi phục!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
             try
             {
                 int successCount = 0;
-                string tableName = cbCategory.SelectedItem.ToString() == "Đồ ăn" ? "DoAn" : "DoUong";
-                string idColumn = tableName == "DoAn" ? "MaMon" : "MaDoUong";
                 foreach (DataGridViewRow row in dtDeletedProducts.SelectedRows)
                 {
                     string maSP = row.Cells["MaSP"].Value.ToString();
-                    string updateQuery = $"UPDATE {tableName} SET IsDeleted = 0 WHERE {idColumn} = @MaSP";
+                    string updateQuery = "UPDATE ChucDanh SET IsDeleted = 0 WHERE MaChucDanh = @MaSP";
                     SqlParameter[] parameters = { new SqlParameter("@MaSP", maSP) };
                     if (cls_DatabaseManager.ExecuteNonQuery(updateQuery, parameters) > 0)
                     {
                         successCount++;
                     }
                 }
-                MessageBox.Show($"Đã khôi phục {successCount} sản phẩm thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                LoadDeletedProducts();
+                MessageBox.Show($"Đã khôi phục {successCount} chức danh thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                LoadDeletedPositions();
             }
             catch (Exception ex)
             {
@@ -137,35 +121,38 @@ namespace QLCHBanGaRan.UCFunction
         {
             if (dtDeletedProducts.SelectedRows.Count == 0)
             {
-                MessageBox.Show("Vui lòng chọn ít nhất một sản phẩm để xóa vĩnh viễn!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Vui lòng chọn ít nhất một chức danh để xóa vĩnh viễn!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
             try
             {
-                if (MessageBox.Show($"Bạn có chắc muốn xóa vĩnh viễn {dtDeletedProducts.SelectedRows.Count} sản phẩm đã chọn?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                if (MessageBox.Show($"Bạn có chắc muốn xóa vĩnh viễn {dtDeletedProducts.SelectedRows.Count} chức danh đã chọn?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
                     int successCount = 0;
-                    string tableName = cbCategory.SelectedItem.ToString() == "Đồ ăn" ? "DoAn" : "DoUong";
-                    string idColumn = tableName == "DoAn" ? "MaMon" : "MaDoUong";
                     foreach (DataGridViewRow row in dtDeletedProducts.SelectedRows)
                     {
                         string maSP = row.Cells["MaSP"].Value.ToString();
-                        string deleteQuery = $"DELETE FROM {tableName} WHERE {idColumn} = @MaSP";
+                        string deleteQuery = "DELETE FROM ChucDanh WHERE MaChucDanh = @MaSP";
                         SqlParameter[] parameters = { new SqlParameter("@MaSP", maSP) };
                         if (cls_DatabaseManager.ExecuteNonQuery(deleteQuery, parameters) > 0)
                         {
                             successCount++;
                         }
                     }
-                    MessageBox.Show($"Đã xóa vĩnh viễn {successCount} sản phẩm thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    LoadDeletedProducts();
+                    MessageBox.Show($"Đã xóa vĩnh viễn {successCount} chức danh thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    LoadDeletedPositions();
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Lỗi khi xóa vĩnh viễn: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void btnBack_Click(object sender, EventArgs e)
+        {
+            this.Visible = false; // Ẩn control nhưng không xóa
         }
     }
 }

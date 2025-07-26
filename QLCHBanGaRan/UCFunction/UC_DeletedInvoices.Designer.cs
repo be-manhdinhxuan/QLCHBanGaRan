@@ -1,6 +1,6 @@
 ﻿namespace QLCHBanGaRan.UCFunction
 {
-    partial class UC_DeletedProducts
+    partial class UC_DeletedInvoices
     {
         /// <summary> 
         /// Required designer variable.
@@ -40,6 +40,7 @@
             this.grpDeletedProducts.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtDeletedProducts)).BeginInit();
             this.SuspendLayout();
+            // Selects
             this.dtDeletedProducts.MultiSelect = true;
             this.dtDeletedProducts.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             // 
@@ -60,7 +61,7 @@
             this.grpDeletedProducts.Size = new System.Drawing.Size(853, 561);
             this.grpDeletedProducts.TabIndex = 7;
             this.grpDeletedProducts.TabStop = false;
-            this.grpDeletedProducts.Text = "Quản lý sản phẩm đã xóa";
+            this.grpDeletedProducts.Text = "Quản lý hóa đơn đã xóa";
             // 
             // btnDeletePermanently
             // 
@@ -90,10 +91,11 @@
             // 
             // dtDeletedProducts
             // 
+            // ...
             this.dtDeletedProducts.AllowUserToAddRows = false;
             this.dtDeletedProducts.AllowUserToDeleteRows = false;
-            this.dtDeletedProducts.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.dtDeletedProducts.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dtDeletedProducts.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dtDeletedProducts.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
@@ -105,17 +107,19 @@
             this.dtDeletedProducts.RowHeadersVisible = false;
             this.dtDeletedProducts.Size = new System.Drawing.Size(813, 334);
             this.dtDeletedProducts.TabIndex = 3;
-            this.dtDeletedProducts.MultiSelect = true;
-            this.dtDeletedProducts.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            // 
-            // cbCategory
-            // 
+            this.dtDeletedProducts.MultiSelect = true; // Thêm dòng này
+            this.dtDeletedProducts.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect; // Thêm dòng này
+                                                                                                                 // ...
+                                                                                                                 // 
+                                                                                                                 // cbCategory
+                                                                                                                 // 
             this.cbCategory.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbCategory.Font = new System.Drawing.Font("Segoe UI", 11F);
             this.cbCategory.FormattingEnabled = true;
             this.cbCategory.Items.AddRange(new object[] {
-            "Đồ ăn",
-            "Đồ uống"});
+            "Mã hóa đơn",
+            "Tên khách hàng",
+            "Tổng tiền"});
             this.cbCategory.Location = new System.Drawing.Point(600, 52);
             this.cbCategory.Name = "cbCategory";
             this.cbCategory.Size = new System.Drawing.Size(233, 28);
@@ -131,7 +135,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(107, 20);
             this.label1.TabIndex = 1;
-            this.label1.Text = "Tên sản phẩm:";
+            this.label1.Text = "Mã hóa đơn:";
             // 
             // txtSearch
             // 
@@ -168,7 +172,7 @@
             this.lblTitle.TabIndex = 67;
             this.lblTitle.Text = "QUAY LẠI";
             // 
-            // UC_DeletedProducts
+            // UC_DeletedInvoices
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -176,7 +180,7 @@
             this.Controls.Add(this.lblTitle);
             this.Controls.Add(this.btnBack);
             this.Controls.Add(this.grpDeletedProducts);
-            this.Name = "UC_DeletedProducts";
+            this.Name = "UC_DeletedInvoices";
             this.Size = new System.Drawing.Size(893, 619);
             this.grpDeletedProducts.ResumeLayout(false);
             this.grpDeletedProducts.PerformLayout();

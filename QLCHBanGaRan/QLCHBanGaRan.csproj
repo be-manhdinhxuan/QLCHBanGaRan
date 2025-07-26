@@ -181,11 +181,35 @@
       <DependentUpon>rp_Salary.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="UCFunction\UC_DeletedEmployees.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UCFunction\UC_DeletedEmployees.Designer.cs">
+      <DependentUpon>UC_DeletedEmployees.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UCFunction\UC_DeletedInvoices.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UCFunction\UC_DeletedInvoices.Designer.cs">
+      <DependentUpon>UC_DeletedInvoices.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UCFunction\UC_DeletedPositions.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UCFunction\UC_DeletedPositions.Designer.cs">
+      <DependentUpon>UC_DeletedPositions.cs</DependentUpon>
+    </Compile>
     <Compile Include="UCFunction\UC_DeletedProducts.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="UCFunction\UC_DeletedProducts.Designer.cs">
       <DependentUpon>UC_DeletedProducts.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UCFunction\UC_DeletedSuppliers.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UCFunction\UC_DeletedSuppliers.Designer.cs">
+      <DependentUpon>UC_DeletedSuppliers.cs</DependentUpon>
     </Compile>
     <Compile Include="UCFunction\UC_DrinkManager.cs">
       <SubType>UserControl</SubType>
@@ -393,8 +417,17 @@
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>rp_Salary.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="UCFunction\UC_DeletedEmployees.resx">
+      <DependentUpon>UC_DeletedEmployees.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UCFunction\UC_DeletedPositions.resx">
+      <DependentUpon>UC_DeletedPositions.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UCFunction\UC_DeletedProducts.resx">
       <DependentUpon>UC_DeletedProducts.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UCFunction\UC_DeletedSuppliers.resx">
+      <DependentUpon>UC_DeletedSuppliers.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UCFunction\UC_DrinkManager.resx">
       <DependentUpon>UC_DrinkManager.cs</DependentUpon>

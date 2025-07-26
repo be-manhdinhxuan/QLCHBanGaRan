@@ -1,6 +1,6 @@
 ﻿namespace QLCHBanGaRan.UCFunction
 {
-    partial class UC_DeletedProducts
+    partial class UC_DeletedSuppliers
     {
         /// <summary> 
         /// Required designer variable.
@@ -35,8 +35,8 @@
             this.cbCategory = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.txtSearch = new System.Windows.Forms.TextBox();
-            this.btnBack = new System.Windows.Forms.Button();
             this.lblTitle = new System.Windows.Forms.Label();
+            this.btnBack = new System.Windows.Forms.Button();
             this.grpDeletedProducts.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtDeletedProducts)).BeginInit();
             this.SuspendLayout();
@@ -60,7 +60,7 @@
             this.grpDeletedProducts.Size = new System.Drawing.Size(853, 561);
             this.grpDeletedProducts.TabIndex = 7;
             this.grpDeletedProducts.TabStop = false;
-            this.grpDeletedProducts.Text = "Quản lý sản phẩm đã xóa";
+            this.grpDeletedProducts.Text = "Quản lý nhà cung cấp đã xóa";
             // 
             // btnDeletePermanently
             // 
@@ -114,8 +114,9 @@
             this.cbCategory.Font = new System.Drawing.Font("Segoe UI", 11F);
             this.cbCategory.FormattingEnabled = true;
             this.cbCategory.Items.AddRange(new object[] {
-            "Đồ ăn",
-            "Đồ uống"});
+            "Tên nhà cung cấp",
+            "Số điện thoại",
+            "Địa chỉ"});
             this.cbCategory.Location = new System.Drawing.Point(600, 52);
             this.cbCategory.Name = "cbCategory";
             this.cbCategory.Size = new System.Drawing.Size(233, 28);
@@ -129,18 +130,29 @@
             this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(0)))), ((int)(((byte)(42)))));
             this.label1.Location = new System.Drawing.Point(16, 55);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(107, 20);
+            this.label1.Size = new System.Drawing.Size(75, 20);
             this.label1.TabIndex = 1;
-            this.label1.Text = "Tên sản phẩm:";
+            this.label1.Text = "Tìm kiếm:";
             // 
             // txtSearch
             // 
             this.txtSearch.Font = new System.Drawing.Font("Segoe UI", 11F);
-            this.txtSearch.Location = new System.Drawing.Point(130, 52);
+            this.txtSearch.Location = new System.Drawing.Point(97, 52);
             this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(464, 27);
+            this.txtSearch.Size = new System.Drawing.Size(497, 27);
             this.txtSearch.TabIndex = 0;
             this.txtSearch.TextChanged += new System.EventHandler(this.txtSearch_TextChanged);
+            // 
+            // lblTitle
+            // 
+            this.lblTitle.AutoSize = true;
+            this.lblTitle.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(0)))), ((int)(((byte)(42)))));
+            this.lblTitle.Location = new System.Drawing.Point(61, 11);
+            this.lblTitle.Name = "lblTitle";
+            this.lblTitle.Size = new System.Drawing.Size(82, 21);
+            this.lblTitle.TabIndex = 67;
+            this.lblTitle.Text = "QUAY LẠI";
             // 
             // btnBack
             // 
@@ -157,18 +169,7 @@
             this.btnBack.UseVisualStyleBackColor = false;
             this.btnBack.Click += new System.EventHandler(this.btnBack_Click);
             // 
-            // lblTitle
-            // 
-            this.lblTitle.AutoSize = true;
-            this.lblTitle.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(0)))), ((int)(((byte)(42)))));
-            this.lblTitle.Location = new System.Drawing.Point(61, 11);
-            this.lblTitle.Name = "lblTitle";
-            this.lblTitle.Size = new System.Drawing.Size(82, 21);
-            this.lblTitle.TabIndex = 67;
-            this.lblTitle.Text = "QUAY LẠI";
-            // 
-            // UC_DeletedProducts
+            // UC_DeletedSuppliers
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -176,7 +177,7 @@
             this.Controls.Add(this.lblTitle);
             this.Controls.Add(this.btnBack);
             this.Controls.Add(this.grpDeletedProducts);
-            this.Name = "UC_DeletedProducts";
+            this.Name = "UC_DeletedSuppliers";
             this.Size = new System.Drawing.Size(893, 619);
             this.grpDeletedProducts.ResumeLayout(false);
             this.grpDeletedProducts.PerformLayout();
