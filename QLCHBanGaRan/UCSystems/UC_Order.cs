@@ -199,7 +199,7 @@ namespace QLCHBanGaRan.UCSystems
 
         private void UC_Order_Load(object sender, EventArgs e)
         {
-            idEmployess = Forms.frm_Main.NguoiDungID; // Giả định frm_Main tồn tại
+            idEmployess = Forms.frm_Main.NguoiDungID; 
             string[] employeeInfo = cls_EmployeeManagement.GetEmployeeInfo(idEmployess);
             tenNV = employeeInfo[1];
             nhanVienID = employeeInfo[0];
@@ -214,6 +214,7 @@ namespace QLCHBanGaRan.UCSystems
             txtMoney.ReadOnly = true;
             txtDiscount.ReadOnly = true;
             txtReturnPayment.ReadOnly = true;
+            btnSaveDB.Enabled = true;
 
             dtSearch.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dtChoose.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
@@ -314,6 +315,7 @@ namespace QLCHBanGaRan.UCSystems
             btnDone.Enabled = false;
             btnPrintInvoice.Enabled = false;
             btnCancel.Enabled = true;
+            btnSaveDB.Enabled = true;
             txtSearch.Focus();
 
             // Làm mới dữ liệu trong dtSearch sau khi hoàn tất
@@ -325,10 +327,11 @@ namespace QLCHBanGaRan.UCSystems
             DialogResult result = MessageBox.Show("Hủy đơn hàng này?", "Thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result == DialogResult.Yes)
             {
-                ClearOrder();
+                ClearOrder(); // Xóa dữ liệu khi hủy
                 btnPrintInvoice.Enabled = false;
                 btnDone.Enabled = false;
                 btnCancel.Enabled = true;
+                btnSaveDB.Enabled = true; // Kích hoạt lại btnSaveDB sau khi hủy
                 txtSearch.Focus();
             }
         }
@@ -354,10 +357,14 @@ namespace QLCHBanGaRan.UCSystems
 
         private void btnSaveDB_Click(object sender, EventArgs e)
         {
+            // Vô hiệu hóa nút ngay từ đầu để tránh nhấn nhiều lần
+            btnSaveDB.Enabled = false;
+
             if (string.IsNullOrEmpty(txtUser.Text) || tbOrder.Rows.Count == 0 || string.IsNullOrEmpty(txtReceive.Text))
             {
                 MessageBox.Show("Vui lòng kiểm tra thông tin khách hàng, danh sách món ăn và tiền khách đưa!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 txtUser.Focus();
+                btnSaveDB.Enabled = true; // Kích hoạt lại nếu có lỗi
                 return;
             }
 
@@ -369,6 +376,7 @@ namespace QLCHBanGaRan.UCSystems
             if (receive < tongCong)
             {
                 MessageBox.Show("Tiền khách đưa không đủ!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                btnSaveDB.Enabled = true; // Kích hoạt lại nếu có lỗi
                 return;
             }
 
@@ -391,16 +399,18 @@ namespace QLCHBanGaRan.UCSystems
             catch (Exception ex)
             {
                 MessageBox.Show("Lỗi khi lấy mã chi tiết hóa đơn lớn nhất: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                btnSaveDB.Enabled = true; // Kích hoạt lại nếu có lỗi
+                return;
             }
 
             // Tăng dần mã chi tiết hóa đơn
-            int ctIndex = int.Parse(maxMaChiTietHD.Substring(4)) + 1; // Lấy số từ "CTHDxxx" và tăng lên
+            int ctIndex = int.Parse(maxMaChiTietHD.Substring(4)) + 1;
             foreach (DataRow row in tbOrder.Rows)
             {
-                string maChiTietHD = $"CTHD{ctIndex:D3}"; // Định dạng 3 chữ số (ví dụ: CTHD001)
+                string maChiTietHD = $"CTHD{ctIndex:D3}";
                 string maSP = row["MaSP"].ToString();
                 chiTietHoaDon.Rows.Add(maChiTietHD, maSP.StartsWith("M") ? maSP : (object)DBNull.Value, maSP.StartsWith("DU") ? maSP : (object)DBNull.Value, Convert.ToInt32(row["SoLuong"]));
-                ctIndex++; // Tăng chỉ số cho bản ghi tiếp theo
+                ctIndex++;
             }
 
             try
@@ -413,6 +423,8 @@ namespace QLCHBanGaRan.UCSystems
                     cmd.Parameters.AddWithValue("@MaHD", maHD);
                     cmd.Parameters.AddWithValue("@MaNV", nhanVienID ?? (object)DBNull.Value);
                     cmd.Parameters.AddWithValue("@NgayLapHD", DateTime.Now);
+                    cmd.Parameters.AddWithValue("@TenKhachHang", txtUser.Text);
+                    cmd.Parameters.AddWithValue("@TienKhachDua", receive);
                     SqlParameter tvpParam = cmd.Parameters.AddWithValue("@ChiTietHoaDon", chiTietHoaDon);
                     tvpParam.SqlDbType = SqlDbType.Structured;
                     tvpParam.TypeName = "ChiTietHoaDonType";
@@ -423,14 +435,19 @@ namespace QLCHBanGaRan.UCSystems
                     btnDone.Enabled = true;
                     btnCancel.Enabled = false;
 
-                    // Làm mới dữ liệu trong dtSearch sau khi lưu thành công
+                    // Làm mới danh sách sản phẩm mà không xóa dữ liệu đơn hàng
                     RefreshProductList();
                 }
             }
             catch (SqlException ex)
             {
                 MessageBox.Show("Lỗi khi lưu hóa đơn: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                btnSaveDB.Enabled = true; // Kích hoạt lại nếu có lỗi
+                return;
             }
+
+            // Giữ nguyên dữ liệu trên giao diện, chỉ vô hiệu hóa btnSaveDB
+            btnSaveDB.Enabled = false; // Giữ vô hiệu hóa sau khi lưu thành công
         }
 
         private void btnPrintInvoice_Click(object sender, EventArgs e)

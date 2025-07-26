@@ -126,10 +126,9 @@ namespace QLCHBanGaRan.Forms
             {
                 addControlsToPanel(_Order);
                 this.Text = "Gọi món";
-                // Làm mới dữ liệu khi hiển thị lại UC_Order
                 if (_Order is UC_Order orderControl)
                 {
-                    orderControl.RefreshProductList(); // Gọi phương thức làm mới
+                    orderControl.RefreshProductList();
                 }
             }
             else
@@ -146,7 +145,6 @@ namespace QLCHBanGaRan.Forms
             {
                 addControlsToPanel(_Product);
                 this.Text = "Sản phẩm";
-                // Đảm bảo UC_FoodManager trong UC_Product được đăng ký sự kiện (nếu cần)
                 if (_Product.Controls.Count > 0 && _Product.Controls[0] is UC_FoodManager foodManager)
                 {
                     foodManager.ProductAdded += FoodManager_ProductAdded;
@@ -284,14 +282,14 @@ namespace QLCHBanGaRan.Forms
             }
             else
             {
-                // Nếu không phải quản trị viên, ẩn tất cả
-                _Order.Visible = false;
-                _Personnel.Visible = false;
-                _Product.Visible = false;
-                _Report.Visible = false;
-                _Salary.Visible = false;
-                _System.Visible = false;
-                _Category.Visible = false;
+                // Nếu không phải quản trị viên, chỉ hiển thị một số màn hình nhất định
+                _Order.Visible = true;      // User thường có thể gọi món
+                _Product.Visible = true;    // User thường có thể xem sản phẩm
+                _Salary.Visible = true;    // Quản lý lương - chỉ admin
+                _Category.Visible = true;
+                // Ẩn các màn hình quản trị
+                _Personnel.Visible = false; // Quản lý nhân sự - chỉ admin
+                _System.Visible = false;    // Quản lý hệ thống - chỉ admin
             }
         }
 

@@ -14,6 +14,12 @@ namespace QLCHBanGaRan.UCSystems
 
         private void btnQuanLyChucDanh_Click(object sender, EventArgs e)
         {
+            bool isAdmin = QLCHBanGaRan.lib.cls_EmployeeManagement.CheckPermission(QLCHBanGaRan.Forms.frm_Main.NguoiDungID);
+            if (!isAdmin)
+            {
+                MessageBox.Show("Bạn không có quyền truy cập chức năng này!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
             if (!frm_Main.Instance.pnlContainer.Controls.ContainsKey("UC_SalaryManager"))
             {
                 UC_SalaryManager salaryManager = new UC_SalaryManager();
@@ -44,6 +50,12 @@ namespace QLCHBanGaRan.UCSystems
             }
 
             frm_Main.Instance.pnlContainer.Controls[controlName].BringToFront();
+        }
+
+        private void UC_Salary_Load(object sender, EventArgs e)
+        {
+            bool isAdmin = QLCHBanGaRan.lib.cls_EmployeeManagement.CheckPermission(QLCHBanGaRan.Forms.frm_Main.NguoiDungID);
+            btnQuanLyChucDanh.Visible = isAdmin;
         }
     }
 }
