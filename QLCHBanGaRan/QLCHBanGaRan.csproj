@@ -181,6 +181,12 @@
       <DependentUpon>rp_Salary.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="UCFunction\UC_DeletedProducts.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UCFunction\UC_DeletedProducts.Designer.cs">
+      <DependentUpon>UC_DeletedProducts.cs</DependentUpon>
+    </Compile>
     <Compile Include="UCFunction\UC_DrinkManager.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -386,6 +392,9 @@
     <EmbeddedResource Include="Report\rp_Salary.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>rp_Salary.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UCFunction\UC_DeletedProducts.resx">
+      <DependentUpon>UC_DeletedProducts.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UCFunction\UC_DrinkManager.resx">
       <DependentUpon>UC_DrinkManager.cs</DependentUpon>
@@ -625,6 +634,29 @@
   <ItemGroup>
     <None Include="Resources\statistics_cc.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Resources\product_del.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\product_del_64px.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\employee_del.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\invoice_del.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\supplier_del.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\title_del.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\position_del.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\restore_120px.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

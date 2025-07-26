@@ -28,158 +28,188 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.grpKhuyenMai = new System.Windows.Forms.GroupBox();
-            this.grpXoaKhuyenMai = new System.Windows.Forms.GroupBox();
-            this.grpSuaKhuyenMai = new System.Windows.Forms.GroupBox();
-            this.grpThemKhuyenMai = new System.Windows.Forms.GroupBox();
-            this.grpXemDanhSachKhuyenMai = new System.Windows.Forms.GroupBox();
-            this.btnXoaKhuyenMai = new System.Windows.Forms.Button();
-            this.btnSuaKhuyenMai = new System.Windows.Forms.Button();
-            this.btnThemKhuyenMai = new System.Windows.Forms.Button();
-            this.btnXemDanhSachKhuyenMai = new System.Windows.Forms.Button();
-            this.grpKhuyenMai.SuspendLayout();
-            this.grpXoaKhuyenMai.SuspendLayout();
-            this.grpSuaKhuyenMai.SuspendLayout();
-            this.grpThemKhuyenMai.SuspendLayout();
-            this.grpXemDanhSachKhuyenMai.SuspendLayout();
+            this.grpDeletedRecords = new System.Windows.Forms.GroupBox();
+            this.grpDeletedInvoices = new System.Windows.Forms.GroupBox();
+            this.btnManageDeletedInvoices = new System.Windows.Forms.Button();
+            this.grpDeletedPositions = new System.Windows.Forms.GroupBox();
+            this.btnManageDeletedPositions = new System.Windows.Forms.Button();
+            this.grpDeletedEmployees = new System.Windows.Forms.GroupBox();
+            this.btnManageDeletedEmployees = new System.Windows.Forms.Button();
+            this.grpDeletedSuppliers = new System.Windows.Forms.GroupBox();
+            this.btnManageDeletedSuppliers = new System.Windows.Forms.Button();
+            this.grpDeletedProducts = new System.Windows.Forms.GroupBox();
+            this.btnManageDeletedProducts = new System.Windows.Forms.Button();
+            this.grpDeletedRecords.SuspendLayout();
+            this.grpDeletedInvoices.SuspendLayout();
+            this.grpDeletedPositions.SuspendLayout();
+            this.grpDeletedEmployees.SuspendLayout();
+            this.grpDeletedSuppliers.SuspendLayout();
+            this.grpDeletedProducts.SuspendLayout();
             this.SuspendLayout();
             // 
-            // grpKhuyenMai
+            // grpDeletedRecords
             // 
-            this.grpKhuyenMai.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.grpKhuyenMai.BackColor = System.Drawing.Color.Transparent;
-            this.grpKhuyenMai.Controls.Add(this.grpXoaKhuyenMai);
-            this.grpKhuyenMai.Controls.Add(this.grpSuaKhuyenMai);
-            this.grpKhuyenMai.Controls.Add(this.grpThemKhuyenMai);
-            this.grpKhuyenMai.Controls.Add(this.grpXemDanhSachKhuyenMai);
-            this.grpKhuyenMai.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.grpKhuyenMai.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(0)))), ((int)(((byte)(42)))));
-            this.grpKhuyenMai.Location = new System.Drawing.Point(105, 65);
-            this.grpKhuyenMai.Name = "grpKhuyenMai";
-            this.grpKhuyenMai.Size = new System.Drawing.Size(534, 488);
-            this.grpKhuyenMai.TabIndex = 7;
-            this.grpKhuyenMai.TabStop = false;
-            this.grpKhuyenMai.Text = "Khuyến mãi";
+            this.grpDeletedRecords.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.grpDeletedRecords.BackColor = System.Drawing.Color.Transparent;
+            this.grpDeletedRecords.Controls.Add(this.grpDeletedInvoices);
+            this.grpDeletedRecords.Controls.Add(this.grpDeletedPositions);
+            this.grpDeletedRecords.Controls.Add(this.grpDeletedEmployees);
+            this.grpDeletedRecords.Controls.Add(this.grpDeletedSuppliers);
+            this.grpDeletedRecords.Controls.Add(this.grpDeletedProducts);
+            this.grpDeletedRecords.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.grpDeletedRecords.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(0)))), ((int)(((byte)(42)))));
+            this.grpDeletedRecords.Location = new System.Drawing.Point(20, 20);
+            this.grpDeletedRecords.Name = "grpDeletedRecords";
+            this.grpDeletedRecords.Size = new System.Drawing.Size(853, 579);
+            this.grpDeletedRecords.TabIndex = 7;
+            this.grpDeletedRecords.TabStop = false;
+            this.grpDeletedRecords.Text = "Quản lý bản ghi đã xóa";
             // 
-            // grpXoaKhuyenMai
+            // grpDeletedInvoices
             // 
-            this.grpXoaKhuyenMai.Controls.Add(this.btnXoaKhuyenMai);
-            this.grpXoaKhuyenMai.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.grpXoaKhuyenMai.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(0)))), ((int)(((byte)(42)))));
-            this.grpXoaKhuyenMai.Location = new System.Drawing.Point(283, 255);
-            this.grpXoaKhuyenMai.Name = "grpXoaKhuyenMai";
-            this.grpXoaKhuyenMai.Size = new System.Drawing.Size(207, 200);
-            this.grpXoaKhuyenMai.TabIndex = 2;
-            this.grpXoaKhuyenMai.TabStop = false;
-            this.grpXoaKhuyenMai.Text = "Xóa khuyến mãi";
+            this.grpDeletedInvoices.Controls.Add(this.btnManageDeletedInvoices);
+            this.grpDeletedInvoices.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.grpDeletedInvoices.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(0)))), ((int)(((byte)(42)))));
+            this.grpDeletedInvoices.Location = new System.Drawing.Point(460, 333);
+            this.grpDeletedInvoices.Name = "grpDeletedInvoices";
+            this.grpDeletedInvoices.Size = new System.Drawing.Size(192, 183);
+            this.grpDeletedInvoices.TabIndex = 8;
+            this.grpDeletedInvoices.TabStop = false;
+            this.grpDeletedInvoices.Text = "Hóa đơn";
             // 
-            // grpSuaKhuyenMai
+            // btnManageDeletedInvoices
             // 
-            this.grpSuaKhuyenMai.Controls.Add(this.btnSuaKhuyenMai);
-            this.grpSuaKhuyenMai.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.grpSuaKhuyenMai.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(0)))), ((int)(((byte)(42)))));
-            this.grpSuaKhuyenMai.Location = new System.Drawing.Point(283, 28);
-            this.grpSuaKhuyenMai.Name = "grpSuaKhuyenMai";
-            this.grpSuaKhuyenMai.Size = new System.Drawing.Size(207, 200);
-            this.grpSuaKhuyenMai.TabIndex = 1;
-            this.grpSuaKhuyenMai.TabStop = false;
-            this.grpSuaKhuyenMai.Text = "Sửa khuyến mãi";
+            this.btnManageDeletedInvoices.BackgroundImage = global::QLCHBanGaRan.Properties.Resources.invoice_del;
+            this.btnManageDeletedInvoices.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnManageDeletedInvoices.Location = new System.Drawing.Point(32, 24);
+            this.btnManageDeletedInvoices.Name = "btnManageDeletedInvoices";
+            this.btnManageDeletedInvoices.Size = new System.Drawing.Size(128, 136);
+            this.btnManageDeletedInvoices.TabIndex = 0;
+            this.btnManageDeletedInvoices.UseVisualStyleBackColor = true;
+            this.btnManageDeletedInvoices.Click += new System.EventHandler(this.btnManageDeletedInvoices_Click);
             // 
-            // grpThemKhuyenMai
+            // grpDeletedPositions
             // 
-            this.grpThemKhuyenMai.Controls.Add(this.btnThemKhuyenMai);
-            this.grpThemKhuyenMai.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.grpThemKhuyenMai.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(0)))), ((int)(((byte)(42)))));
-            this.grpThemKhuyenMai.Location = new System.Drawing.Point(43, 28);
-            this.grpThemKhuyenMai.Name = "grpThemKhuyenMai";
-            this.grpThemKhuyenMai.Size = new System.Drawing.Size(207, 200);
-            this.grpThemKhuyenMai.TabIndex = 0;
-            this.grpThemKhuyenMai.TabStop = false;
-            this.grpThemKhuyenMai.Text = "Thêm khuyến mãi";
+            this.grpDeletedPositions.Controls.Add(this.btnManageDeletedPositions);
+            this.grpDeletedPositions.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.grpDeletedPositions.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(0)))), ((int)(((byte)(42)))));
+            this.grpDeletedPositions.Location = new System.Drawing.Point(186, 333);
+            this.grpDeletedPositions.Name = "grpDeletedPositions";
+            this.grpDeletedPositions.Size = new System.Drawing.Size(192, 183);
+            this.grpDeletedPositions.TabIndex = 7;
+            this.grpDeletedPositions.TabStop = false;
+            this.grpDeletedPositions.Text = "Chức danh";
             // 
-            // grpXemDanhSachKhuyenMai
+            // btnManageDeletedPositions
             // 
-            this.grpXemDanhSachKhuyenMai.Controls.Add(this.btnXemDanhSachKhuyenMai);
-            this.grpXemDanhSachKhuyenMai.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.grpXemDanhSachKhuyenMai.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(0)))), ((int)(((byte)(42)))));
-            this.grpXemDanhSachKhuyenMai.Location = new System.Drawing.Point(43, 255);
-            this.grpXemDanhSachKhuyenMai.Name = "grpXemDanhSachKhuyenMai";
-            this.grpXemDanhSachKhuyenMai.Size = new System.Drawing.Size(207, 200);
-            this.grpXemDanhSachKhuyenMai.TabIndex = 3;
-            this.grpXemDanhSachKhuyenMai.TabStop = false;
-            this.grpXemDanhSachKhuyenMai.Text = "Danh sách khuyến mãi";
+            this.btnManageDeletedPositions.BackgroundImage = global::QLCHBanGaRan.Properties.Resources.position_del;
+            this.btnManageDeletedPositions.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnManageDeletedPositions.Location = new System.Drawing.Point(33, 26);
+            this.btnManageDeletedPositions.Name = "btnManageDeletedPositions";
+            this.btnManageDeletedPositions.Size = new System.Drawing.Size(128, 136);
+            this.btnManageDeletedPositions.TabIndex = 0;
+            this.btnManageDeletedPositions.UseVisualStyleBackColor = true;
+            this.btnManageDeletedPositions.Click += new System.EventHandler(this.btnManageDeletedPositions_Click);
             // 
-            // btnXoaKhuyenMai
+            // grpDeletedEmployees
             // 
-            this.btnXoaKhuyenMai.BackgroundImage = global::QLCHBanGaRan.Properties.Resources.delete_120px;
-            this.btnXoaKhuyenMai.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnXoaKhuyenMai.Location = new System.Drawing.Point(35, 28);
-            this.btnXoaKhuyenMai.Name = "btnXoaKhuyenMai";
-            this.btnXoaKhuyenMai.Size = new System.Drawing.Size(145, 145);
-            this.btnXoaKhuyenMai.TabIndex = 0;
-            this.btnXoaKhuyenMai.UseVisualStyleBackColor = true;
-            this.btnXoaKhuyenMai.Click += new System.EventHandler(this.btnXoaKhuyenMai_Click);
+            this.grpDeletedEmployees.Controls.Add(this.btnManageDeletedEmployees);
+            this.grpDeletedEmployees.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.grpDeletedEmployees.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(0)))), ((int)(((byte)(42)))));
+            this.grpDeletedEmployees.Location = new System.Drawing.Point(599, 100);
+            this.grpDeletedEmployees.Name = "grpDeletedEmployees";
+            this.grpDeletedEmployees.Size = new System.Drawing.Size(192, 183);
+            this.grpDeletedEmployees.TabIndex = 6;
+            this.grpDeletedEmployees.TabStop = false;
+            this.grpDeletedEmployees.Text = "Nhân viên";
             // 
-            // btnSuaKhuyenMai
+            // btnManageDeletedEmployees
             // 
-            this.btnSuaKhuyenMai.BackgroundImage = global::QLCHBanGaRan.Properties.Resources.edit_120px;
-            this.btnSuaKhuyenMai.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnSuaKhuyenMai.Location = new System.Drawing.Point(35, 28);
-            this.btnSuaKhuyenMai.Name = "btnSuaKhuyenMai";
-            this.btnSuaKhuyenMai.Size = new System.Drawing.Size(145, 145);
-            this.btnSuaKhuyenMai.TabIndex = 0;
-            this.btnSuaKhuyenMai.UseVisualStyleBackColor = true;
-            this.btnSuaKhuyenMai.Click += new System.EventHandler(this.btnSuaKhuyenMai_Click);
+            this.btnManageDeletedEmployees.BackgroundImage = global::QLCHBanGaRan.Properties.Resources.employee_del;
+            this.btnManageDeletedEmployees.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnManageDeletedEmployees.Location = new System.Drawing.Point(28, 30);
+            this.btnManageDeletedEmployees.Name = "btnManageDeletedEmployees";
+            this.btnManageDeletedEmployees.Size = new System.Drawing.Size(128, 136);
+            this.btnManageDeletedEmployees.TabIndex = 0;
+            this.btnManageDeletedEmployees.UseVisualStyleBackColor = true;
+            this.btnManageDeletedEmployees.Click += new System.EventHandler(this.btnManageDeletedEmployees_Click);
             // 
-            // btnThemKhuyenMai
+            // grpDeletedSuppliers
             // 
-            this.btnThemKhuyenMai.BackgroundImage = global::QLCHBanGaRan.Properties.Resources.add_120px;
-            this.btnThemKhuyenMai.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnThemKhuyenMai.Location = new System.Drawing.Point(35, 28);
-            this.btnThemKhuyenMai.Name = "btnThemKhuyenMai";
-            this.btnThemKhuyenMai.Size = new System.Drawing.Size(145, 145);
-            this.btnThemKhuyenMai.TabIndex = 0;
-            this.btnThemKhuyenMai.UseVisualStyleBackColor = true;
-            this.btnThemKhuyenMai.Click += new System.EventHandler(this.btnThemKhuyenMai_Click);
+            this.grpDeletedSuppliers.Controls.Add(this.btnManageDeletedSuppliers);
+            this.grpDeletedSuppliers.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.grpDeletedSuppliers.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(0)))), ((int)(((byte)(42)))));
+            this.grpDeletedSuppliers.Location = new System.Drawing.Point(325, 100);
+            this.grpDeletedSuppliers.Name = "grpDeletedSuppliers";
+            this.grpDeletedSuppliers.Size = new System.Drawing.Size(192, 183);
+            this.grpDeletedSuppliers.TabIndex = 5;
+            this.grpDeletedSuppliers.TabStop = false;
+            this.grpDeletedSuppliers.Text = "Nhà cung cấp";
             // 
-            // btnXemDanhSachKhuyenMai
+            // btnManageDeletedSuppliers
             // 
-            this.btnXemDanhSachKhuyenMai.BackgroundImage = global::QLCHBanGaRan.Properties.Resources.list_120px;
-            this.btnXemDanhSachKhuyenMai.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnXemDanhSachKhuyenMai.Location = new System.Drawing.Point(35, 28);
-            this.btnXemDanhSachKhuyenMai.Name = "btnXemDanhSachKhuyenMai";
-            this.btnXemDanhSachKhuyenMai.Size = new System.Drawing.Size(145, 145);
-            this.btnXemDanhSachKhuyenMai.TabIndex = 0;
-            this.btnXemDanhSachKhuyenMai.UseVisualStyleBackColor = true;
-            this.btnXemDanhSachKhuyenMai.Click += new System.EventHandler(this.btnXemDanhSachKhuyenMai_Click);
+            this.btnManageDeletedSuppliers.BackgroundImage = global::QLCHBanGaRan.Properties.Resources.supplier_del;
+            this.btnManageDeletedSuppliers.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnManageDeletedSuppliers.Location = new System.Drawing.Point(32, 30);
+            this.btnManageDeletedSuppliers.Name = "btnManageDeletedSuppliers";
+            this.btnManageDeletedSuppliers.Size = new System.Drawing.Size(128, 136);
+            this.btnManageDeletedSuppliers.TabIndex = 0;
+            this.btnManageDeletedSuppliers.UseVisualStyleBackColor = true;
+            this.btnManageDeletedSuppliers.Click += new System.EventHandler(this.btnManageDeletedSuppliers_Click);
+            // 
+            // grpDeletedProducts
+            // 
+            this.grpDeletedProducts.Controls.Add(this.btnManageDeletedProducts);
+            this.grpDeletedProducts.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.grpDeletedProducts.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(0)))), ((int)(((byte)(42)))));
+            this.grpDeletedProducts.Location = new System.Drawing.Point(51, 100);
+            this.grpDeletedProducts.Name = "grpDeletedProducts";
+            this.grpDeletedProducts.Size = new System.Drawing.Size(192, 183);
+            this.grpDeletedProducts.TabIndex = 4;
+            this.grpDeletedProducts.TabStop = false;
+            this.grpDeletedProducts.Text = "Sản phẩm";
+            // 
+            // btnManageDeletedProducts
+            // 
+            this.btnManageDeletedProducts.BackgroundImage = global::QLCHBanGaRan.Properties.Resources.product_del;
+            this.btnManageDeletedProducts.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnManageDeletedProducts.Location = new System.Drawing.Point(29, 30);
+            this.btnManageDeletedProducts.Name = "btnManageDeletedProducts";
+            this.btnManageDeletedProducts.Size = new System.Drawing.Size(128, 136);
+            this.btnManageDeletedProducts.TabIndex = 0;
+            this.btnManageDeletedProducts.UseVisualStyleBackColor = true;
+            this.btnManageDeletedProducts.Click += new System.EventHandler(this.btnManageDeletedProducts_Click);
             // 
             // UC_Category
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.Controls.Add(this.grpKhuyenMai);
+            this.Controls.Add(this.grpDeletedRecords);
             this.Name = "UC_Category";
             this.Size = new System.Drawing.Size(893, 619);
-            this.grpKhuyenMai.ResumeLayout(false);
-            this.grpXoaKhuyenMai.ResumeLayout(false);
-            this.grpSuaKhuyenMai.ResumeLayout(false);
-            this.grpThemKhuyenMai.ResumeLayout(false);
-            this.grpXemDanhSachKhuyenMai.ResumeLayout(false);
+            this.grpDeletedRecords.ResumeLayout(false);
+            this.grpDeletedInvoices.ResumeLayout(false);
+            this.grpDeletedPositions.ResumeLayout(false);
+            this.grpDeletedEmployees.ResumeLayout(false);
+            this.grpDeletedSuppliers.ResumeLayout(false);
+            this.grpDeletedProducts.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.GroupBox grpKhuyenMai;
-        private System.Windows.Forms.GroupBox grpXoaKhuyenMai;
-        private System.Windows.Forms.Button btnXoaKhuyenMai;
-        private System.Windows.Forms.GroupBox grpSuaKhuyenMai;
-        private System.Windows.Forms.Button btnSuaKhuyenMai;
-        private System.Windows.Forms.GroupBox grpThemKhuyenMai;
-        private System.Windows.Forms.Button btnThemKhuyenMai;
-        private System.Windows.Forms.GroupBox grpXemDanhSachKhuyenMai;
-        private System.Windows.Forms.Button btnXemDanhSachKhuyenMai;
+        private System.Windows.Forms.GroupBox grpDeletedRecords;
+        private System.Windows.Forms.GroupBox grpDeletedInvoices;
+        private System.Windows.Forms.Button btnManageDeletedInvoices;
+        private System.Windows.Forms.GroupBox grpDeletedPositions;
+        private System.Windows.Forms.Button btnManageDeletedPositions;
+        private System.Windows.Forms.GroupBox grpDeletedEmployees;
+        private System.Windows.Forms.Button btnManageDeletedEmployees;
+        private System.Windows.Forms.GroupBox grpDeletedSuppliers;
+        private System.Windows.Forms.Button btnManageDeletedSuppliers;
+        private System.Windows.Forms.GroupBox grpDeletedProducts;
+        private System.Windows.Forms.Button btnManageDeletedProducts;
     }
 }
