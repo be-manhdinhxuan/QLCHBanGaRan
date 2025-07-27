@@ -108,7 +108,7 @@ namespace QLCHBanGaRan.UCFunction
 
         private DataTable _getIDProduct()
         {
-            string query = "SELECT MaMon FROM DoAn ORDER BY MaMon";
+            string query = "SELECT MaMon FROM DoAn WHERE IsDeleted = 0 ORDER BY MaMon";
             return cls_DatabaseManager.TableRead(query); // Giả sử cls_DatabaseManager có thể dùng cho DoAn
         }
 
@@ -174,6 +174,12 @@ namespace QLCHBanGaRan.UCFunction
 
                 dtListProduct.DataSource = dt;
 
+                // Ẩn cột IsDeleted
+                if (dtListProduct.Columns.Contains("IsDeleted"))
+                {
+                    dtListProduct.Columns["IsDeleted"].Visible = false;
+                }
+
                 if (dtListProduct.Columns.Contains("MaNCC"))
                     dtListProduct.Columns["MaNCC"].Visible = false;
 
@@ -186,8 +192,24 @@ namespace QLCHBanGaRan.UCFunction
                 if (!string.IsNullOrEmpty(txtTimKiem.Text))
                 {
                     string filterColumn = cmbFilter.SelectedValue.ToString();
-                    dt.DefaultView.RowFilter = $"{filterColumn} LIKE '%{txtTimKiem.Text}%'";
+                    dt.DefaultView.RowFilter = $"IsDeleted = 0 AND {filterColumn} LIKE '%{txtTimKiem.Text}%'";
                     dtListProduct.DataSource = dt.DefaultView.ToTable();
+                    // Ẩn cột IsDeleted sau khi áp dụng bộ lọc
+                    if (dtListProduct.Columns.Contains("IsDeleted"))
+                    {
+                        dtListProduct.Columns["IsDeleted"].Visible = false;
+                    }
+                }
+                else
+                {
+                    // Nếu không có tìm kiếm, áp dụng bộ lọc IsDeleted = 0
+                    dt.DefaultView.RowFilter = "IsDeleted = 0";
+                    dtListProduct.DataSource = dt.DefaultView.ToTable();
+                    // Ẩn cột IsDeleted sau khi áp dụng bộ lọc
+                    if (dtListProduct.Columns.Contains("IsDeleted"))
+                    {
+                        dtListProduct.Columns["IsDeleted"].Visible = false;
+                    }
                 }
             }
 
@@ -280,61 +302,20 @@ namespace QLCHBanGaRan.UCFunction
             DialogResult result = MessageBox.Show($"Bạn có chắc chắn muốn xóa sản phẩm có mã {maMon}?", "Xác nhận xóa", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result == DialogResult.Yes)
             {
-                // Kiểm tra và xóa các bản ghi liên quan trong ChiTietHoaDon
-                if (_checkProductInCTHD(maMon))
+                // Cập nhật IsDeleted = 1 thay vì xóa vĩnh viễn
+                string query = "UPDATE DoAn SET IsDeleted = 1 WHERE MaMon = @MaMon";
+                SqlParameter[] parameters = new SqlParameter[] { new SqlParameter("@MaMon", maMon) };
+                if (cls_DatabaseManager.ExecuteNonQuery(query, parameters) > 0)
                 {
-                    if (_deleteRelatedChiTietHoaDon(maMon))
-                    {
-                        if (_delProduct(maMon))
-                        {
-                            MessageBox.Show($"Xóa sản phẩm có mã {maMon} thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            LoadProductList(); // Tải lại danh sách sản phẩm
-                            _reset(); // Đặt lại các trường nhập liệu
-                        }
-                        else
-                        {
-                            MessageBox.Show($"Không thể xóa sản phẩm có mã {maMon}. Vui lòng thử lại!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
-                    }
-                    else
-                    {
-                        MessageBox.Show("Không thể xóa các bản ghi trong ChiTietHoaDon. Vui lòng thử lại!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
-                else if (_delProduct(maMon))
-                {
-                    MessageBox.Show($"Xóa sản phẩm có mã {maMon} thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show($"Đã đánh dấu sản phẩm có mã {maMon} là đã xóa!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     LoadProductList(); // Tải lại danh sách sản phẩm
                     _reset(); // Đặt lại các trường nhập liệu
                 }
                 else
                 {
-                    MessageBox.Show($"Không thể xóa sản phẩm có mã {maMon}. Vui lòng thử lại!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"Không thể đánh dấu sản phẩm có mã {maMon} là đã xóa. Vui lòng thử lại!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-        }
-
-        // Thêm các phương thức hỗ trợ tương tự như trong UC_DrinkManager
-        private bool _deleteRelatedChiTietHoaDon(string maMon)
-        {
-            string query = "DELETE FROM ChiTietHoaDon WHERE MaMon = @MaMon";
-            SqlParameter[] parameters = new SqlParameter[] { new SqlParameter("@MaMon", maMon) };
-            return cls_DatabaseManager.ExecuteNonQuery(query, parameters) > 0;
-        }
-
-        private bool _checkProductInCTHD(string maMon)
-        {
-            string query = "SELECT COUNT(*) FROM ChiTietHoaDon WHERE MaMon = @MaMon";
-            SqlParameter[] parameters = new SqlParameter[] { new SqlParameter("@MaMon", maMon) };
-            DataTable dt = cls_DatabaseManager.TableRead(query, parameters);
-            return dt.Rows[0].Field<int>(0) > 0;
-        }
-
-        private bool _delProduct(string maMon)
-        {
-            string query = "DELETE FROM DoAn WHERE MaMon = @MaMon";
-            SqlParameter[] parameters = new SqlParameter[] { new SqlParameter("@MaMon", maMon) };
-            return cls_DatabaseManager.ExecuteNonQuery(query, parameters) > 0;
         }
 
         private void btnCapNhat_Click(object sender, EventArgs e)
@@ -404,7 +385,7 @@ namespace QLCHBanGaRan.UCFunction
                 if (dt != null && dt.Rows.Count > 0)
                 {
                     string filterColumn = cmbFilter.SelectedValue.ToString();
-                    dt.DefaultView.RowFilter = $"{filterColumn} LIKE '%{txtTimKiem.Text}%'";
+                    dt.DefaultView.RowFilter = $"IsDeleted = 0 AND {filterColumn} LIKE '%{txtTimKiem.Text}%'";
                     dtListProduct.DataSource = dt.DefaultView.ToTable();
                     _formatDT();
                 }

@@ -24,9 +24,15 @@ namespace QLCHBanGaRan.UCFunction
 
         private void _formatDT()
         {
-            dtListProduct.Columns["MaDoUong"].Width = 60;
-            dtListProduct.Columns["TenDoUong"].Width = 220;
-            dtListProduct.Columns["TenNhaCungCap"].Width = 300;
+            if (dtListProduct.Columns.Contains("MaDoUong"))
+                dtListProduct.Columns["MaDoUong"].Width = 60;
+            if (dtListProduct.Columns.Contains("TenDoUong"))
+                dtListProduct.Columns["TenDoUong"].Width = 180;
+            if (dtListProduct.Columns.Contains("TenNhaCungCap"))
+                dtListProduct.Columns["TenNhaCungCap"].Width = 250;
+            // Ẩn cột IsDeleted nếu có
+            if (dtListProduct.Columns.Contains("IsDeleted"))
+                dtListProduct.Columns["IsDeleted"].Visible = false;
         }
 
         private void _reset()
@@ -77,7 +83,7 @@ namespace QLCHBanGaRan.UCFunction
 
         private DataTable _getIDProduct()
         {
-            string query = "SELECT MaDoUong FROM DoUong ORDER BY MaDoUong";
+            string query = "SELECT MaDoUong FROM DoUong WHERE IsDeleted = 0 ORDER BY MaDoUong";
             return cls_DatabaseManager.TableRead(query);
         }
 
@@ -113,8 +119,8 @@ namespace QLCHBanGaRan.UCFunction
 
         private DataTable _searchProduct(string column, string searchText)
         {
-            string query = $"SELECT du.MaDoUong, du.TenDoUong, ncc.TenNCC AS TenNhaCungCap, du.GiaTien, du.GiamGia, du.SoLuong " +
-                           $"FROM DoUong du LEFT JOIN NhaCungCap ncc ON du.MaNCC = ncc.MaNCC WHERE {column} LIKE @Search";
+            string query = $"SELECT du.MaDoUong, du.TenDoUong, ncc.TenNCC AS TenNhaCungCap, du.GiaTien, du.GiamGia, du.SoLuong, du.IsDeleted " +
+                           $"FROM DoUong du LEFT JOIN NhaCungCap ncc ON du.MaNCC = ncc.MaNCC WHERE du.IsDeleted = 0 AND {column} LIKE @Search";
             SqlParameter[] parameters = new SqlParameter[] { new SqlParameter("@Search", "%" + searchText + "%") };
             return cls_DatabaseManager.TableRead(query, parameters);
         }
@@ -173,60 +179,21 @@ namespace QLCHBanGaRan.UCFunction
                 DialogResult result = MessageBox.Show("Bạn có muốn xóa đồ uống này?", "Thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (result == DialogResult.Yes)
                 {
-                    if (_checkProductInCTHD(maDoUong))
+                    // Cập nhật IsDeleted = 1 thay vì xóa vĩnh viễn
+                    string query = "UPDATE DoUong SET IsDeleted = 1 WHERE MaDoUong = @MaDoUong";
+                    SqlParameter[] parameters = new SqlParameter[] { new SqlParameter("@MaDoUong", maDoUong) };
+                    if (cls_DatabaseManager.ExecuteNonQuery(query, parameters) > 0)
                     {
-                        if (_deleteRelatedChiTietHoaDon(maDoUong))
-                        {
-                            if (_delProduct(maDoUong))
-                            {
-                                MessageBox.Show(string.Format("Xóa thành công đồ uống có mã {0}", maDoUong), "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                dtListProduct.DataSource = _showProduct();
-                                _formatDT();
-                            }
-                            else
-                            {
-                                MessageBox.Show("Không thể xóa đồ uống này. Vui lòng thử lại!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            }
-                        }
-                        else
-                        {
-                            MessageBox.Show("Không thể xóa các bản ghi trong ChiTietHoaDon. Vui lòng thử lại!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
-                    }
-                    else if (_delProduct(maDoUong))
-                    {
-                        MessageBox.Show(string.Format("Xóa thành công đồ uống có mã {0}", maDoUong), "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show($"Đã đánh dấu đồ uống có mã {maDoUong} là đã xóa!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         dtListProduct.DataSource = _showProduct();
                         _formatDT();
                     }
                     else
                     {
-                        MessageBox.Show("Không thể xóa đồ uống này. Vui lòng thử lại!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show($"Không thể đánh dấu đồ uống có mã {maDoUong} là đã xóa. Vui lòng thử lại!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
-        }
-
-        private bool _deleteRelatedChiTietHoaDon(string maDoUong)
-        {
-            string query = "DELETE FROM ChiTietHoaDon WHERE MaDoUong = @MaDoUong";
-            SqlParameter[] parameters = new SqlParameter[] { new SqlParameter("@MaDoUong", maDoUong) };
-            return cls_DatabaseManager.ExecuteNonQuery(query, parameters) > 0;
-        }
-
-        private bool _checkProductInCTHD(string maDoUong)
-        {
-            string query = "SELECT COUNT(*) FROM ChiTietHoaDon WHERE MaDoUong = @MaDoUong";
-            SqlParameter[] parameters = new SqlParameter[] { new SqlParameter("@MaDoUong", maDoUong) };
-            DataTable dt = cls_DatabaseManager.TableRead(query, parameters);
-            return dt.Rows[0].Field<int>(0) > 0;
-        }
-
-        private bool _delProduct(string maDoUong)
-        {
-            string query = "DELETE FROM DoUong WHERE MaDoUong = @MaDoUong";
-            SqlParameter[] parameters = new SqlParameter[] { new SqlParameter("@MaDoUong", maDoUong) };
-            return cls_DatabaseManager.ExecuteNonQuery(query, parameters) > 0;
         }
 
         private IEnumerable<Control> GetAll(Control control, Type type)
@@ -343,7 +310,7 @@ namespace QLCHBanGaRan.UCFunction
 
         private bool _addProduct(string maDoUong, string tenDoUong, string maNCC, decimal giaTien, int giamGia, int soLuong)
         {
-            string query = "INSERT INTO DoUong (MaDoUong, TenDoUong, MaNCC, GiaTien, GiamGia, SoLuong) VALUES (@MaDoUong, @TenDoUong, @MaNCC, @GiaTien, @GiamGia, @SoLuong)";
+            string query = "INSERT INTO DoUong (MaDoUong, TenDoUong, MaNCC, GiaTien, GiamGia, SoLuong, IsDeleted) VALUES (@MaDoUong, @TenDoUong, @MaNCC, @GiaTien, @GiamGia, @SoLuong, 0)";
             SqlParameter[] parameters = new SqlParameter[]
             {
                 new SqlParameter("@MaDoUong", maDoUong),
@@ -373,8 +340,8 @@ namespace QLCHBanGaRan.UCFunction
 
         private DataTable _showProduct()
         {
-            string query = "SELECT du.MaDoUong, du.TenDoUong, ncc.TenNCC AS TenNhaCungCap, du.GiaTien, du.GiamGia, du.SoLuong, du.SoLuongDaBan " +
-                           "FROM DoUong du LEFT JOIN NhaCungCap ncc ON du.MaNCC = ncc.MaNCC";
+            string query = "SELECT du.MaDoUong, du.TenDoUong, ncc.TenNCC AS TenNhaCungCap, du.GiaTien, du.GiamGia, du.SoLuong, du.SoLuongDaBan, du.IsDeleted " +
+                           "FROM DoUong du LEFT JOIN NhaCungCap ncc ON du.MaNCC = ncc.MaNCC WHERE du.IsDeleted = 0";
             return cls_DatabaseManager.TableRead(query);
         }
 

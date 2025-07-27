@@ -9,18 +9,20 @@ namespace QLCHBanGaRan.lib
         // Hiển thị danh sách món ăn
         public static DataTable _showDoAn()
         {
-            string query = "SELECT da.MaMon, da.TenMon, da.MaNCC, ncc.TenNCC, da.GiaTien, da.GiamGia, da.SoLuong, da.SoLuongDaBan " +
+            string query = "SELECT da.MaMon, da.TenMon, da.MaNCC, ncc.TenNCC, da.GiaTien, da.GiamGia, da.SoLuong, da.SoLuongDaBan, da.IsDeleted " +
                            "FROM DoAn da " +
-                           "JOIN NhaCungCap ncc ON da.MaNCC = ncc.MaNCC";
+                           "JOIN NhaCungCap ncc ON da.MaNCC = ncc.MaNCC " +
+                           "WHERE da.IsDeleted = 0";
             return cls_DatabaseManager.TableRead(query, null);
         }
 
         // Hiển thị danh sách đồ uống
         public static DataTable _showDoUong()
         {
-            string query = "SELECT du.MaDoUong, du.TenDoUong, du.MaNCC, ncc.TenNCC, du.GiaTien, du.GiamGia, du.SoLuong " +
+            string query = "SELECT du.MaDoUong, du.TenDoUong, du.MaNCC, ncc.TenNCC, du.GiaTien, du.GiamGia, du.SoLuong, du.IsDeleted " +
                            "FROM DoUong du " +
-                           "JOIN NhaCungCap ncc ON du.MaNCC = ncc.MaNCC";
+                           "JOIN NhaCungCap ncc ON du.MaNCC = ncc.MaNCC " +
+                           "WHERE du.IsDeleted = 0";
             return cls_DatabaseManager.TableRead(query, null);
         }
 
