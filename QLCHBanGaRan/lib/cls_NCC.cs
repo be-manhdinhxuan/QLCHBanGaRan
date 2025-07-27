@@ -9,20 +9,38 @@ namespace QLCHBanGaRan.lib
     {
         public static DataTable _showDetailNCC()
         {
-            string query = "SELECT MaNCC, TenNCC FROM NhaCungCap";
+            string query = "SELECT MaNCC, TenNCC, DiaChi, SDT, IsDeleted FROM NhaCungCap WHERE IsDeleted = 0";
             return cls_DatabaseManager.TableRead(query);
         }
 
-        public static bool _addNCC(string tenNCC)
+        public static DataTable _searchNCC(string filter, string keyword)
+        {
+            string query = "";
+            if (filter == "Tên NCC")
+                query = "SELECT MaNCC, TenNCC, DiaChi, SDT, IsDeleted FROM NhaCungCap WHERE IsDeleted = 0 AND TenNCC LIKE @Keyword";
+            else if (filter == "Địa chỉ")
+                query = "SELECT MaNCC, TenNCC, DiaChi, SDT, IsDeleted FROM NhaCungCap WHERE IsDeleted = 0 AND DiaChi LIKE @Keyword";
+            else if (filter == "SĐT")
+                query = "SELECT MaNCC, TenNCC, DiaChi, SDT, IsDeleted FROM NhaCungCap WHERE IsDeleted = 0 AND SDT LIKE @Keyword";
+
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new SqlParameter("@Keyword", $"%{keyword}%")
+            };
+            return cls_DatabaseManager.TableRead(query, parameters);
+        }
+
+        public static bool _addNCC(string maNCC, string tenNCC, string diaChi, string sdt)
         {
             try
             {
-                string maNCC = GenerateMaNCC();
-                string query = "INSERT INTO NhaCungCap (MaNCC, TenNCC) VALUES (@MaNCC, @TenNCC)";
+                string query = "INSERT INTO NhaCungCap (MaNCC, TenNCC, DiaChi, SDT, IsDeleted) VALUES (@MaNCC, @TenNCC, @DiaChi, @SDT, 0)";
                 SqlParameter[] parameters = new SqlParameter[]
                 {
                     new SqlParameter("@MaNCC", maNCC),
-                    new SqlParameter("@TenNCC", tenNCC)
+                    new SqlParameter("@TenNCC", tenNCC),
+                    new SqlParameter("@DiaChi", diaChi),
+                    new SqlParameter("@SDT", sdt)
                 };
                 int rowsAffected = cls_DatabaseManager.ExecuteNonQuery(query, parameters);
                 return rowsAffected > 0;
@@ -33,15 +51,17 @@ namespace QLCHBanGaRan.lib
             }
         }
 
-        public static bool _updateNCC(string maNCC, string tenNCC)
+        public static bool _updateNCC(string maNCC, string tenNCC, string diaChi, string sdt)
         {
             try
             {
-                string query = "UPDATE NhaCungCap SET TenNCC = @TenNCC WHERE MaNCC = @MaNCC";
+                string query = "UPDATE NhaCungCap SET TenNCC = @TenNCC, DiaChi = @DiaChi, SDT = @SDT WHERE MaNCC = @MaNCC";
                 SqlParameter[] parameters = new SqlParameter[]
                 {
                     new SqlParameter("@MaNCC", maNCC),
-                    new SqlParameter("@TenNCC", tenNCC)
+                    new SqlParameter("@TenNCC", tenNCC),
+                    new SqlParameter("@DiaChi", diaChi),
+                    new SqlParameter("@SDT", sdt)
                 };
                 int rowsAffected = cls_DatabaseManager.ExecuteNonQuery(query, parameters);
                 return rowsAffected > 0;
@@ -56,16 +76,10 @@ namespace QLCHBanGaRan.lib
         {
             try
             {
-                string query = "EXEC sp_DelNCC @MaNCC";
+                string query = "UPDATE NhaCungCap SET IsDeleted = 1 WHERE MaNCC = @MaNCC";
                 SqlParameter[] parameters = new SqlParameter[] { new SqlParameter("@MaNCC", maNCC) };
-                using (SqlConnection conn = new SqlConnection(cls_DatabaseManager.connectionString))
-                {
-                    conn.Open();
-                    SqlCommand cmd = new SqlCommand(query, conn);
-                    cmd.Parameters.AddWithValue("@MaNCC", maNCC);
-                    int result = cmd.ExecuteNonQuery();
-                    return result > 0; // Trả về true nếu có dòng bị ảnh hưởng
-                }
+                int rowsAffected = cls_DatabaseManager.ExecuteNonQuery(query, parameters);
+                return rowsAffected > 0;
             }
             catch (SqlException ex)
             {
@@ -81,7 +95,7 @@ namespace QLCHBanGaRan.lib
 
         public static DataTable _checkNCC(string maNCC)
         {
-            string query = "SELECT COUNT(*) FROM DoAn WHERE MaNCC = @MaNCC UNION SELECT COUNT(*) FROM DoUong WHERE MaNCC = @MaNCC";
+            string query = "SELECT COUNT(*) FROM DoAn WHERE MaNCC = @MaNCC AND IsDeleted = 0 UNION SELECT COUNT(*) FROM DoUong WHERE MaNCC = @MaNCC AND IsDeleted = 0";
             SqlParameter[] parameters = new SqlParameter[]
             {
                 new SqlParameter("@MaNCC", maNCC)
@@ -89,7 +103,7 @@ namespace QLCHBanGaRan.lib
             return cls_DatabaseManager.TableRead(query, parameters);
         }
 
-        private static string GenerateMaNCC()
+        public static string GenerateMaNCC()
         {
             string query = "SELECT MAX(CAST(SUBSTRING(MaNCC, 4, 3) AS INT)) FROM NhaCungCap WHERE MaNCC LIKE 'NCC[0-9][0-9][0-9]'";
             object result = cls_DatabaseManager.ExecuteScalar(query);
