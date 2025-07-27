@@ -45,8 +45,8 @@ namespace QLCHBanGaRan.UCSystems
             DataTable dt = new DataTable();
             try
             {
-                string query = "SELECT MaMon AS MaSP, TenMon AS TenSP, GiaTien, SoLuong, GiamGia FROM DoAn WHERE TenMon LIKE @SearchText + '%'" +
-                               "UNION SELECT MaDoUong AS MaSP, TenDoUong AS TenSP, GiaTien, SoLuong, GiamGia FROM DoUong WHERE TenDoUong LIKE @SearchText + '%'";
+                string query = "SELECT MaMon AS MaSP, TenMon AS TenSP, GiaTien, SoLuong, GiamGia FROM DoAn WHERE IsDeleted = 0 AND TenMon LIKE @SearchText + '%'" +
+                               "UNION SELECT MaDoUong AS MaSP, TenDoUong AS TenSP, GiaTien, SoLuong, GiamGia FROM DoUong WHERE IsDeleted = 0 AND TenDoUong LIKE @SearchText + '%'";
                 SqlParameter[] parameters = new SqlParameter[]
                 {
                     new SqlParameter("@SearchText", SqlDbType.NVarChar) { Value = searchText }
@@ -66,7 +66,7 @@ namespace QLCHBanGaRan.UCSystems
         // Thêm phương thức làm mới danh sách sản phẩm
         public void RefreshProductList()
         {
-            dtSearch.DataSource = LoadProducts(""); // Tải lại toàn bộ sản phẩm mà không lọc
+            dtSearch.DataSource = LoadProducts(""); // Tải lại toàn bộ sản phẩm chưa xóa
             ConfigureDataGridViewColumns(dtSearch); // Cấu hình cột
         }
 
@@ -199,7 +199,7 @@ namespace QLCHBanGaRan.UCSystems
 
         private void UC_Order_Load(object sender, EventArgs e)
         {
-            idEmployess = Forms.frm_Main.NguoiDungID; 
+            idEmployess = Forms.frm_Main.NguoiDungID;
             string[] employeeInfo = cls_EmployeeManagement.GetEmployeeInfo(idEmployess);
             tenNV = employeeInfo[1];
             nhanVienID = employeeInfo[0];
@@ -514,7 +514,5 @@ namespace QLCHBanGaRan.UCSystems
                 txtSearch.ForeColor = System.Drawing.Color.Gray;
             }
         }
-
-
     }
 }
