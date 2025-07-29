@@ -33,26 +33,36 @@ namespace QLCHBanGaRan
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.Icon = global::QLCHBanGaRan.Properties.Resources.logo;
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frm_Login));
+            this.dragLogin = new Bunifu.Framework.UI.BunifuDragControl(this.components);
             this.pnlRight = new System.Windows.Forms.Panel();
             this.btnClose = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.lblLogin = new System.Windows.Forms.Label();
-            this.txtTenDangNhap = new MaterialSkin.Controls.MaterialSingleLineTextField();
-            this.txtPassword = new MaterialSkin.Controls.MaterialSingleLineTextField();
+            this.txtTenDangNhap = new Bunifu.Framework.UI.BunifuMaterialTextbox();
+            this.txtPassword = new Bunifu.Framework.UI.BunifuMaterialTextbox();
             this.label6 = new System.Windows.Forms.Label();
             this.pnlLeft = new System.Windows.Forms.Panel();
+            this.lblHintPassword = new System.Windows.Forms.Label();
+            this.lblHintUsername = new System.Windows.Forms.Label();
             this.picEyeToggle = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.btnLogin = new MaterialSkin.Controls.MaterialRaisedButton();
-            this.focusTimer = new System.Windows.Forms.Timer(this.components);
+            this.btnLogin = new System.Windows.Forms.Button();
+            this.bunifuDragControl1 = new Bunifu.Framework.UI.BunifuDragControl(this.components);
             this.pnlRight.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.pnlLeft.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picEyeToggle)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
+            // 
+            // dragLogin
+            // 
+            this.dragLogin.Fixed = true;
+            this.dragLogin.Horizontal = true;
+            this.dragLogin.TargetControl = this.pnlRight;
+            this.dragLogin.Vertical = true;
             // 
             // pnlRight
             // 
@@ -65,9 +75,6 @@ namespace QLCHBanGaRan
             this.pnlRight.Name = "pnlRight";
             this.pnlRight.Size = new System.Drawing.Size(516, 533);
             this.pnlRight.TabIndex = 1;
-            this.pnlRight.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pnlRight_MouseDown);
-            this.pnlRight.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pnlRight_MouseMove);
-            this.pnlRight.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pnlRight_MouseUp);
             // 
             // btnClose
             // 
@@ -77,8 +84,7 @@ namespace QLCHBanGaRan
             this.btnClose.Location = new System.Drawing.Point(490, -1);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(25, 28);
-            this.btnClose.TabIndex = 9;
-            this.btnClose.TabStop = false;
+            this.btnClose.TabIndex = 4;
             this.btnClose.UseVisualStyleBackColor = true;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
@@ -90,8 +96,7 @@ namespace QLCHBanGaRan
             this.label1.Location = new System.Drawing.Point(0, 17);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(563, 80);
-            this.label1.TabIndex = 8;
-            this.label1.TabStop = false;
+            this.label1.TabIndex = 5;
             this.label1.Text = "FastFood Chicken Bông";
             // 
             // pictureBox1
@@ -101,7 +106,7 @@ namespace QLCHBanGaRan
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(414, 393);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox1.TabIndex = 7;
+            this.pictureBox1.TabIndex = 6;
             this.pictureBox1.TabStop = false;
             // 
             // lblLogin
@@ -113,39 +118,46 @@ namespace QLCHBanGaRan
             this.lblLogin.Name = "lblLogin";
             this.lblLogin.Size = new System.Drawing.Size(283, 32);
             this.lblLogin.TabIndex = 1;
-            this.lblLogin.TabStop = false;
             this.lblLogin.Text = "ĐĂNG NHẬP HỆ THỐNG";
             // 
             // txtTenDangNhap
             // 
-            this.txtTenDangNhap.Depth = 0;
-            this.txtTenDangNhap.Hint = "Username";
+            this.txtTenDangNhap.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtTenDangNhap.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtTenDangNhap.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.txtTenDangNhap.HintForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.txtTenDangNhap.HintText = "";
+            this.txtTenDangNhap.isPassword = false;
+            this.txtTenDangNhap.LineFocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(0)))), ((int)(((byte)(42)))));
+            this.txtTenDangNhap.LineIdleColor = System.Drawing.Color.Gray;
+            this.txtTenDangNhap.LineMouseHoverColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(0)))), ((int)(((byte)(42)))));
+            this.txtTenDangNhap.LineThickness = 3;
             this.txtTenDangNhap.Location = new System.Drawing.Point(35, 237);
-            this.txtTenDangNhap.MouseState = MaterialSkin.MouseState.HOVER;
+            this.txtTenDangNhap.Margin = new System.Windows.Forms.Padding(4);
             this.txtTenDangNhap.Name = "txtTenDangNhap";
-            this.txtTenDangNhap.PasswordChar = '\0';
-            this.txtTenDangNhap.SelectedText = "";
-            this.txtTenDangNhap.SelectionLength = 0;
-            this.txtTenDangNhap.SelectionStart = 0;
-            this.txtTenDangNhap.Size = new System.Drawing.Size(315, 23);
-            this.txtTenDangNhap.TabIndex = 0;
-            this.txtTenDangNhap.UseSystemPasswordChar = false;
+            this.txtTenDangNhap.Size = new System.Drawing.Size(315, 44);
+            this.txtTenDangNhap.TabIndex = 1;
+            this.txtTenDangNhap.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.txtTenDangNhap.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtTenDangNhap_KeyDown);
             // 
             // txtPassword
             // 
-            this.txtPassword.Depth = 0;
-            this.txtPassword.Hint = "Password";
+            this.txtPassword.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtPassword.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtPassword.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.txtPassword.HintForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.txtPassword.HintText = "";
+            this.txtPassword.isPassword = false;
+            this.txtPassword.LineFocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(0)))), ((int)(((byte)(42)))));
+            this.txtPassword.LineIdleColor = System.Drawing.Color.Gray;
+            this.txtPassword.LineMouseHoverColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(0)))), ((int)(((byte)(42)))));
+            this.txtPassword.LineThickness = 3;
             this.txtPassword.Location = new System.Drawing.Point(35, 313);
-            this.txtPassword.MouseState = MaterialSkin.MouseState.HOVER;
+            this.txtPassword.Margin = new System.Windows.Forms.Padding(4);
             this.txtPassword.Name = "txtPassword";
-            this.txtPassword.PasswordChar = '\0';
-            this.txtPassword.SelectedText = "";
-            this.txtPassword.SelectionLength = 0;
-            this.txtPassword.SelectionStart = 0;
-            this.txtPassword.Size = new System.Drawing.Size(315, 23);
-            this.txtPassword.TabIndex = 1;
-            this.txtPassword.UseSystemPasswordChar = true;
+            this.txtPassword.Size = new System.Drawing.Size(315, 44);
+            this.txtPassword.TabIndex = 2;
+            this.txtPassword.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.txtPassword.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtPassword_KeyDown);
             // 
             // label6
@@ -153,12 +165,13 @@ namespace QLCHBanGaRan
             this.label6.Location = new System.Drawing.Point(0, 0);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(100, 23);
-            this.label6.TabIndex = 7;
-            this.label6.TabStop = false;
+            this.label6.TabIndex = 11;
             // 
             // pnlLeft
             // 
             this.pnlLeft.BackColor = System.Drawing.Color.White;
+            this.pnlLeft.Controls.Add(this.lblHintPassword);
+            this.pnlLeft.Controls.Add(this.lblHintUsername);
             this.pnlLeft.Controls.Add(this.picEyeToggle);
             this.pnlLeft.Controls.Add(this.pictureBox2);
             this.pnlLeft.Controls.Add(this.btnLogin);
@@ -171,20 +184,41 @@ namespace QLCHBanGaRan
             this.pnlLeft.Name = "pnlLeft";
             this.pnlLeft.Size = new System.Drawing.Size(379, 533);
             this.pnlLeft.TabIndex = 0;
-            this.pnlLeft.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pnlLeft_MouseDown);
-            this.pnlLeft.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pnlLeft_MouseMove);
-            this.pnlLeft.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pnlLeft_MouseUp);
+            // 
+            // lblHintPassword
+            // 
+            this.lblHintPassword.AutoSize = true;
+            this.lblHintPassword.Enabled = false;
+            this.lblHintPassword.Font = new System.Drawing.Font("Segoe UI", 11F);
+            this.lblHintPassword.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.lblHintPassword.Location = new System.Drawing.Point(45, 325);
+            this.lblHintPassword.Name = "lblHintPassword";
+            this.lblHintPassword.Size = new System.Drawing.Size(70, 20);
+            this.lblHintPassword.TabIndex = 9;
+            this.lblHintPassword.Text = "Password";
+            // 
+            // lblHintUsername
+            // 
+            this.lblHintUsername.AutoSize = true;
+            this.lblHintUsername.Enabled = false;
+            this.lblHintUsername.Font = new System.Drawing.Font("Segoe UI", 11F);
+            this.lblHintUsername.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.lblHintUsername.Location = new System.Drawing.Point(45, 250);
+            this.lblHintUsername.Name = "lblHintUsername";
+            this.lblHintUsername.Size = new System.Drawing.Size(75, 20);
+            this.lblHintUsername.TabIndex = 8;
+            this.lblHintUsername.Text = "Username";
             // 
             // picEyeToggle
             // 
-            this.picEyeToggle.Image = global::QLCHBanGaRan.Properties.Resources.eye_closed;
-            this.picEyeToggle.Location = new System.Drawing.Point(318, 298);
+            this.picEyeToggle.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.picEyeToggle.Image = ((System.Drawing.Image)(resources.GetObject("picEyeToggle.Image")));
+            this.picEyeToggle.Location = new System.Drawing.Point(326, 325);
             this.picEyeToggle.Name = "picEyeToggle";
-            this.picEyeToggle.Size = new System.Drawing.Size(32, 32);
+            this.picEyeToggle.Size = new System.Drawing.Size(24, 24);
             this.picEyeToggle.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.picEyeToggle.TabIndex = 8;
+            this.picEyeToggle.TabIndex = 10;
             this.picEyeToggle.TabStop = false;
-            this.picEyeToggle.Click += new System.EventHandler(this.picEyeToggle_Click);
             // 
             // pictureBox2
             // 
@@ -198,22 +232,26 @@ namespace QLCHBanGaRan
             // 
             // btnLogin
             // 
-            this.btnLogin.Depth = 0;
-            this.btnLogin.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnLogin.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnLogin.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(0)))), ((int)(((byte)(42)))));
+            this.btnLogin.FlatAppearance.BorderSize = 0;
+            this.btnLogin.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnLogin.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnLogin.ForeColor = System.Drawing.Color.White;
             this.btnLogin.Location = new System.Drawing.Point(88, 386);
-            this.btnLogin.MouseState = MaterialSkin.MouseState.HOVER;
             this.btnLogin.Name = "btnLogin";
-            this.btnLogin.Primary = true;
             this.btnLogin.Size = new System.Drawing.Size(207, 53);
-            this.btnLogin.TabIndex = 2;
+            this.btnLogin.TabIndex = 3;
             this.btnLogin.Text = "ĐĂNG NHẬP";
             this.btnLogin.UseVisualStyleBackColor = false;
             this.btnLogin.Click += new System.EventHandler(this.btnLogin_Click);
             // 
-            // focusTimer
+            // bunifuDragControl1
             // 
-            this.focusTimer.Interval = 300; // Delay 100ms
-            this.focusTimer.Tick += new System.EventHandler(this.focusTimer_Tick);
+            this.bunifuDragControl1.Fixed = true;
+            this.bunifuDragControl1.Horizontal = true;
+            this.bunifuDragControl1.TargetControl = null;
+            this.bunifuDragControl1.Vertical = true;
             // 
             // frm_Login
             // 
@@ -224,11 +262,11 @@ namespace QLCHBanGaRan
             this.Controls.Add(this.pnlRight);
             this.Controls.Add(this.pnlLeft);
             this.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Icon = global::QLCHBanGaRan.Properties.Resources.logo;
             this.Name = "frm_Login";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Đăng Nhập";
-            this.Load += new System.EventHandler(this.frm_Login_Load);
-            this.Activated += new System.EventHandler(this.frm_Login_Activated);
             this.pnlRight.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.pnlLeft.ResumeLayout(false);
@@ -240,48 +278,21 @@ namespace QLCHBanGaRan
         }
 
         #endregion
+        private Bunifu.Framework.UI.BunifuDragControl dragLogin;
         private System.Windows.Forms.Panel pnlRight;
         private System.Windows.Forms.Label lblLogin;
-        private MaterialSkin.Controls.MaterialSingleLineTextField txtTenDangNhap;
-        private MaterialSkin.Controls.MaterialSingleLineTextField txtPassword;
+        private Bunifu.Framework.UI.BunifuMaterialTextbox txtTenDangNhap;
+        private Bunifu.Framework.UI.BunifuMaterialTextbox txtPassword;
         private System.Windows.Forms.Label label6;
-        private MaterialSkin.Controls.MaterialRaisedButton btnLogin;
+        private System.Windows.Forms.Button btnLogin;
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.Panel pnlLeft;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnClose;
+        private Bunifu.Framework.UI.BunifuDragControl bunifuDragControl1;
         private System.Windows.Forms.PictureBox picEyeToggle;
-        private System.Windows.Forms.Timer focusTimer;
-
-        private bool isDragging = false;
-        private Point lastCursorPosition;
-        private Point lastFormPosition;
-
-        private void frm_Login_Load(object sender, EventArgs e)
-        {
-            var materialSkinManager = MaterialSkinManager.Instance;
-            materialSkinManager.AddFormToManage(this);
-            materialSkinManager.Theme = MaterialSkinManager.Themes.LIGHT;
-            materialSkinManager.ColorScheme = new ColorScheme(
-                Primary.Red800, // Gần với (228, 0, 42)
-                Primary.Red900,
-                Primary.Red500,
-                Accent.Red200,
-                TextShade.WHITE
-            );
-            btnLogin.Primary = true;
-            focusTimer.Start(); // Bắt đầu timer để delay focus
-        }
-
-        private void frm_Login_Activated(object sender, EventArgs e)
-        {
-        }
-
-        private void focusTimer_Tick(object sender, EventArgs e)
-        {
-            focusTimer.Stop(); // Dừng timer sau lần đầu
-            txtTenDangNhap.Focus();
-        }
+        private System.Windows.Forms.Label lblHintPassword;
+        private System.Windows.Forms.Label lblHintUsername;
     }
 }
