@@ -26,27 +26,26 @@
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
-        // Trong InitializeComponent()
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
             this.grpSearchProduct = new System.Windows.Forms.GroupBox();
+            this.tableLayoutPanelSearchContainer = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanelSearch = new System.Windows.Forms.TableLayoutPanel();
+            this.cmbFilter = new System.Windows.Forms.ComboBox();
+            this.txtSearch = new System.Windows.Forms.TextBox();
             this.dtSearch = new System.Windows.Forms.DataGridView();
             this.MaSP = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TenSP = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.GiaTien = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SoLuong = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.GiamGia = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.panelSpacing = new System.Windows.Forms.Panel();
-            this.txtSearch = new System.Windows.Forms.TextBox();
             this.grpListProduct = new System.Windows.Forms.GroupBox();
             this.dtChoose = new System.Windows.Forms.DataGridView();
             this.grpInfoInvoice = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanelInfoInvoice = new System.Windows.Forms.TableLayoutPanel();
             this.lblUser = new System.Windows.Forms.Label();
             this.txtUser = new System.Windows.Forms.TextBox();
-            this.lblEmployess = new System.Windows.Forms.Label();
-            this.txtEmployess = new System.Windows.Forms.TextBox();
             this.grpPayment = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanelPayment = new System.Windows.Forms.TableLayoutPanel();
             this.lblMoney = new System.Windows.Forms.Label();
@@ -71,7 +70,11 @@
             this.panelInvoiceButtons = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanelRight = new System.Windows.Forms.TableLayoutPanel();
             this.panelActionButtons = new System.Windows.Forms.TableLayoutPanel();
+            this.txtEmployess = new System.Windows.Forms.TextBox();
+            this.lblEmployess = new System.Windows.Forms.Label();
             this.grpSearchProduct.SuspendLayout();
+            this.tableLayoutPanelSearchContainer.SuspendLayout();
+            this.tableLayoutPanelSearch.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtSearch)).BeginInit();
             this.grpListProduct.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtChoose)).BeginInit();
@@ -89,9 +92,7 @@
             // 
             // grpSearchProduct
             // 
-            this.grpSearchProduct.Controls.Add(this.dtSearch);
-            this.grpSearchProduct.Controls.Add(this.panelSpacing);
-            this.grpSearchProduct.Controls.Add(this.txtSearch);
+            this.grpSearchProduct.Controls.Add(this.tableLayoutPanelSearchContainer);
             this.grpSearchProduct.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grpSearchProduct.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold);
             this.grpSearchProduct.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(0)))), ((int)(((byte)(42)))));
@@ -101,6 +102,62 @@
             this.grpSearchProduct.TabIndex = 0;
             this.grpSearchProduct.TabStop = false;
             this.grpSearchProduct.Text = "Chọn món";
+            // 
+            // tableLayoutPanelSearchContainer
+            // 
+            this.tableLayoutPanelSearchContainer.ColumnCount = 1;
+            this.tableLayoutPanelSearchContainer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanelSearchContainer.Controls.Add(this.tableLayoutPanelSearch, 0, 0);
+            this.tableLayoutPanelSearchContainer.Controls.Add(this.dtSearch, 0, 1);
+            this.tableLayoutPanelSearchContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanelSearchContainer.Location = new System.Drawing.Point(3, 23);
+            this.tableLayoutPanelSearchContainer.Name = "tableLayoutPanelSearchContainer";
+            this.tableLayoutPanelSearchContainer.RowCount = 2;
+            this.tableLayoutPanelSearchContainer.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
+            this.tableLayoutPanelSearchContainer.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanelSearchContainer.Size = new System.Drawing.Size(428, 324);
+            this.tableLayoutPanelSearchContainer.TabIndex = 4;
+            // 
+            // tableLayoutPanelSearch
+            // 
+            this.tableLayoutPanelSearch.ColumnCount = 2;
+            this.tableLayoutPanelSearch.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 70F));
+            this.tableLayoutPanelSearch.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 120F));
+            this.tableLayoutPanelSearch.Controls.Add(this.cmbFilter, 1, 0);
+            this.tableLayoutPanelSearch.Controls.Add(this.txtSearch, 0, 0);
+            this.tableLayoutPanelSearch.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanelSearch.Location = new System.Drawing.Point(3, 3);
+            this.tableLayoutPanelSearch.Name = "tableLayoutPanelSearch";
+            this.tableLayoutPanelSearch.RowCount = 1;
+            this.tableLayoutPanelSearch.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanelSearch.Size = new System.Drawing.Size(422, 34);
+            this.tableLayoutPanelSearch.TabIndex = 3;
+            // 
+            // cmbFilter
+            // 
+            this.cmbFilter.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.cmbFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbFilter.Font = new System.Drawing.Font("Segoe UI", 11.25F);
+            this.cmbFilter.FormattingEnabled = true;
+            this.cmbFilter.Items.AddRange(new object[] {
+            "Mã SP",
+            "Tên SP",
+            "Giá tiền"});
+            this.cmbFilter.Location = new System.Drawing.Point(305, 3);
+            this.cmbFilter.Name = "cmbFilter";
+            this.cmbFilter.Size = new System.Drawing.Size(114, 28);
+            this.cmbFilter.TabIndex = 3;
+            // 
+            // txtSearch
+            // 
+            this.txtSearch.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtSearch.Font = new System.Drawing.Font("Segoe UI", 11.25F);
+            this.txtSearch.ForeColor = System.Drawing.Color.Gray;
+            this.txtSearch.Location = new System.Drawing.Point(3, 3);
+            this.txtSearch.Name = "txtSearch";
+            this.txtSearch.Size = new System.Drawing.Size(296, 27);
+            this.txtSearch.TabIndex = 0;
+            this.txtSearch.Text = "Tìm kiếm...";
             // 
             // dtSearch
             // 
@@ -114,11 +171,11 @@
             this.SoLuong,
             this.GiamGia});
             this.dtSearch.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dtSearch.Location = new System.Drawing.Point(3, 80);
+            this.dtSearch.Location = new System.Drawing.Point(3, 43);
             this.dtSearch.Name = "dtSearch";
             this.dtSearch.RowHeadersVisible = false;
             this.dtSearch.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dtSearch.Size = new System.Drawing.Size(428, 267);
+            this.dtSearch.Size = new System.Drawing.Size(422, 278);
             this.dtSearch.TabIndex = 1;
             // 
             // MaSP
@@ -158,28 +215,6 @@
             this.GiamGia.HeaderText = "Giảm giá (%)";
             this.GiamGia.Name = "GiamGia";
             this.GiamGia.ReadOnly = true;
-            // 
-            // panelSpacing
-            // 
-            this.panelSpacing.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelSpacing.Location = new System.Drawing.Point(3, 50);
-            this.panelSpacing.Name = "panelSpacing";
-            this.panelSpacing.Size = new System.Drawing.Size(428, 30);
-            this.panelSpacing.TabIndex = 2;
-            // 
-            // txtSearch
-            // 
-            this.txtSearch.Dock = System.Windows.Forms.DockStyle.Top;
-            this.txtSearch.Font = new System.Drawing.Font("Segoe UI", 11.25F);
-            this.txtSearch.ForeColor = System.Drawing.Color.Gray;
-            this.txtSearch.Location = new System.Drawing.Point(3, 23);
-            this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(428, 27);
-            this.txtSearch.TabIndex = 0;
-            this.txtSearch.Text = "Tìm kiếm...";
-            this.txtSearch.Enter += new System.EventHandler(this.txtSearch_Enter);
-            this.txtSearch.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtSearch_KeyPress);
-            this.txtSearch.Leave += new System.EventHandler(this.txtSearch_Leave);
             // 
             // grpListProduct
             // 
@@ -227,24 +262,26 @@
             this.tableLayoutPanelInfoInvoice.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanelInfoInvoice.Controls.Add(this.lblUser, 0, 0);
             this.tableLayoutPanelInfoInvoice.Controls.Add(this.txtUser, 1, 0);
-            this.tableLayoutPanelInfoInvoice.Controls.Add(this.lblEmployess, 0, 1);
-            this.tableLayoutPanelInfoInvoice.Controls.Add(this.txtEmployess, 1, 1);
+            this.tableLayoutPanelInfoInvoice.Controls.Add(this.lblEmployess, 0, 2);
+            this.tableLayoutPanelInfoInvoice.Controls.Add(this.txtEmployess, 1, 2);
             this.tableLayoutPanelInfoInvoice.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanelInfoInvoice.Location = new System.Drawing.Point(3, 23);
             this.tableLayoutPanelInfoInvoice.Name = "tableLayoutPanelInfoInvoice";
-            this.tableLayoutPanelInfoInvoice.RowCount = 2;
-            this.tableLayoutPanelInfoInvoice.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 36F));
-            this.tableLayoutPanelInfoInvoice.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 36F));
+            this.tableLayoutPanelInfoInvoice.RowCount = 3;
+            this.tableLayoutPanelInfoInvoice.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanelInfoInvoice.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
+            this.tableLayoutPanelInfoInvoice.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanelInfoInvoice.Size = new System.Drawing.Size(428, 116);
             this.tableLayoutPanelInfoInvoice.TabIndex = 0;
             // 
             // lblUser
             // 
+            this.lblUser.AutoSize = true;
             this.lblUser.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblUser.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold);
             this.lblUser.Location = new System.Drawing.Point(3, 0);
             this.lblUser.Name = "lblUser";
-            this.lblUser.Size = new System.Drawing.Size(124, 36);
+            this.lblUser.Size = new System.Drawing.Size(124, 40);
             this.lblUser.TabIndex = 0;
             this.lblUser.Text = "Khách hàng:";
             this.lblUser.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -257,28 +294,6 @@
             this.txtUser.Name = "txtUser";
             this.txtUser.Size = new System.Drawing.Size(292, 27);
             this.txtUser.TabIndex = 1;
-            // 
-            // lblEmployess
-            // 
-            this.lblEmployess.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblEmployess.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold);
-            this.lblEmployess.Location = new System.Drawing.Point(3, 36);
-            this.lblEmployess.Name = "lblEmployess";
-            this.lblEmployess.Size = new System.Drawing.Size(124, 80);
-            this.lblEmployess.TabIndex = 2;
-            this.lblEmployess.Text = "Nhân viên:";
-            this.lblEmployess.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // txtEmployess
-            // 
-            this.txtEmployess.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtEmployess.Font = new System.Drawing.Font("Segoe UI", 11.25F);
-            this.txtEmployess.Location = new System.Drawing.Point(130, 61);
-            this.txtEmployess.Margin = new System.Windows.Forms.Padding(0, 25, 0, 3);
-            this.txtEmployess.Name = "txtEmployess";
-            this.txtEmployess.Size = new System.Drawing.Size(298, 27);
-            this.txtEmployess.TabIndex = 3;
-            this.txtEmployess.TextChanged += new System.EventHandler(this.txtReceive_TextChanged);
             // 
             // grpPayment
             // 
@@ -336,6 +351,7 @@
             // txtMoney
             // 
             this.txtMoney.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtMoney.Enabled = false;
             this.txtMoney.Font = new System.Drawing.Font("Segoe UI", 11.25F);
             this.txtMoney.Location = new System.Drawing.Point(88, 3);
             this.txtMoney.Name = "txtMoney";
@@ -358,6 +374,7 @@
             // txtDiscount
             // 
             this.txtDiscount.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtDiscount.Enabled = false;
             this.txtDiscount.Font = new System.Drawing.Font("Segoe UI", 11.25F);
             this.txtDiscount.Location = new System.Drawing.Point(301, 3);
             this.txtDiscount.Name = "txtDiscount";
@@ -385,7 +402,6 @@
             this.txtReceive.Name = "txtReceive";
             this.txtReceive.Size = new System.Drawing.Size(122, 27);
             this.txtReceive.TabIndex = 14;
-            this.txtReceive.TextChanged += new System.EventHandler(this.txtReceive_TextChanged);
             // 
             // lblReturnPayment
             // 
@@ -402,6 +418,7 @@
             // txtReturnPayment
             // 
             this.txtReturnPayment.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtReturnPayment.Enabled = false;
             this.txtReturnPayment.Font = new System.Drawing.Font("Segoe UI", 11.25F);
             this.txtReturnPayment.Location = new System.Drawing.Point(301, 43);
             this.txtReturnPayment.Name = "txtReturnPayment";
@@ -449,7 +466,6 @@
             this.btnDone.TabIndex = 1;
             this.btnDone.Text = "XONG";
             this.btnDone.UseVisualStyleBackColor = false;
-            this.btnDone.Click += new System.EventHandler(this.btnDone_Click);
             // 
             // btnCancel
             // 
@@ -463,7 +479,6 @@
             this.btnCancel.TabIndex = 22;
             this.btnCancel.Text = "HỦY";
             this.btnCancel.UseVisualStyleBackColor = false;
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // btnAddProduct
             // 
@@ -477,7 +492,6 @@
             this.btnAddProduct.TabIndex = 23;
             this.btnAddProduct.Text = "THÊM MÓN";
             this.btnAddProduct.UseVisualStyleBackColor = false;
-            this.btnAddProduct.Click += new System.EventHandler(this.btnAddProduct_Click);
             // 
             // btnDelProduct
             // 
@@ -491,7 +505,6 @@
             this.btnDelProduct.TabIndex = 24;
             this.btnDelProduct.Text = "XÓA MÓN";
             this.btnDelProduct.UseVisualStyleBackColor = false;
-            this.btnDelProduct.Click += new System.EventHandler(this.btnDelProduct_Click);
             // 
             // btnPrintInvoice
             // 
@@ -505,7 +518,6 @@
             this.btnPrintInvoice.TabIndex = 25;
             this.btnPrintInvoice.Text = "IN HÓA ĐƠN";
             this.btnPrintInvoice.UseVisualStyleBackColor = false;
-            this.btnPrintInvoice.Click += new System.EventHandler(this.btnPrintInvoice_Click);
             // 
             // btnSaveDB
             // 
@@ -519,7 +531,6 @@
             this.btnSaveDB.TabIndex = 26;
             this.btnSaveDB.Text = "LƯU CSDL";
             this.btnSaveDB.UseVisualStyleBackColor = false;
-            this.btnSaveDB.Click += new System.EventHandler(this.btnSaveDB_Click);
             // 
             // check
             // 
@@ -608,6 +619,28 @@
             this.panelActionButtons.Size = new System.Drawing.Size(435, 84);
             this.panelActionButtons.TabIndex = 22;
             // 
+            // txtEmployess
+            // 
+            this.txtEmployess.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtEmployess.Enabled = false;
+            this.txtEmployess.Font = new System.Drawing.Font("Segoe UI", 11.25F);
+            this.txtEmployess.Location = new System.Drawing.Point(133, 78);
+            this.txtEmployess.Name = "txtEmployess";
+            this.txtEmployess.Size = new System.Drawing.Size(292, 27);
+            this.txtEmployess.TabIndex = 3;
+            // 
+            // lblEmployess
+            // 
+            this.lblEmployess.AutoSize = true;
+            this.lblEmployess.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblEmployess.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold);
+            this.lblEmployess.Location = new System.Drawing.Point(3, 75);
+            this.lblEmployess.Name = "lblEmployess";
+            this.lblEmployess.Size = new System.Drawing.Size(124, 41);
+            this.lblEmployess.TabIndex = 2;
+            this.lblEmployess.Text = "Nhân viên:";
+            this.lblEmployess.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // UC_Order
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -617,7 +650,9 @@
             this.Size = new System.Drawing.Size(893, 600);
             this.Load += new System.EventHandler(this.UC_Order_Load);
             this.grpSearchProduct.ResumeLayout(false);
-            this.grpSearchProduct.PerformLayout();
+            this.tableLayoutPanelSearchContainer.ResumeLayout(false);
+            this.tableLayoutPanelSearch.ResumeLayout(false);
+            this.tableLayoutPanelSearch.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtSearch)).EndInit();
             this.grpListProduct.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dtChoose)).EndInit();
@@ -646,8 +681,6 @@
         private System.Windows.Forms.GroupBox grpPayment;
         private System.Windows.Forms.Label lblUser;
         private System.Windows.Forms.TextBox txtUser;
-        private System.Windows.Forms.Label lblEmployess;
-        private System.Windows.Forms.TextBox txtEmployess;
         private System.Windows.Forms.Label lblMoney;
         private System.Windows.Forms.TextBox txtMoney;
         private System.Windows.Forms.Label lblDiscount;
@@ -679,6 +712,10 @@
         private System.Windows.Forms.TableLayoutPanel panelInvoiceButtons;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanelRight;
         private System.Windows.Forms.TableLayoutPanel panelActionButtons;
-        private System.Windows.Forms.Panel panelSpacing;
+        private System.Windows.Forms.ComboBox cmbFilter;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanelSearch;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanelSearchContainer;
+        private System.Windows.Forms.Label lblEmployess;
+        private System.Windows.Forms.TextBox txtEmployess;
     }
 }

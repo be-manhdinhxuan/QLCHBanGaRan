@@ -22,6 +22,43 @@ namespace QLCHBanGaRan.UCSystems
             InitializeComponent();
             InitializeDatabase();
             InitializeOrderTable(); // Khởi tạo DataTable riêng
+            InitializeControls(); // Khởi tạo các control
+        }
+
+        private void InitializeControls()
+        {
+            // Khởi tạo placeholder cho txtSearch
+            txtSearch.Text = "Tìm kiếm...";
+            txtSearch.ForeColor = System.Drawing.Color.Gray;
+
+            // Đăng ký event handlers cho txtSearch
+            txtSearch.Enter += txtSearch_Enter;
+            txtSearch.Leave += txtSearch_Leave;
+            txtSearch.TextChanged += txtSearch_TextChanged;
+
+            // Khởi tạo giá trị mặc định cho cmbFilter
+            cmbFilter.Items.Clear();
+            cmbFilter.Items.Add("Tên SP");
+            cmbFilter.Items.Add("Giá tiền");
+            cmbFilter.Items.Add("Giảm giá");
+            cmbFilter.SelectedIndex = 0; // Chọn "Tên SP" làm giá trị mặc định
+
+            // Đăng ký event handler cho cmbFilter
+            cmbFilter.SelectedIndexChanged += cmbFilter_SelectedIndexChanged;
+
+            // Đăng ký event handlers cho các button
+            btnAddProduct.Click += btnAddProduct_Click;
+            btnDelProduct.Click += btnDelProduct_Click;
+            btnDone.Click += btnDone_Click;
+            btnCancel.Click += btnCancel_Click;
+            btnSaveDB.Click += btnSaveDB_Click;
+            btnPrintInvoice.Click += btnPrintInvoice_Click;
+
+            // Đăng ký event handler cho txtReceive
+            txtReceive.TextChanged += txtReceive_TextChanged;
+
+            // Đăng ký event handler cho UC_Order_Load
+            this.Load += UC_Order_Load;
         }
 
         private void InitializeDatabase()
@@ -40,13 +77,39 @@ namespace QLCHBanGaRan.UCSystems
             tbOrder.Columns["GiamGia"].ReadOnly = false; // Đảm bảo cột GiamGia không chỉ đọc
         }
 
-        private DataTable LoadProducts(string searchText)
+        private DataTable LoadProducts(string searchText, string filterType = "Tên SP")
         {
             DataTable dt = new DataTable();
             try
             {
-                string query = "SELECT MaMon AS MaSP, TenMon AS TenSP, GiaTien, SoLuong, GiamGia FROM DoAn WHERE IsDeleted = 0 AND TenMon LIKE @SearchText + '%'" +
-                               "UNION SELECT MaDoUong AS MaSP, TenDoUong AS TenSP, GiaTien, SoLuong, GiamGia FROM DoUong WHERE IsDeleted = 0 AND TenDoUong LIKE @SearchText + '%'";
+                string query = "";
+                string whereClauseDoAn = "";
+                string whereClauseDoUong = "";
+
+                // Xây dựng điều kiện tìm kiếm dựa trên filterType
+                switch (filterType)
+                {
+                    case "Tên SP":
+                        whereClauseDoAn = "TenMon LIKE '%' + @SearchText + '%'";
+                        whereClauseDoUong = "TenDoUong LIKE '%' + @SearchText + '%'";
+                        break;
+                    case "Giá tiền":
+                        whereClauseDoAn = "CAST(GiaTien AS NVARCHAR) LIKE '%' + @SearchText + '%'";
+                        whereClauseDoUong = "CAST(GiaTien AS NVARCHAR) LIKE '%' + @SearchText + '%'";
+                        break;
+                    case "Giảm giá":
+                        whereClauseDoAn = "CAST(GiamGia AS NVARCHAR) LIKE '%' + @SearchText + '%'";
+                        whereClauseDoUong = "CAST(GiamGia AS NVARCHAR) LIKE '%' + @SearchText + '%'";
+                        break;
+                    default:
+                        whereClauseDoAn = "TenMon LIKE '%' + @SearchText + '%'";
+                        whereClauseDoUong = "TenDoUong LIKE '%' + @SearchText + '%'";
+                        break;
+                }
+
+                query = $"SELECT MaMon AS MaSP, TenMon AS TenSP, GiaTien, SoLuong, GiamGia FROM DoAn WHERE IsDeleted = 0 AND {whereClauseDoAn}" +
+                        $" UNION SELECT MaDoUong AS MaSP, TenDoUong AS TenSP, GiaTien, SoLuong, GiamGia FROM DoUong WHERE IsDeleted = 0 AND {whereClauseDoUong}";
+
                 SqlParameter[] parameters = new SqlParameter[]
                 {
                     new SqlParameter("@SearchText", SqlDbType.NVarChar) { Value = searchText }
@@ -66,7 +129,8 @@ namespace QLCHBanGaRan.UCSystems
         // Thêm phương thức làm mới danh sách sản phẩm
         public void RefreshProductList()
         {
-            dtSearch.DataSource = LoadProducts(""); // Tải lại toàn bộ sản phẩm chưa xóa
+            string filterType = cmbFilter.SelectedItem?.ToString() ?? "Tên SP";
+            dtSearch.DataSource = LoadProducts("", filterType); // Tải lại toàn bộ sản phẩm chưa xóa
             ConfigureDataGridViewColumns(dtSearch); // Cấu hình cột
         }
 
@@ -74,7 +138,14 @@ namespace QLCHBanGaRan.UCSystems
         {
             if (e.KeyChar == (char)Keys.Enter)
             {
-                dtSearch.DataSource = LoadProducts(txtSearch.Text);
+                // Kiểm tra nếu txtSearch đang hiển thị placeholder thì không tìm kiếm
+                if (txtSearch.Text == "Tìm kiếm...")
+                {
+                    return;
+                }
+
+                string filterType = cmbFilter.SelectedItem?.ToString() ?? "Tên SP";
+                dtSearch.DataSource = LoadProducts(txtSearch.Text, filterType);
                 ConfigureDataGridViewColumns(dtSearch); // Cấu hình cột cho dtSearch
             }
         }
@@ -98,60 +169,85 @@ namespace QLCHBanGaRan.UCSystems
 
         private void btnAddProduct_Click(object sender, EventArgs e)
         {
-            if (dtSearch.SelectedRows.Count == 0)
+            try
             {
-                MessageBox.Show("Bạn chưa chọn món!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-
-            string maSP = dtSearch.SelectedRows[0].Cells["MaSP"].Value.ToString();
-            string tenSP = dtSearch.SelectedRows[0].Cells["TenSP"].Value.ToString();
-            decimal giaTien = Convert.ToDecimal(dtSearch.SelectedRows[0].Cells["GiaTien"].Value);
-            int soLuongTon = Convert.ToInt32(dtSearch.SelectedRows[0].Cells["SoLuong"].Value);
-            decimal giamGiaPhanTram = Convert.ToDecimal(dtSearch.SelectedRows[0].Cells["GiamGia"].Value); // Phần trăm giảm giá từ CSDL
-
-            if (soLuongTon <= 0)
-            {
-                MessageBox.Show("Món bạn chọn đã hết!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-
-            DataRow dtr = tbOrder.NewRow();
-            int temp = _productSelect(tenSP, tbOrder);
-
-            if (temp != -1)
-            {
-                int currentSoLuong = Convert.ToInt32(tbOrder.Rows[temp]["SoLuong"]);
-                if (currentSoLuong < soLuongTon)
+                // Kiểm tra xem có hàng nào được chọn không
+                if (dtSearch.SelectedRows.Count == 0)
                 {
-                    tbOrder.Rows[temp]["SoLuong"] = currentSoLuong + 1;
-                    tbOrder.Rows[temp]["GiaTien"] = Convert.ToDecimal(tbOrder.Rows[temp]["GiaTien"]) + giaTien;
-                    // Tính lại giảm giá dựa trên phần trăm
-                    decimal giamGiaMoi = (giaTien * giamGiaPhanTram / 100) * (currentSoLuong + 1);
-                    tbOrder.Rows[temp]["GiamGia"] = giamGiaMoi;
+                    MessageBox.Show("Bạn chưa chọn món! Vui lòng click vào một hàng trong danh sách sản phẩm.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                // Lấy thông tin từ hàng được chọn
+                var selectedRow = dtSearch.SelectedRows[0];
+
+                // Kiểm tra xem các giá trị có null không
+                if (selectedRow.Cells["MaSP"].Value == null ||
+                    selectedRow.Cells["TenSP"].Value == null ||
+                    selectedRow.Cells["GiaTien"].Value == null ||
+                    selectedRow.Cells["SoLuong"].Value == null ||
+                    selectedRow.Cells["GiamGia"].Value == null)
+                {
+                    MessageBox.Show("Dữ liệu sản phẩm không hợp lệ!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                string maSP = selectedRow.Cells["MaSP"].Value.ToString();
+                string tenSP = selectedRow.Cells["TenSP"].Value.ToString();
+                decimal giaTien = Convert.ToDecimal(selectedRow.Cells["GiaTien"].Value);
+                int soLuongTon = Convert.ToInt32(selectedRow.Cells["SoLuong"].Value);
+                decimal giamGiaPhanTram = Convert.ToDecimal(selectedRow.Cells["GiamGia"].Value);
+
+                if (soLuongTon <= 0)
+                {
+                    MessageBox.Show("Món bạn chọn đã hết!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                DataRow dtr = tbOrder.NewRow();
+                int temp = _productSelect(tenSP, tbOrder);
+
+                if (temp != -1)
+                {
+                    // Sản phẩm đã có trong đơn hàng, tăng số lượng
+                    int currentSoLuong = Convert.ToInt32(tbOrder.Rows[temp]["SoLuong"]);
+                    if (currentSoLuong < soLuongTon)
+                    {
+                        tbOrder.Rows[temp]["SoLuong"] = currentSoLuong + 1;
+                        tbOrder.Rows[temp]["GiaTien"] = Convert.ToDecimal(tbOrder.Rows[temp]["GiaTien"]) + giaTien;
+                        // Tính lại giảm giá dựa trên phần trăm
+                        decimal giamGiaMoi = (giaTien * giamGiaPhanTram / 100) * (currentSoLuong + 1);
+                        tbOrder.Rows[temp]["GiamGia"] = giamGiaMoi;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Số lượng tồn không đủ!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        return;
+                    }
                 }
                 else
                 {
-                    MessageBox.Show("Số lượng tồn không đủ!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    return;
+                    // Sản phẩm mới, thêm vào đơn hàng
+                    dtr["MaSP"] = maSP;
+                    dtr["TenSP"] = tenSP;
+                    dtr["SoLuong"] = 1;
+                    dtr["GiaTien"] = giaTien;
+                    // Tính giảm giá ban đầu dựa trên phần trăm
+                    dtr["GiamGia"] = (giaTien * giamGiaPhanTram / 100);
+                    tbOrder.Rows.Add(dtr);
                 }
+
+                // Cập nhật giao diện
+                dtChoose.DataSource = tbOrder;
+                ConfigureDataGridViewColumns(dtChoose);
+                dtChoose.Refresh();
+
+                UpdatePaymentInfo();
             }
-            else
+            catch (Exception ex)
             {
-                dtr["MaSP"] = maSP;
-                dtr["TenSP"] = tenSP;
-                dtr["SoLuong"] = 1;
-                dtr["GiaTien"] = giaTien;
-                // Tính giảm giá ban đầu dựa trên phần trăm
-                dtr["GiamGia"] = (giaTien * giamGiaPhanTram / 100);
-                tbOrder.Rows.Add(dtr);
+                MessageBox.Show($"Lỗi khi thêm sản phẩm: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
-            dtChoose.DataSource = tbOrder;
-            ConfigureDataGridViewColumns(dtChoose); // Cấu hình cột cho dtChoose
-            dtChoose.Refresh(); // Làm mới giao diện
-
-            UpdatePaymentInfo();
         }
 
         private void ConfigureDataGridViewColumns(DataGridView dataGridView)
@@ -160,30 +256,34 @@ namespace QLCHBanGaRan.UCSystems
             {
                 dataGridView.Columns["MaSP"].HeaderText = "Mã SP";
                 dataGridView.Columns["MaSP"].Width = 70;
+                dataGridView.Columns["MaSP"].ReadOnly = true;
             }
             if (dataGridView.Columns.Contains("TenSP"))
             {
                 dataGridView.Columns["TenSP"].HeaderText = "Tên SP";
                 dataGridView.Columns["TenSP"].Width = 150;
+                dataGridView.Columns["TenSP"].ReadOnly = true;
             }
             if (dataGridView.Columns.Contains("GiaTien"))
             {
                 dataGridView.Columns["GiaTien"].HeaderText = "Giá Tiền";
                 dataGridView.Columns["GiaTien"].Width = 100;
+                dataGridView.Columns["GiaTien"].ReadOnly = true;
             }
             if (dataGridView.Columns.Contains("SoLuong"))
             {
                 dataGridView.Columns["SoLuong"].HeaderText = "Số Lượng";
                 dataGridView.Columns["SoLuong"].Width = 80;
+                dataGridView.Columns["SoLuong"].ReadOnly = true;
             }
             if (dataGridView.Columns.Contains("GiamGia"))
             {
-                dataGridView.Columns["GiamGia"].HeaderText = "Giảm Giá";
+                dataGridView.Columns["GiamGia"].HeaderText = "Giảm Giá %";
                 dataGridView.Columns["GiamGia"].Width = 100;
-                dataGridView.Columns["GiamGia"].ReadOnly = false; // Đảm bảo cột GiamGia có thể chỉnh sửa (dù bạn muốn bỏ qua)
+                dataGridView.Columns["GiamGia"].ReadOnly = true;
             }
-            dataGridView.ReadOnly = false; // Đảm bảo toàn bộ DataGridView không chỉ đọc
-            dataGridView.EditMode = DataGridViewEditMode.EditOnKeystrokeOrF2; // Cho phép chỉnh sửa khi gõ phím
+            dataGridView.ReadOnly = true; // Đảm bảo toàn bộ DataGridView chỉ đọc
+            dataGridView.EditMode = DataGridViewEditMode.EditProgrammatically; // Không cho phép chỉnh sửa
         }
 
         private void UpdatePaymentInfo()
@@ -203,7 +303,6 @@ namespace QLCHBanGaRan.UCSystems
             string[] employeeInfo = cls_EmployeeManagement.GetEmployeeInfo(idEmployess);
             tenNV = employeeInfo[1];
             nhanVienID = employeeInfo[0];
-            txtSearch.Focus();
             txtEmployess.Text = tenNV;
             txtEmployess.ReadOnly = true;
 
@@ -216,68 +315,27 @@ namespace QLCHBanGaRan.UCSystems
             txtReturnPayment.ReadOnly = true;
             btnSaveDB.Enabled = true;
 
+            // Cấu hình DataGridView
             dtSearch.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dtChoose.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+            // Cấu hình cho phép chọn hàng
+            dtSearch.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dtSearch.MultiSelect = false;
+            dtSearch.AllowUserToAddRows = false;
+            dtSearch.AllowUserToDeleteRows = false;
+            dtSearch.ReadOnly = true;
+
+            dtChoose.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dtChoose.MultiSelect = false;
+            dtChoose.AllowUserToAddRows = false;
+            dtChoose.AllowUserToDeleteRows = false;
+            dtChoose.ReadOnly = true;
 
             RefreshProductList(); // Tải dữ liệu ban đầu
             dtChoose.DataSource = tbOrder; // Gán DataSource sau khi khởi tạo
             ConfigureDataGridViewColumns(dtSearch); // Cấu hình cột cho dtSearch
             ConfigureDataGridViewColumns(dtChoose); // Cấu hình cột cho dtChoose
-
-            dtChoose.CellValueChanged += dtChoose_CellValueChanged;
-            dtChoose.EditingControlShowing += dtChoose_EditingControlShowing;
-        }
-
-        private void dtChoose_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
-        {
-            if (dtChoose.CurrentCell.ColumnIndex == dtChoose.Columns["GiamGia"].Index && e.Control is TextBox)
-            {
-                TextBox tb = e.Control as TextBox;
-                tb.KeyPress += (s, ev) =>
-                {
-                    if (!char.IsControl(ev.KeyChar) && !char.IsDigit(ev.KeyChar) && ev.KeyChar != '.')
-                    {
-                        ev.Handled = true; // Chỉ cho phép số và dấu chấm
-                    }
-                    // Giới hạn một dấu chấm
-                    if (ev.KeyChar == '.' && tb.Text.Contains("."))
-                    {
-                        ev.Handled = true;
-                    }
-                };
-            }
-        }
-
-        private void dtChoose_CellValueChanged(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex >= 0 && e.ColumnIndex == dtChoose.Columns["GiamGia"].Index)
-            {
-                if (decimal.TryParse(dtChoose.Rows[e.RowIndex].Cells["GiamGia"].EditedFormattedValue.ToString(), out decimal newGiamGia))
-                {
-                    decimal giaTien = Convert.ToDecimal(dtChoose.Rows[e.RowIndex].Cells["GiaTien"].Value);
-                    int soLuong = Convert.ToInt32(dtChoose.Rows[e.RowIndex].Cells["SoLuong"].Value);
-                    decimal maxGiamGia = giaTien * soLuong;
-
-                    if (newGiamGia > maxGiamGia)
-                    {
-                        tbOrder.Rows[e.RowIndex]["GiamGia"] = maxGiamGia;
-                        MessageBox.Show("Giảm giá không được vượt quá tổng giá tiền!");
-                    }
-                    else
-                    {
-                        tbOrder.Rows[e.RowIndex]["GiamGia"] = newGiamGia;
-                    }
-
-                    dtChoose.Rows[e.RowIndex].Cells["GiamGia"].Value = tbOrder.Rows[e.RowIndex]["GiamGia"];
-                    UpdatePaymentInfo();
-                }
-                else
-                {
-                    MessageBox.Show("Vui lòng nhập giá trị giảm giá hợp lệ (số)!");
-                    dtChoose.Rows[e.RowIndex].Cells["GiamGia"].Value = 0;
-                    tbOrder.Rows[e.RowIndex]["GiamGia"] = 0;
-                }
-            }
         }
 
         private void btnDelProduct_Click(object sender, EventArgs e)
@@ -316,7 +374,6 @@ namespace QLCHBanGaRan.UCSystems
             btnPrintInvoice.Enabled = false;
             btnCancel.Enabled = true;
             btnSaveDB.Enabled = true;
-            txtSearch.Focus();
 
             // Làm mới dữ liệu trong dtSearch sau khi hoàn tất
             RefreshProductList();
@@ -332,7 +389,6 @@ namespace QLCHBanGaRan.UCSystems
                 btnDone.Enabled = false;
                 btnCancel.Enabled = true;
                 btnSaveDB.Enabled = true; // Kích hoạt lại btnSaveDB sau khi hủy
-                txtSearch.Focus();
             }
         }
 
@@ -489,7 +545,8 @@ namespace QLCHBanGaRan.UCSystems
             dtChoose.DataSource = tbOrder;
             ConfigureDataGridViewColumns(dtChoose); // Cấu hình lại sau khi xóa
             txtUser.Text = "";
-            txtSearch.Text = "";
+            txtSearch.Text = "Tìm kiếm...";
+            txtSearch.ForeColor = System.Drawing.Color.Gray;
             txtMoney.Text = "";
             txtReceive.Text = "";
             txtReturnPayment.Text = "";
@@ -513,6 +570,29 @@ namespace QLCHBanGaRan.UCSystems
                 txtSearch.Text = "Tìm kiếm...";
                 txtSearch.ForeColor = System.Drawing.Color.Gray;
             }
+        }
+
+        private void txtSearch_TextChanged(object sender, EventArgs e)
+        {
+            // Kiểm tra nếu txtSearch đang hiển thị placeholder thì không tìm kiếm
+            if (txtSearch.Text == "Tìm kiếm...")
+            {
+                return;
+            }
+
+            // Thực hiện tìm kiếm real-time
+            string filterType = cmbFilter.SelectedItem?.ToString() ?? "Tên SP";
+            dtSearch.DataSource = LoadProducts(txtSearch.Text, filterType);
+            ConfigureDataGridViewColumns(dtSearch);
+        }
+
+        private void cmbFilter_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // Làm mới dữ liệu khi thay đổi filter
+            string searchText = txtSearch.Text == "Tìm kiếm..." ? "" : txtSearch.Text;
+            string filterType = cmbFilter.SelectedItem?.ToString() ?? "Tên SP";
+            dtSearch.DataSource = LoadProducts(searchText, filterType);
+            ConfigureDataGridViewColumns(dtSearch);
         }
     }
 }
