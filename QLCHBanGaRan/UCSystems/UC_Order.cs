@@ -514,8 +514,11 @@ namespace QLCHBanGaRan.UCSystems
                 return;
             }
 
-            frm_PrintInvoice printForm = new frm_PrintInvoice(maHD);
-            printForm.ShowDialog();
+            using (frm_PrintInvoice printInvoice = new frm_PrintInvoice(maHD))
+            {
+                printInvoice._maHD = maHD; // Đảm bảo maHD được gán vào property
+                printInvoice.ShowDialog();
+            }
         }
 
         private void txtReceive_TextChanged(object sender, EventArgs e)

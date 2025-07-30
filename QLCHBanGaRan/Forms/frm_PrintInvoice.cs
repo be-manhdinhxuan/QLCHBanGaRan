@@ -17,6 +17,12 @@ namespace QLCHBanGaRan.Forms
             this.maHD = maHD;
         }
 
+        public string _maHD
+        {
+            get { return maHD; }
+            set { maHD = value; }
+        }
+
         private void frm_PrintInvoice_Load(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(maHD))
@@ -28,39 +34,20 @@ namespace QLCHBanGaRan.Forms
 
             try
             {
-                // Tải báo cáo
-                ReportDocument report = new ReportDocument();
-                report.Load(@"D:\source\repos\BTL\QLCHBanGaRan\InvoiceReport.rpt");
-
-                // Lấy dữ liệu từ CSDL
-                string queryHoaDon = "SELECT MaHD, MaNV, NgayLapHD, TongTien FROM HoaDon WHERE MaHD = @MaHD";
-                SqlParameter[] parametersHoaDon = new SqlParameter[] { new SqlParameter("@MaHD", maHD) };
-                DataTable dtHoaDon = cls_DatabaseManager.TableRead(queryHoaDon, parametersHoaDon);
-
-                // Kiểm tra dữ liệu
-                if (dtHoaDon.Rows.Count == 0)
+                // Khởi tạo báo cáo
+                Report.rp_PrintInvoice report = new Report.rp_PrintInvoice();
+                if (report == null)
                 {
-                    MessageBox.Show("Không tìm thấy hóa đơn với mã: " + maHD, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Không thể khởi tạo báo cáo rp_PrintInvoice.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     this.Close();
                     return;
                 }
 
-                // Gán dữ liệu vào Dataset
-                InvoiceDataset dataset = new InvoiceDataset();
-                if (dtHoaDon.Rows.Count > 0)
-                {
-                    DataRow row = dtHoaDon.Rows[0];
-                    decimal tongTien = row["TongTien"] != DBNull.Value ? row.Field<decimal>("TongTien") : 0;
-                    dataset.HoaDon.AddHoaDonRow(
-                        row.Field<string>("MaHD"),
-                        row.Field<string>("MaNV"),
-                        row.Field<DateTime>("NgayLapHD"),
-                        tongTien
-                    );
-                }
+                // Truyền tham số maHD vào báo cáo
+                report.SetParameterValue("mahd", maHD);
 
-                // Gán Dataset vào báo cáo
-                report.SetDataSource(dataset);
+                // Không cần gán DataTable vì báo cáo sử dụng command
+                // Chỉ dựa vào tham số mahd để lấy dữ liệu từ CSDL
 
                 // Hiển thị báo cáo
                 rpInvoice.ReportSource = report;

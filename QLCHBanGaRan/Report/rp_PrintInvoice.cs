@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace QLCHBanGaRan {
+namespace QLCHBanGaRan.Report {
     using System;
     using System.ComponentModel;
     using CrystalDecisions.Shared;
@@ -16,14 +16,14 @@ namespace QLCHBanGaRan {
     using CrystalDecisions.CrystalReports.Engine;
     
     
-    public class InvoiceReport : ReportClass {
+    public class rp_PrintInvoice : ReportClass {
         
-        public InvoiceReport() {
+        public rp_PrintInvoice() {
         }
         
         public override string ResourceName {
             get {
-                return "InvoiceReport.rpt";
+                return "rp_PrintInvoice.rpt";
             }
             set {
                 // Do nothing
@@ -41,7 +41,7 @@ namespace QLCHBanGaRan {
         
         public override string FullResourceName {
             get {
-                return "QLCHBanGaRan.InvoiceReport.rpt";
+                return "QLCHBanGaRan.Report.rp_PrintInvoice.rpt";
             }
             set {
                 // Do nothing
@@ -87,12 +87,20 @@ namespace QLCHBanGaRan {
                 return this.ReportDefinition.Sections[4];
             }
         }
+        
+        [Browsable(false)]
+        [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+        public CrystalDecisions.Shared.IParameterField Parameter_mahd {
+            get {
+                return this.DataDefinition.ParameterFields[0];
+            }
+        }
     }
     
     [System.Drawing.ToolboxBitmapAttribute(typeof(CrystalDecisions.Shared.ExportOptions), "report.bmp")]
-    public class CachedInvoiceReport : Component, ICachedReport {
+    public class Cachedrp_PrintInvoice : Component, ICachedReport {
         
-        public CachedInvoiceReport() {
+        public Cachedrp_PrintInvoice() {
         }
         
         [Browsable(false)]
@@ -129,7 +137,7 @@ namespace QLCHBanGaRan {
         }
         
         public virtual CrystalDecisions.CrystalReports.Engine.ReportDocument CreateReport() {
-            InvoiceReport rpt = new InvoiceReport();
+            rp_PrintInvoice rpt = new rp_PrintInvoice();
             rpt.Site = this.Site;
             return rpt;
         }

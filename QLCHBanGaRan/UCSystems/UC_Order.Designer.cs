@@ -46,6 +46,8 @@
             this.tableLayoutPanelInfoInvoice = new System.Windows.Forms.TableLayoutPanel();
             this.lblUser = new System.Windows.Forms.Label();
             this.txtUser = new System.Windows.Forms.TextBox();
+            this.lblEmployess = new System.Windows.Forms.Label();
+            this.txtEmployess = new System.Windows.Forms.TextBox();
             this.grpPayment = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanelPayment = new System.Windows.Forms.TableLayoutPanel();
             this.lblMoney = new System.Windows.Forms.Label();
@@ -70,8 +72,6 @@
             this.panelInvoiceButtons = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanelRight = new System.Windows.Forms.TableLayoutPanel();
             this.panelActionButtons = new System.Windows.Forms.TableLayoutPanel();
-            this.txtEmployess = new System.Windows.Forms.TextBox();
-            this.lblEmployess = new System.Windows.Forms.Label();
             this.grpSearchProduct.SuspendLayout();
             this.tableLayoutPanelSearchContainer.SuspendLayout();
             this.tableLayoutPanelSearch.SuspendLayout();
@@ -294,6 +294,28 @@
             this.txtUser.Name = "txtUser";
             this.txtUser.Size = new System.Drawing.Size(292, 27);
             this.txtUser.TabIndex = 1;
+            // 
+            // lblEmployess
+            // 
+            this.lblEmployess.AutoSize = true;
+            this.lblEmployess.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblEmployess.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold);
+            this.lblEmployess.Location = new System.Drawing.Point(3, 75);
+            this.lblEmployess.Name = "lblEmployess";
+            this.lblEmployess.Size = new System.Drawing.Size(124, 41);
+            this.lblEmployess.TabIndex = 2;
+            this.lblEmployess.Text = "Nhân viên:";
+            this.lblEmployess.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // txtEmployess
+            // 
+            this.txtEmployess.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtEmployess.Enabled = false;
+            this.txtEmployess.Font = new System.Drawing.Font("Segoe UI", 11.25F);
+            this.txtEmployess.Location = new System.Drawing.Point(133, 78);
+            this.txtEmployess.Name = "txtEmployess";
+            this.txtEmployess.Size = new System.Drawing.Size(292, 27);
+            this.txtEmployess.TabIndex = 3;
             // 
             // grpPayment
             // 
@@ -618,28 +640,6 @@
             this.panelActionButtons.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.panelActionButtons.Size = new System.Drawing.Size(435, 84);
             this.panelActionButtons.TabIndex = 22;
-            // 
-            // txtEmployess
-            // 
-            this.txtEmployess.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtEmployess.Enabled = false;
-            this.txtEmployess.Font = new System.Drawing.Font("Segoe UI", 11.25F);
-            this.txtEmployess.Location = new System.Drawing.Point(133, 78);
-            this.txtEmployess.Name = "txtEmployess";
-            this.txtEmployess.Size = new System.Drawing.Size(292, 27);
-            this.txtEmployess.TabIndex = 3;
-            // 
-            // lblEmployess
-            // 
-            this.lblEmployess.AutoSize = true;
-            this.lblEmployess.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblEmployess.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold);
-            this.lblEmployess.Location = new System.Drawing.Point(3, 75);
-            this.lblEmployess.Name = "lblEmployess";
-            this.lblEmployess.Size = new System.Drawing.Size(124, 41);
-            this.lblEmployess.TabIndex = 2;
-            this.lblEmployess.Text = "Nhân viên:";
-            this.lblEmployess.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // UC_Order
             // 
