@@ -10,7 +10,7 @@ namespace QLCHBanGaRan.Forms
     public partial class frm_Main : Form
     {
         public static string NguoiDungID; // Giữ biến tĩnh để tương thích với logic cũ nếu cần
-        public string CurrentMaND { get; set; } // Thêm thuộc tính để truyền maND
+        public string CurrentMaND { get; set; } // Truyền maND
 
         bool checkPer;
 
@@ -26,24 +26,23 @@ namespace QLCHBanGaRan.Forms
         UC_Category _Category = new UC_Category();
         UC_Noti _Noti = new UC_Noti();
 
-        // Thêm biến lưu trạng thái gốc
-        private Size _originalSize;
-        private Point _originalLocation;
+        // Trạng thái zoom & khôi phục
         private bool _isZoomed = false;
+        private Rectangle? _restoreBounds = null; // Lưu bounds trước khi phóng to
 
         public frm_Main(string NguoiDungID_Login)
         {
             InitializeComponent();
 
-            // Đảm bảo form không che thanh taskbar ngay từ đầu
-            this.MaximizeBox = false; // Tắt nút maximize mặc định
-            this.FormBorderStyle = FormBorderStyle.None; // Giữ nguyên border style
+            // Chúng ta điều khiển phóng to/thu nhỏ bằng code
+            this.MaximizeBox = false;
+            this.FormBorderStyle = FormBorderStyle.None;
 
             addControlsToPanel(_Home);
-            NguoiDungID = NguoiDungID_Login; // Gán giá trị tĩnh
-            CurrentMaND = NguoiDungID_Login; // Gán giá trị cho thuộc tính mới
+            NguoiDungID = NguoiDungID_Login;
+            CurrentMaND = NguoiDungID_Login;
 
-            // Ẩn tất cả các UC ban đầu
+            // Ẩn các UC ban đầu
             _Order.Visible = false;
             _Personnel.Visible = false;
             _Product.Visible = false;
@@ -52,7 +51,6 @@ namespace QLCHBanGaRan.Forms
             _System.Visible = false;
             _Category.Visible = false;
 
-            // Đặt tiêu đề mặc định là "Trang chủ" khi vào Home
             this.Text = "Trang chủ";
 
             // Đăng ký sự kiện từ UC_FoodManager (nằm trong UC_Product)
@@ -61,9 +59,10 @@ namespace QLCHBanGaRan.Forms
                 foodManager.ProductAdded += FoodManager_ProductAdded;
             }
 
-            // Chỉ giữ lại những event handler cần thiết
+            // Event cần thiết
             this.SizeChanged += Frm_Main_SizeChanged;
             this.Shown += Frm_Main_Shown;
+            this.ResizeEnd += Frm_Main_ResizeEnd;
         }
 
         public static frm_Main Instance
@@ -72,7 +71,7 @@ namespace QLCHBanGaRan.Forms
             {
                 if (_obj == null)
                 {
-                    _obj = new frm_Main(NguoiDungID); // Sử dụng NguoiDungID tĩnh
+                    _obj = new frm_Main(NguoiDungID);
                 }
                 return _obj;
             }
@@ -86,24 +85,27 @@ namespace QLCHBanGaRan.Forms
 
         private void btnClose_Click(object sender, EventArgs e)
         {
-            DialogResult result = MessageBox.Show("Bạn có muốn thoát không?", "Thông báo", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
-            if (result == DialogResult.OK)
-            {
-                NguoiDungID = null;
-                CurrentMaND = null;
-                this.Dispose();
-            }
-            Application.Exit(); // Thoát ứng dụng
+            var result = MessageBox.Show(
+                "Bạn có muốn thoát không?", "Thông báo",
+                MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+
+            if (result != DialogResult.OK) return;   // Bấm Cancel thì dừng tại đây
+
+            NguoiDungID = null;
+            CurrentMaND = null;
+
+            Application.Exit(); // Thoát toàn bộ app
         }
 
-        // Function di chuyển side menu
+
+        // Di chuyển side menu
         private void moveSidePanel(Control btn)
         {
             panelSide.Top = btn.Top;
             panelSide.Height = btn.Height;
         }
 
-        // Khi chọn menu sẽ add UC_Controls tương ứng và cập nhật tiêu đề
+        // Add UC vào panel
         private void addControlsToPanel(Control c)
         {
             c.Dock = DockStyle.Fill;
@@ -122,43 +124,33 @@ namespace QLCHBanGaRan.Forms
         public void btnOrder_Click(object sender, EventArgs e)
         {
             moveSidePanel(btnOrder);
-            if (_Order.Visible == true)
+            if (_Order.Visible)
             {
                 addControlsToPanel(_Order);
                 this.Text = "Gọi món";
                 if (_Order is UC_Order orderControl)
-                {
                     orderControl.RefreshProductList();
-                }
             }
-            else
-            {
-                addControlsToPanel(_Noti);
-            }
+            else addControlsToPanel(_Noti);
         }
 
         public void btnProduct_Click(object sender, EventArgs e)
         {
             moveSidePanel(btnProduct);
-            if (_Product.Visible == true)
+            if (_Product.Visible)
             {
                 addControlsToPanel(_Product);
                 this.Text = "Sản phẩm";
                 if (_Product.Controls.Count > 0 && _Product.Controls[0] is UC_FoodManager foodManager)
-                {
                     foodManager.ProductAdded += FoodManager_ProductAdded;
-                }
             }
-            else
-            {
-                addControlsToPanel(_Noti);
-            }
+            else addControlsToPanel(_Noti);
         }
 
         private void btnPersonnel_Click(object sender, EventArgs e)
         {
             moveSidePanel(btnPersonnel);
-            if (_Personnel.Visible == true)
+            if (_Personnel.Visible)
             {
                 addControlsToPanel(_Personnel);
                 this.Text = "Nhân sự";
@@ -203,7 +195,7 @@ namespace QLCHBanGaRan.Forms
         private void btnCategory_Click(object sender, EventArgs e)
         {
             moveSidePanel(btnCategory);
-            if (_Category.Visible == true)
+            if (_Category.Visible)
             {
                 addControlsToPanel(_Category);
                 this.Text = "Danh mục";
@@ -233,24 +225,24 @@ namespace QLCHBanGaRan.Forms
         private void btnLogout_Click(object sender, EventArgs e)
         {
             moveSidePanel(btnLogout);
-            DialogResult result = MessageBox.Show("Bạn có muốn đăng xuất không?", "Thông báo", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+            var result = MessageBox.Show("Bạn có muốn đăng xuất không?", "Thông báo", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
             if (result == DialogResult.OK)
             {
                 NguoiDungID = null;
                 CurrentMaND = null;
-                this.Hide(); // Ẩn form hiện tại thay vì Dispose
-                frm_Login loginForm = new frm_Login();
-                loginForm.ShowDialog();
-                this.Close(); // Đóng form sau khi loginForm được xử lý
+                this.Hide();
+                using (var loginForm = new frm_Login())
+                {
+                    loginForm.ShowDialog();
+                }
+                this.Close();
             }
         }
 
-        private void lblInfo_Click(object sender, EventArgs e)
+        private void btnInfo_Click(object sender, EventArgs e)
         {
             using (frm_About about = new frm_About())
-            {
                 about.ShowDialog();
-            }
         }
 
         private void frm_Main_Load(object sender, EventArgs e)
@@ -259,8 +251,9 @@ namespace QLCHBanGaRan.Forms
             _obj = this;
             lblUserAccount.Text = $"Chào {lib.cls_EmployeeManagement.GetEmployeeInfo(NguoiDungID)[1]}!";
 
-            // Đảm bảo form không che thanh taskbar khi load
+            // Khi load: kẹp vào WorkingArea rồi canh giữa (nếu chưa zoom)
             EnsureFormInWorkingArea();
+            if (!_isZoomed) CenterInWorkingArea();
         }
 
         private void _loadPermission()
@@ -269,7 +262,6 @@ namespace QLCHBanGaRan.Forms
 
             if (checkPer)
             {
-                // Nếu là quản trị viên (LaQuanTri = true), hiển thị tất cả
                 _Order.Visible = true;
                 _Personnel.Visible = true;
                 _Product.Visible = true;
@@ -280,54 +272,93 @@ namespace QLCHBanGaRan.Forms
             }
             else
             {
-                // Nếu không phải quản trị viên, chỉ hiển thị một số màn hình nhất định
-                _Order.Visible = true;      // User thường có thể gọi món
-                _Product.Visible = true;    // User thường có thể xem sản phẩm
-                _Salary.Visible = true;    // Quản lý lương - chỉ admin
-                // Ẩn các màn hình quản trị
-                _Personnel.Visible = false; // Quản lý nhân sự - chỉ admin
-                _System.Visible = false;    // Quản lý hệ thống - chỉ admin
+                _Order.Visible = true;
+                _Product.Visible = true;
+                _Salary.Visible = true;     // theo logic hiện tại
+                _Personnel.Visible = false;
+                _System.Visible = false;
             }
         }
 
+        /// <summary>
+        /// Kẹp form vào vùng làm việc (WorkingArea) của màn hình chứa form:
+        /// - Nếu kích thước vượt quá WorkingArea -> thu nhỏ lại vừa.
+        /// - Nếu vị trí lệch ra ngoài -> dịch vào trong.
+        /// Không tự động phóng to full màn hình.
+        /// </summary>
         private void EnsureFormInWorkingArea()
         {
-            // Đảm bảo form luôn nằm trong vùng làm việc (không che thanh taskbar)
-            Rectangle workingArea = Screen.PrimaryScreen.WorkingArea;
+            var screen = Screen.FromHandle(this.Handle);
+            var wa = screen.WorkingArea;
 
-            // Kiểm tra nếu form đang ở chế độ phóng to (kích thước bằng working area)
-            if (this.Size == workingArea.Size && this.Location == workingArea.Location)
-            {
-                // Đã đúng, không cần làm gì
-                return;
-            }
+            int w = Math.Min(this.Width, wa.Width);
+            int h = Math.Min(this.Height, wa.Height);
 
-            // Nếu form vượt quá working area, điều chỉnh lại
-            if (this.Width > workingArea.Width || this.Height > workingArea.Height ||
-                this.Location.X < workingArea.X || this.Location.Y < workingArea.Y)
-            {
-                this.Location = workingArea.Location;
-                this.Size = workingArea.Size;
-            }
+            int x = this.Left;
+            int y = this.Top;
+
+            if (x < wa.Left) x = wa.Left;
+            if (y < wa.Top) y = wa.Top;
+            if (x + w > wa.Right) x = wa.Right - w;
+            if (y + h > wa.Bottom) y = wa.Bottom - h;
+
+            if (w != this.Width || h != this.Height)
+                this.Size = new Size(w, h);
+            if (x != this.Left || y != this.Top)
+                this.Location = new Point(x, y);
+        }
+
+        /// <summary>
+        /// Canh giữa form trong WorkingArea (nếu form nhỏ hơn WorkingArea).
+        /// </summary>
+        private void CenterInWorkingArea()
+        {
+            var wa = Screen.FromHandle(this.Handle).WorkingArea;
+
+            // Chỉ canh giữa nếu form nhỏ hơn WorkingArea
+            int w = Math.Min(this.Width, wa.Width);
+            int h = Math.Min(this.Height, wa.Height);
+
+            int x = wa.Left + (wa.Width - w) / 2;
+            int y = wa.Top + (wa.Height - h) / 2;
+
+            // Giữ kích thước hiện tại (đã kẹp nếu cần), chỉ set Location
+            this.Location = new Point(x, y);
+        }
+
+        /// <summary>
+        /// Trả về Bounds đã kẹp nằm trong WorkingArea (giữ kích thước gốc nếu có thể).
+        /// </summary>
+        private Rectangle ClampToWorkingArea(Rectangle bounds)
+        {
+            var wa = Screen.FromHandle(this.Handle).WorkingArea;
+
+            int w = Math.Min(bounds.Width, wa.Width);
+            int h = Math.Min(bounds.Height, wa.Height);
+
+            int x = bounds.Left;
+            int y = bounds.Top;
+
+            if (x < wa.Left) x = wa.Left;
+            if (y < wa.Top) y = wa.Top;
+            if (x + w > wa.Right) x = wa.Right - w;
+            if (y + h > wa.Bottom) y = wa.Bottom - h;
+
+            return new Rectangle(x, y, w, h);
         }
 
         protected override void SetBoundsCore(int x, int y, int width, int height, BoundsSpecified specified)
         {
-            // Đảm bảo form không vượt quá vùng làm việc
-            Rectangle workingArea = Screen.PrimaryScreen.WorkingArea;
+            // Không cho vượt WorkingArea của màn hình chứa form
+            var wa = Screen.FromHandle(this.Handle).WorkingArea;
 
-            if (width > workingArea.Width)
-                width = workingArea.Width;
-            if (height > workingArea.Height)
-                height = workingArea.Height;
-            if (x < workingArea.X)
-                x = workingArea.X;
-            if (y < workingArea.Y)
-                y = workingArea.Y;
-            if (x + width > workingArea.Right)
-                x = workingArea.Right - width;
-            if (y + height > workingArea.Bottom)
-                y = workingArea.Bottom - height;
+            if (width > wa.Width) width = wa.Width;
+            if (height > wa.Height) height = wa.Height;
+
+            if (x < wa.X) x = wa.X;
+            if (y < wa.Y) y = wa.Y;
+            if (x + width > wa.Right) x = wa.Right - width;
+            if (y + height > wa.Bottom) y = wa.Bottom - height;
 
             base.SetBoundsCore(x, y, width, height, specified);
         }
@@ -336,13 +367,9 @@ namespace QLCHBanGaRan.Forms
         {
             base.OnLoad(e);
 
-            // Đảm bảo form không che thanh taskbar khi load
-            Rectangle workingArea = Screen.PrimaryScreen.WorkingArea;
-            if (this.Size.Width > workingArea.Width || this.Size.Height > workingArea.Height)
-            {
-                this.Location = workingArea.Location;
-                this.Size = workingArea.Size;
-            }
+            // Kẹp & canh giữa khi form load (nếu chưa zoom)
+            EnsureFormInWorkingArea();
+            if (!_isZoomed) CenterInWorkingArea();
         }
 
         private void btnMinimize_Click(object sender, EventArgs e)
@@ -352,23 +379,37 @@ namespace QLCHBanGaRan.Forms
 
         private void btnZoom_Click(object sender, EventArgs e)
         {
-            Rectangle workingArea = Screen.PrimaryScreen.WorkingArea;
+            var wa = Screen.FromHandle(this.Handle).WorkingArea;
+
             if (!_isZoomed)
             {
-                // Lưu lại trạng thái gốc
-                _originalSize = this.Size;
-                _originalLocation = this.Location;
+                // Lưu lại bounds hiện tại để có thể thu nhỏ về sau
+                _restoreBounds = this.Bounds;
 
-                // Phóng to
-                this.Location = workingArea.Location;
-                this.Size = workingArea.Size;
+                // Phóng to đúng bằng WorkingArea
+                this.Location = wa.Location;
+                this.Size = wa.Size;
+
                 _isZoomed = true;
             }
             else
             {
-                // Thu nhỏ về trạng thái gốc
-                this.Size = _originalSize;
-                this.Location = _originalLocation;
+                // Thu nhỏ về đúng kích thước/vị trí trước khi phóng
+                if (_restoreBounds.HasValue)
+                {
+                    var r = ClampToWorkingArea(_restoreBounds.Value);
+                    this.Bounds = r;
+                }
+                else
+                {
+                    // Trường hợp dự phòng: đặt về giữa WorkingArea với kích thước 80%
+                    int w = (int)(wa.Width * 0.8);
+                    int h = (int)(wa.Height * 0.8);
+                    int x = wa.Left + (wa.Width - w) / 2;
+                    int y = wa.Top + (wa.Height - h) / 2;
+                    this.Bounds = new Rectangle(x, y, w, h);
+                }
+
                 _isZoomed = false;
             }
         }
@@ -393,33 +434,43 @@ namespace QLCHBanGaRan.Forms
         private void Frm_Main_SizeChanged(object sender, EventArgs e)
         {
             // Cập nhật vị trí các nút khi form thay đổi kích thước
-            btnMinimize.Location = new Point(pnlHeader.Width - 79, 0); // btnMinimize bên trái nhất
-            btnZoom.Location = new Point(pnlHeader.Width - 52, 0); // btnZoom giữa
-            btnClose.Location = new Point(pnlHeader.Width - 25, 0); // btnClose mép phải
+            btnMinimize.Location = new Point(pnlHeader.Width - 79, 0); // bên trái
+            btnZoom.Location = new Point(pnlHeader.Width - 52, 0); // giữa
+            btnClose.Location = new Point(pnlHeader.Width - 25, 0); // mép phải
 
-            // Đảm bảo form không che thanh taskbar
+            // Tránh can thiệp khi đang Minimized
+            if (this.WindowState == FormWindowState.Minimized) return;
+
+            // Kẹp gọn nếu tràn
             EnsureFormInWorkingArea();
         }
 
         private void Frm_Main_Shown(object sender, EventArgs e)
         {
-            // Đảm bảo form không che thanh taskbar khi được hiển thị
-            Rectangle workingArea = Screen.PrimaryScreen.WorkingArea;
-            if (this.Size.Width > workingArea.Width || this.Size.Height > workingArea.Height)
+            // Lần đầu hiển thị: kẹp & canh giữa (nếu chưa zoom)
+            EnsureFormInWorkingArea();
+            if (!_isZoomed) CenterInWorkingArea();
+        }
+
+        private void Frm_Main_ResizeEnd(object sender, EventArgs e)
+        {
+            // Khi người dùng resize xong, kẹp lại vào WorkingArea
+            EnsureFormInWorkingArea();
+
+            // Không tự chỉnh _isZoomed ở đây; chỉ dùng nút Zoom để đổi trạng thái.
+            // Nhưng nếu người dùng tự kéo đúng full WorkingArea, bạn có thể nhận biết như sau (tùy chọn):
+            var wa = Screen.FromHandle(this.Handle).WorkingArea;
+            if (this.Bounds == wa)
             {
-                this.Location = workingArea.Location;
-                this.Size = workingArea.Size;
+                _isZoomed = true;
             }
         }
 
-        // Thêm phương thức xử lý sự kiện ProductAdded
+        // Khi thêm món, cập nhật list ở UC_Order
         private void FoodManager_ProductAdded(object sender, EventArgs e)
         {
-            // Gửi tín hiệu đến UC_Order để làm mới
             if (_Order is UC_Order orderControl)
-            {
-                orderControl.RefreshProductList(); // Gọi phương thức làm mới trong UC_Order
-            }
+                orderControl.RefreshProductList();
         }
     }
 }

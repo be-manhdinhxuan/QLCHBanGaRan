@@ -31,7 +31,6 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frm_Main));
             this.pnlLeft = new System.Windows.Forms.Panel();
             this.lblUserAccount = new System.Windows.Forms.Label();
-            this.lblInfo = new System.Windows.Forms.Label();
             this.btnLogout = new System.Windows.Forms.Button();
             this.panelSide = new System.Windows.Forms.Panel();
             this.btnSystem = new System.Windows.Forms.Button();
@@ -44,6 +43,7 @@
             this.btnHome = new System.Windows.Forms.Button();
             this.pnlLeftTop = new System.Windows.Forms.Panel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.btnInfo = new System.Windows.Forms.Button();
             this.pnlHeader = new System.Windows.Forms.Panel();
             this.btnMinimize = new System.Windows.Forms.Button();
             this.btnZoom = new System.Windows.Forms.Button();
@@ -59,7 +59,6 @@
             // 
             this.pnlLeft.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(0)))), ((int)(((byte)(42)))));
             this.pnlLeft.Controls.Add(this.lblUserAccount);
-            this.pnlLeft.Controls.Add(this.lblInfo);
             this.pnlLeft.Controls.Add(this.btnLogout);
             this.pnlLeft.Controls.Add(this.panelSide);
             this.pnlLeft.Controls.Add(this.btnSystem);
@@ -82,24 +81,12 @@
             this.lblUserAccount.AutoSize = true;
             this.lblUserAccount.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblUserAccount.ForeColor = System.Drawing.Color.White;
-            this.lblUserAccount.Location = new System.Drawing.Point(3, 592);
+            this.lblUserAccount.Location = new System.Drawing.Point(3, 602);
             this.lblUserAccount.Name = "lblUserAccount";
             this.lblUserAccount.Size = new System.Drawing.Size(137, 30);
             this.lblUserAccount.TabIndex = 15;
             this.lblUserAccount.Text = "Tên tài khoản";
             this.lblUserAccount.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // lblInfo
-            // 
-            this.lblInfo.AutoSize = true;
-            this.lblInfo.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblInfo.ForeColor = System.Drawing.Color.White;
-            this.lblInfo.Location = new System.Drawing.Point(2, 618);
-            this.lblInfo.Name = "lblInfo";
-            this.lblInfo.Size = new System.Drawing.Size(21, 25);
-            this.lblInfo.TabIndex = 14;
-            this.lblInfo.Text = "?";
-            this.lblInfo.Click += new System.EventHandler(this.lblInfo_Click);
             // 
             // btnLogout
             // 
@@ -282,9 +269,24 @@
             this.pictureBox1.TabIndex = 2;
             this.pictureBox1.TabStop = false;
             // 
+            // btnInfo
+            // 
+            this.btnInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnInfo.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnInfo.FlatAppearance.BorderSize = 0;
+            this.btnInfo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnInfo.Image = global::QLCHBanGaRan.Properties.Resources.info_24px;
+            this.btnInfo.Location = new System.Drawing.Point(774, 0);
+            this.btnInfo.Name = "btnInfo";
+            this.btnInfo.Size = new System.Drawing.Size(27, 26);
+            this.btnInfo.TabIndex = 3;
+            this.btnInfo.UseVisualStyleBackColor = true;
+            this.btnInfo.Click += new System.EventHandler(this.btnInfo_Click);
+            // 
             // pnlHeader
             // 
             this.pnlHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(0)))), ((int)(((byte)(42)))));
+            this.pnlHeader.Controls.Add(this.btnInfo);
             this.pnlHeader.Controls.Add(this.btnMinimize);
             this.pnlHeader.Controls.Add(this.btnZoom);
             this.pnlHeader.Controls.Add(this.btnClose);
@@ -385,7 +387,7 @@
         private System.Windows.Forms.Panel panelSide;
         private System.Windows.Forms.Panel panelControls;
         private System.Windows.Forms.Button btnLogout;
-        private System.Windows.Forms.Label lblInfo;
+        private System.Windows.Forms.Button btnInfo;
         private System.Windows.Forms.Button btnMinimize;
         private System.Windows.Forms.Button btnZoom;
         private System.Windows.Forms.Label lblUserAccount; // Thêm biến thành viên cho label mới

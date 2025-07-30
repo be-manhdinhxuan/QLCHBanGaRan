@@ -78,11 +78,11 @@
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(170, 2);
+            this.label1.Location = new System.Drawing.Point(125, 3);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(288, 21);
+            this.label1.Size = new System.Drawing.Size(369, 21);
             this.label1.TabIndex = 0;
-            this.label1.Text = "VỀ CỬA HÀNG GÀ RÁN CHICKEN BÔNG";
+            this.label1.Text = "GIỚI THIỆU VỀ CỬA HÀNG GÀ RÁN CHICKEN BÔNG";
             this.label1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // panelLeft
@@ -181,6 +181,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
+            this.label5.Cursor = System.Windows.Forms.Cursors.Hand;
             this.label5.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(0)))), ((int)(((byte)(42)))));
             this.label5.Location = new System.Drawing.Point(180, 252);
