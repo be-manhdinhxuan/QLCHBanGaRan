@@ -743,5 +743,8 @@
   <ItemGroup>
     <None Include="Resources\eye_open.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\error_120px.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

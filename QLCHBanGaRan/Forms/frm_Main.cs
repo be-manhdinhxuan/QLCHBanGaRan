@@ -122,7 +122,7 @@ namespace QLCHBanGaRan.Forms
         public void btnOrder_Click(object sender, EventArgs e)
         {
             moveSidePanel(btnOrder);
-            if (_Order.Visible)
+            if (_Order.Visible == true)
             {
                 addControlsToPanel(_Order);
                 this.Text = "Gọi món";
@@ -134,14 +134,13 @@ namespace QLCHBanGaRan.Forms
             else
             {
                 addControlsToPanel(_Noti);
-                this.Text = "Thông báo";
             }
         }
 
         public void btnProduct_Click(object sender, EventArgs e)
         {
             moveSidePanel(btnProduct);
-            if (_Product.Visible)
+            if (_Product.Visible == true)
             {
                 addControlsToPanel(_Product);
                 this.Text = "Sản phẩm";
@@ -153,14 +152,13 @@ namespace QLCHBanGaRan.Forms
             else
             {
                 addControlsToPanel(_Noti);
-                this.Text = "Thông báo";
             }
         }
 
         private void btnPersonnel_Click(object sender, EventArgs e)
         {
             moveSidePanel(btnPersonnel);
-            if (_Personnel.Visible)
+            if (_Personnel.Visible == true)
             {
                 addControlsToPanel(_Personnel);
                 this.Text = "Nhân sự";
@@ -205,7 +203,7 @@ namespace QLCHBanGaRan.Forms
         private void btnCategory_Click(object sender, EventArgs e)
         {
             moveSidePanel(btnCategory);
-            if (_Category.Visible)
+            if (_Category.Visible == true)
             {
                 addControlsToPanel(_Category);
                 this.Text = "Danh mục";
@@ -286,7 +284,6 @@ namespace QLCHBanGaRan.Forms
                 _Order.Visible = true;      // User thường có thể gọi món
                 _Product.Visible = true;    // User thường có thể xem sản phẩm
                 _Salary.Visible = true;    // Quản lý lương - chỉ admin
-                _Category.Visible = true;
                 // Ẩn các màn hình quản trị
                 _Personnel.Visible = false; // Quản lý nhân sự - chỉ admin
                 _System.Visible = false;    // Quản lý hệ thống - chỉ admin
