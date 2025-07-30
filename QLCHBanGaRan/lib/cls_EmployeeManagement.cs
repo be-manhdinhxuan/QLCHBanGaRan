@@ -54,15 +54,22 @@ namespace QLCHBanGaRan.lib
                         cmd.Parameters.Add(outputParameter);
 
                         cmd.ExecuteNonQuery();
-                        MaND = cmd.Parameters["@MaND"].Value.ToString();
+                        MaND = outputParameter.Value?.ToString();
                     }
                 }
+
+                // Nếu MaND null hoặc rỗng, trả về "ERROR" thay vì throw exception
                 return string.IsNullOrEmpty(MaND) ? "ERROR" : MaND;
+            }
+            catch (SqlException ex)
+            {
+                // Ném lại SqlException để xử lý ở tầng UI
+                throw;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Lỗi đăng nhập: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return "ERROR";
+                // Ném lại exception khác
+                throw;
             }
         }
 
@@ -96,7 +103,6 @@ namespace QLCHBanGaRan.lib
 
         public static DataTable GetEmployeeByMaNV(string maNV)
         {
-            // Logic truy vấn SQL để lấy thông tin nhân viên theo MaNV
             string query = "SELECT MaNV, TenNV, NgaySinh, GioiTinh, SDT, DiaChi, Email, CMND, TrangThai, MaChucDanh FROM NhanVien WHERE MaNV = @MaNV";
             SqlParameter[] parameters = new SqlParameter[]
             {
@@ -403,5 +409,4 @@ namespace QLCHBanGaRan.lib
             return cls_DatabaseManager.TableRead(query, parameters);
         }
     }
-
 }
