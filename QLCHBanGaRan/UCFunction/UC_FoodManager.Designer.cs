@@ -109,7 +109,7 @@
             this.cmbNhaCungCap.Location = new System.Drawing.Point(121, 106);
             this.cmbNhaCungCap.Name = "cmbNhaCungCap";
             this.cmbNhaCungCap.Size = new System.Drawing.Size(300, 28);
-            this.cmbNhaCungCap.TabIndex = 29;
+            this.cmbNhaCungCap.TabIndex = 7;
             // 
             // label6
             // 
@@ -118,7 +118,7 @@
             this.label6.Location = new System.Drawing.Point(234, 146);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(40, 20);
-            this.label6.TabIndex = 28;
+            this.label6.TabIndex = 10;
             this.label6.Text = "VND";
             // 
             // label5
@@ -128,7 +128,7 @@
             this.label5.Location = new System.Drawing.Point(400, 145);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(21, 20);
-            this.label5.TabIndex = 27;
+            this.label5.TabIndex = 13;
             this.label5.Text = "%";
             // 
             // txtSoLuong
@@ -137,7 +137,7 @@
             this.txtSoLuong.Location = new System.Drawing.Point(321, 33);
             this.txtSoLuong.Name = "txtSoLuong";
             this.txtSoLuong.Size = new System.Drawing.Size(100, 27);
-            this.txtSoLuong.TabIndex = 26;
+            this.txtSoLuong.TabIndex = 3;
             this.txtSoLuong.Validating += new System.ComponentModel.CancelEventHandler(this.txtSoLuong_Validating);
             // 
             // txtGiamGia
@@ -146,7 +146,7 @@
             this.txtGiamGia.Location = new System.Drawing.Point(342, 142);
             this.txtGiamGia.Name = "txtGiamGia";
             this.txtGiamGia.Size = new System.Drawing.Size(55, 27);
-            this.txtGiamGia.TabIndex = 24;
+            this.txtGiamGia.TabIndex = 12;
             this.txtGiamGia.Validating += new System.ComponentModel.CancelEventHandler(this.txtGiamGia_Validating);
             // 
             // lblGiamGia
@@ -156,7 +156,7 @@
             this.lblGiamGia.Location = new System.Drawing.Point(271, 146);
             this.lblGiamGia.Name = "lblGiamGia";
             this.lblGiamGia.Size = new System.Drawing.Size(69, 20);
-            this.lblGiamGia.TabIndex = 23;
+            this.lblGiamGia.TabIndex = 11;
             this.lblGiamGia.Text = "Giảm giá";
             // 
             // txtGiaTien
@@ -165,7 +165,7 @@
             this.txtGiaTien.Location = new System.Drawing.Point(121, 143);
             this.txtGiaTien.Name = "txtGiaTien";
             this.txtGiaTien.Size = new System.Drawing.Size(110, 27);
-            this.txtGiaTien.TabIndex = 22;
+            this.txtGiaTien.TabIndex = 9;
             this.txtGiaTien.Validating += new System.ComponentModel.CancelEventHandler(this.txtGiaTien_Validating);
             // 
             // lblGiaTien
@@ -175,7 +175,7 @@
             this.lblGiaTien.Location = new System.Drawing.Point(15, 146);
             this.lblGiaTien.Name = "lblGiaTien";
             this.lblGiaTien.Size = new System.Drawing.Size(60, 20);
-            this.lblGiaTien.TabIndex = 21;
+            this.lblGiaTien.TabIndex = 8;
             this.lblGiaTien.Text = "Giá tiền";
             // 
             // lblNhaCungCap
@@ -185,7 +185,7 @@
             this.lblNhaCungCap.Location = new System.Drawing.Point(15, 109);
             this.lblNhaCungCap.Name = "lblNhaCungCap";
             this.lblNhaCungCap.Size = new System.Drawing.Size(100, 20);
-            this.lblNhaCungCap.TabIndex = 19;
+            this.lblNhaCungCap.TabIndex = 6;
             this.lblNhaCungCap.Text = "Nhà cung cấp";
             // 
             // txtTenMonAn
@@ -194,7 +194,7 @@
             this.txtTenMonAn.Location = new System.Drawing.Point(121, 71);
             this.txtTenMonAn.Name = "txtTenMonAn";
             this.txtTenMonAn.Size = new System.Drawing.Size(300, 27);
-            this.txtTenMonAn.TabIndex = 10;
+            this.txtTenMonAn.TabIndex = 5;
             this.txtTenMonAn.Validating += new System.ComponentModel.CancelEventHandler(this.txtTenMonAn_Validating);
             // 
             // lblTenMonAn
@@ -204,7 +204,7 @@
             this.lblTenMonAn.Location = new System.Drawing.Point(15, 73);
             this.lblTenMonAn.Name = "lblTenMonAn";
             this.lblTenMonAn.Size = new System.Drawing.Size(100, 20);
-            this.lblTenMonAn.TabIndex = 9;
+            this.lblTenMonAn.TabIndex = 4;
             this.lblTenMonAn.Text = "Tên sản phẩm";
             // 
             // lblSoLuong
@@ -214,7 +214,7 @@
             this.lblSoLuong.Location = new System.Drawing.Point(246, 36);
             this.lblSoLuong.Name = "lblSoLuong";
             this.lblSoLuong.Size = new System.Drawing.Size(69, 20);
-            this.lblSoLuong.TabIndex = 4;
+            this.lblSoLuong.TabIndex = 2;
             this.lblSoLuong.Text = "Số lượng";
             // 
             // txtMaMonAn
@@ -223,7 +223,7 @@
             this.txtMaMonAn.Location = new System.Drawing.Point(121, 33);
             this.txtMaMonAn.Name = "txtMaMonAn";
             this.txtMaMonAn.Size = new System.Drawing.Size(119, 27);
-            this.txtMaMonAn.TabIndex = 3;
+            this.txtMaMonAn.TabIndex = 1;
             // 
             // lblMaMonAn
             // 
@@ -244,7 +244,7 @@
             this.grpTimKiem.Location = new System.Drawing.Point(10, 38);
             this.grpTimKiem.Name = "grpTimKiem";
             this.grpTimKiem.Size = new System.Drawing.Size(397, 82);
-            this.grpTimKiem.TabIndex = 43;
+            this.grpTimKiem.TabIndex = 1;
             this.grpTimKiem.TabStop = false;
             this.grpTimKiem.Text = "Tìm kiếm";
             // 
@@ -255,7 +255,7 @@
             this.cmbFilter.Location = new System.Drawing.Point(257, 37);
             this.cmbFilter.Name = "cmbFilter";
             this.cmbFilter.Size = new System.Drawing.Size(111, 28);
-            this.cmbFilter.TabIndex = 30;
+            this.cmbFilter.TabIndex = 1;
             // 
             // txtTimKiem
             // 
@@ -263,7 +263,7 @@
             this.txtTimKiem.Location = new System.Drawing.Point(39, 37);
             this.txtTimKiem.Name = "txtTimKiem";
             this.txtTimKiem.Size = new System.Drawing.Size(212, 27);
-            this.txtTimKiem.TabIndex = 11;
+            this.txtTimKiem.TabIndex = 0;
             this.txtTimKiem.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtTimKiem_KeyPress);
             // 
             // btnThem
@@ -276,7 +276,7 @@
             this.btnThem.Location = new System.Drawing.Point(16, 128);
             this.btnThem.Name = "btnThem";
             this.btnThem.Size = new System.Drawing.Size(125, 44);
-            this.btnThem.TabIndex = 50;
+            this.btnThem.TabIndex = 3;
             this.btnThem.Text = "THÊM MÓN";
             this.btnThem.UseVisualStyleBackColor = false;
             this.btnThem.Click += new System.EventHandler(this.btnThem_Click);
@@ -291,7 +291,7 @@
             this.btnSua.Location = new System.Drawing.Point(147, 128);
             this.btnSua.Name = "btnSua";
             this.btnSua.Size = new System.Drawing.Size(126, 44);
-            this.btnSua.TabIndex = 51;
+            this.btnSua.TabIndex = 4;
             this.btnSua.Text = "SỬA";
             this.btnSua.UseVisualStyleBackColor = false;
             this.btnSua.Click += new System.EventHandler(this.btnSua_Click);
@@ -306,7 +306,7 @@
             this.btnXoa.Location = new System.Drawing.Point(279, 128);
             this.btnXoa.Name = "btnXoa";
             this.btnXoa.Size = new System.Drawing.Size(125, 44);
-            this.btnXoa.TabIndex = 56;
+            this.btnXoa.TabIndex = 5;
             this.btnXoa.Text = "XÓA";
             this.btnXoa.UseVisualStyleBackColor = false;
             this.btnXoa.Click += new System.EventHandler(this.btnXoa_Click);
@@ -321,7 +321,7 @@
             this.btnCapNhat.Location = new System.Drawing.Point(73, 178);
             this.btnCapNhat.Name = "btnCapNhat";
             this.btnCapNhat.Size = new System.Drawing.Size(125, 44);
-            this.btnCapNhat.TabIndex = 57;
+            this.btnCapNhat.TabIndex = 6;
             this.btnCapNhat.Text = "CẬP NHẬT";
             this.btnCapNhat.UseVisualStyleBackColor = false;
             this.btnCapNhat.Click += new System.EventHandler(this.btnCapNhat_Click);
@@ -336,7 +336,7 @@
             this.btnHuyBo.Location = new System.Drawing.Point(204, 178);
             this.btnHuyBo.Name = "btnHuyBo";
             this.btnHuyBo.Size = new System.Drawing.Size(125, 44);
-            this.btnHuyBo.TabIndex = 58;
+            this.btnHuyBo.TabIndex = 7;
             this.btnHuyBo.Text = "HỦY BỎ";
             this.btnHuyBo.UseVisualStyleBackColor = false;
             this.btnHuyBo.Click += new System.EventHandler(this.btnHuyBo_Click);
@@ -349,7 +349,7 @@
             this.grpDanhSach.Location = new System.Drawing.Point(10, 230);
             this.grpDanhSach.Name = "grpDanhSach";
             this.grpDanhSach.Size = new System.Drawing.Size(869, 375);
-            this.grpDanhSach.TabIndex = 55;
+            this.grpDanhSach.TabIndex = 8;
             this.grpDanhSach.TabStop = false;
             this.grpDanhSach.Text = "Danh sách sản phẩm";
             // 
@@ -413,7 +413,7 @@
             this.dtListProduct.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.dtListProduct.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dtListProduct.Size = new System.Drawing.Size(857, 341);
-            this.dtListProduct.TabIndex = 1;
+            this.dtListProduct.TabIndex = 2;
             // 
             // MaNCC
             // 
@@ -494,7 +494,7 @@
             this.lblTitle.Location = new System.Drawing.Point(38, 9);
             this.lblTitle.Name = "lblTitle";
             this.lblTitle.Size = new System.Drawing.Size(151, 21);
-            this.lblTitle.TabIndex = 69;
+            this.lblTitle.TabIndex = 0;
             this.lblTitle.Text = "QUẢN LÝ MÓN ĂN";
             // 
             // errorProvider

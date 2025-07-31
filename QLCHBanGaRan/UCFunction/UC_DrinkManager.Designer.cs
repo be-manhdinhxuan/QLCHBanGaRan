@@ -68,13 +68,12 @@
             this.lblMaDoUong = new System.Windows.Forms.Label();
             this.lblTitle = new System.Windows.Forms.Label();
             this.errorProvidera = new System.Windows.Forms.ErrorProvider(this.components);
-            this.btnBack = new System.Windows.Forms.PictureBox();
+            this.btnBack = new System.Windows.Forms.Button();
             this.grpDanhSach.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtListProduct)).BeginInit();
             this.grpTimKiem.SuspendLayout();
             this.grpThongTin.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvidera)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.btnBack)).BeginInit();
             this.SuspendLayout();
             // 
             // btnThem
@@ -484,14 +483,16 @@
             // 
             // btnBack
             // 
-            this.btnBack.BackColor = System.Drawing.Color.Transparent;
+            this.btnBack.FlatAppearance.BorderSize = 0;
+            this.btnBack.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnBack.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold);
+            this.btnBack.ForeColor = System.Drawing.Color.White;
             this.btnBack.Image = global::QLCHBanGaRan.Properties.Resources.left_round_32px;
             this.btnBack.Location = new System.Drawing.Point(3, 3);
             this.btnBack.Name = "btnBack";
             this.btnBack.Size = new System.Drawing.Size(32, 32);
-            this.btnBack.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.btnBack.TabIndex = 63;
-            this.btnBack.TabStop = false;
+            this.btnBack.TabIndex = 54;
+            this.btnBack.UseVisualStyleBackColor = false;
             this.btnBack.Click += new System.EventHandler(this.btnBack_Click);
             // 
             // UC_DrinkManager
@@ -520,7 +521,6 @@
             this.grpThongTin.ResumeLayout(false);
             this.grpThongTin.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvidera)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.btnBack)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -561,6 +561,6 @@
         private System.Windows.Forms.Label lblTitle;
         private System.Windows.Forms.ErrorProvider errorProvidera;
         private System.Windows.Forms.TextBox txtMaDoUong;
-        private System.Windows.Forms.PictureBox btnBack;
+        private System.Windows.Forms.Button btnBack;
     }
 }
