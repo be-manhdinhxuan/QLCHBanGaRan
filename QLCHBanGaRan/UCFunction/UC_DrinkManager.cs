@@ -1,4 +1,4 @@
-﻿using QLCHBanGaRan.lib; // Thêm namespace của cls_DatabaseManager
+﻿using QLCHBanGaRan.lib;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -33,6 +33,7 @@ namespace QLCHBanGaRan.UCFunction
             // Ẩn cột IsDeleted nếu có
             if (dtListProduct.Columns.Contains("IsDeleted"))
                 dtListProduct.Columns["IsDeleted"].Visible = false;
+
         }
 
         private void _reset()
@@ -44,6 +45,14 @@ namespace QLCHBanGaRan.UCFunction
             txtSoLuong.Text = "";
             txtTimKiem.Focus();
             errorProvidera.Clear();
+        }
+
+        private IEnumerable<Control> GetAll(Control control, Type type)
+        {
+            var controls = control.Controls.Cast<Control>();
+            return controls.SelectMany(ctrl => GetAll(ctrl, type))
+                           .Concat(controls)
+                           .Where(c => c.GetType() == type);
         }
 
         private string _genIdProduct()
@@ -107,14 +116,145 @@ namespace QLCHBanGaRan.UCFunction
             }
         }
 
-        private void txtTimKiem_KeyPress(object sender, KeyPressEventArgs e)
+        private void LoadProductList()
         {
-            if (e.KeyChar == (char)Keys.Enter)
+            DataTable dt = _showProduct();
+            if (dt == null || dt.Rows.Count == 0)
             {
-                string filter = cmbFilter.SelectedValue?.ToString() ?? "TenDoUong";
-                dtListProduct.DataSource = _searchProduct(filter, txtTimKiem.Text);
-                _formatDT();
+                MessageBox.Show("Không có dữ liệu đồ uống để hiển thị!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                dtListProduct.DataSource = null;
+                return;
             }
+
+            // Thêm cột chuỗi tạm thời cho GiaTien và GiamGia nếu chưa có
+            if (!dt.Columns.Contains("GiaTienStr"))
+            {
+                dt.Columns.Add("GiaTienStr", typeof(string));
+                foreach (DataRow row in dt.Rows)
+                {
+                    row["GiaTienStr"] = row["GiaTien"]?.ToString() ?? "";
+                }
+            }
+            if (!dt.Columns.Contains("GiamGiaStr"))
+            {
+                dt.Columns.Add("GiamGiaStr", typeof(string));
+                foreach (DataRow row in dt.Rows)
+                {
+                    row["GiamGiaStr"] = row["GiamGia"]?.ToString() ?? "";
+                }
+            }
+
+            dtListProduct.DataSource = dt;
+
+            if (dtListProduct.Columns.Contains("IsDeleted"))
+                dtListProduct.Columns["IsDeleted"].Visible = false;
+            if (dtListProduct.Columns.Contains("GiaTienStr"))
+                dtListProduct.Columns["GiaTienStr"].Visible = false; // Ẩn cột
+            if (dtListProduct.Columns.Contains("GiamGiaStr"))
+                dtListProduct.Columns["GiamGiaStr"].Visible = false; // Ẩn cột
+
+            if (dtListProduct.Columns.Contains("TenNhaCungCap"))
+            {
+                dtListProduct.Columns["TenNhaCungCap"].HeaderText = "Nhà cung cấp";
+                dtListProduct.Columns["TenNhaCungCap"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            }
+
+            _formatDT();
+        }
+
+        private string EscapeFilterValue(string input)
+        {
+            return input.Replace("'", "''")  // escape dấu nháy đơn
+                        .Replace("[", "[[]") // escape [
+                        .Replace("%", "[%]") // escape %
+                        .Replace("*", "[*]") // escape *
+                        .Replace(",", "[,]"); // escape dấu phẩy nếu cần
+        }
+
+
+        private void txtTimKiem_TextChanged(object sender, EventArgs e)
+        {
+            DataTable dt = _showProduct();
+            if (dt == null || dt.Rows.Count == 0)
+            {
+                dtListProduct.DataSource = null;
+                return;
+            }
+
+            // Thêm cột chuỗi tạm thời cho GiaTien và GiamGia nếu chưa có
+            if (!dt.Columns.Contains("GiaTienStr"))
+            {
+                dt.Columns.Add("GiaTienStr", typeof(string));
+                foreach (DataRow row in dt.Rows)
+                {
+                    row["GiaTienStr"] = row["GiaTien"]?.ToString() ?? "";
+                }
+            }
+            if (!dt.Columns.Contains("GiamGiaStr"))
+            {
+                dt.Columns.Add("GiamGiaStr", typeof(string));
+                foreach (DataRow row in dt.Rows)
+                {
+                    row["GiamGiaStr"] = row["GiamGia"]?.ToString() ?? "";
+                }
+            }
+
+            string filterColumn = "TenDoUong"; // Giá trị mặc định
+            if (cmbFilter.SelectedValue != null)
+            {
+                filterColumn = cmbFilter.SelectedValue.ToString();
+            }
+            else if (cmbFilter.SelectedIndex >= 0 && cmbFilter.Items.Count > 0)
+            {
+                cmbFilter.SelectedIndex = 0;
+                filterColumn = cmbFilter.SelectedValue.ToString();
+            }
+
+            string searchText = EscapeFilterValue(txtTimKiem.Text.Trim());
+
+            dt.DefaultView.RowFilter = "IsDeleted = 0";
+
+            if (!string.IsNullOrEmpty(searchText))
+            {
+                string filterColumnStr = filterColumn;
+                if (filterColumn == "GiaTien")
+                    filterColumnStr = "GiaTienStr";
+                else if (filterColumn == "GiamGia")
+                    filterColumnStr = "GiamGiaStr";
+
+                if (dt.Columns.Contains(filterColumnStr))
+                {
+                    string likePattern;
+
+                    if (filterColumn == "TenDoUong")
+                    {
+                        // Tìm kiếm chứa chuỗi
+                        likePattern = $"'%{searchText}%'";
+                    }
+                    else
+                    {
+                        // Tìm kiếm bắt đầu bằng chuỗi
+                        likePattern = $"'{searchText}%'";
+                    }
+
+                    dt.DefaultView.RowFilter += $" AND CONVERT([{filterColumnStr}], System.String) LIKE {likePattern}";
+                }
+
+            }
+
+
+            //dtListProduct.DataSource = dt.DefaultView.ToTable();
+            DataTable dtFiltered = dt.DefaultView.ToTable();
+
+            // Nếu tồn tại cột phụ thì xóa đi trước khi hiển thị
+            if (dtFiltered.Columns.Contains("GiaTienStr"))
+                dtFiltered.Columns.Remove("GiaTienStr");
+            if (dtFiltered.Columns.Contains("GiamGiaStr"))
+                dtFiltered.Columns.Remove("GiamGiaStr");
+
+            dtListProduct.DataSource = dtFiltered;
+
+            _formatDT();
         }
 
         private DataTable _searchProduct(string column, string searchText)
@@ -194,14 +334,6 @@ namespace QLCHBanGaRan.UCFunction
                     }
                 }
             }
-        }
-
-        private IEnumerable<Control> GetAll(Control control, Type type)
-        {
-            var controls = control.Controls.Cast<Control>();
-            return controls.SelectMany(ctrl => GetAll(ctrl, type))
-                           .Concat(controls)
-                           .Where(c => c.GetType() == type);
         }
 
         private void btnCapNhat_Click(object sender, EventArgs e)
@@ -354,8 +486,7 @@ namespace QLCHBanGaRan.UCFunction
         private void UC_DrinkManager_Load(object sender, EventArgs e)
         {
             AutoValidate = AutoValidate.EnableAllowFocusChange;
-            dtListProduct.DataSource = _showProduct();
-            _formatDT();
+            LoadProductList();
             _sttButton(true, true, true, false, false, false);
             _reset();
             DataTable dtNCC = _getNhaCungCap();
@@ -370,14 +501,20 @@ namespace QLCHBanGaRan.UCFunction
                 MessageBox.Show("Không có dữ liệu nhà cung cấp. Vui lòng thêm nhà cung cấp trước!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            cmbFilter.DisplayMember = "Text";
-            cmbFilter.ValueMember = "Value";
-
+            cmbFilter.DropDownStyle = ComboBoxStyle.DropDownList;
             var items = new[] {
                 new { Text = "Tên đồ uống", Value = "TenDoUong" },
-                new { Text = "Mã đồ uống", Value = "MaDoUong" }
+                new { Text = "Giá tiền", Value = "GiaTien" },
+                new { Text = "Giảm giá (%)", Value = "GiamGia" }
             };
             cmbFilter.DataSource = items;
+            cmbFilter.DisplayMember = "Text";
+            cmbFilter.ValueMember = "Value";
+            cmbFilter.SelectedIndex = 0;
+            cmbFilter.SelectedIndexChanged += (s, ev) => LoadProductList();
+
+            // Gắn sự kiện TextChanged cho txtTimKiem
+            txtTimKiem.TextChanged += txtTimKiem_TextChanged;
         }
 
         private void txtSoLuong_Validating(object sender, CancelEventArgs e)
