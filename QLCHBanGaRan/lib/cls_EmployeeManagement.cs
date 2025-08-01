@@ -198,16 +198,20 @@ namespace QLCHBanGaRan.lib
             string query = "SELECT nv.MaNV, nv.TenNV, nv.NgaySinh, " +
                            "CASE nv.GioiTinh WHEN 0 THEN N'Nam' WHEN 1 THEN N'Nữ' END AS GioiTinh, " +
                            "nv.DiaChi, nv.SDT, nv.Email, nv.CMND, nv.TrangThai AS TrangThaiID, " +
+                           "nv.IsDeleted, " + // Thêm cột IsDeleted
                            "cd.MaChucDanh, COALESCE(cd.TenChucDanh, N'Chưa có chức danh') AS TenChucDanh " +
                            "FROM NhanVien nv " +
                            "LEFT JOIN ChucDanh cd ON nv.MaChucDanh = cd.MaChucDanh " +
                            "WHERE nv.IsDeleted = 0"; // Chỉ lấy nhân viên chưa xóa
+
             DataTable dt = cls_DatabaseManager.TableRead(query);
+
             foreach (DataRow row in dt.Rows)
             {
                 int trangThaiValue = Convert.ToInt32(row["TrangThaiID"]);
-                Console.WriteLine($"ShowEmployees - MaNV: {row["MaNV"]}, TrangThaiID: {trangThaiValue}, GioiTinh: {row["GioiTinh"]}");
+                Console.WriteLine($"ShowEmployees - MaNV: {row["MaNV"]}, TrangThaiID: {trangThaiValue}, GioiTinh: {row["GioiTinh"]}, IsDeleted: {row["IsDeleted"]}");
             }
+
             return dt;
         }
 
@@ -246,45 +250,50 @@ namespace QLCHBanGaRan.lib
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.AddWithValue("@MaNV", maNV);
-                        // Thêm output parameter
                         SqlParameter outputParam = new SqlParameter("@TotalRowsAffected", SqlDbType.Int)
                         {
                             Direction = ParameterDirection.Output
                         };
                         cmd.Parameters.Add(outputParam);
-                        int rowsAffected = cmd.ExecuteNonQuery();
-                        int totalRows = (int)outputParam.Value; // Lấy giá trị từ output parameter
-                        return totalRows > 0; // Sử dụng totalRows thay vì rowsAffected
+                        Console.WriteLine($"Executing sp_DeleteEmployee for MaNV: {maNV}");
+                        cmd.ExecuteNonQuery(); // Không cần gán rowsAffected
+                        int totalRows = (int)outputParam.Value;
+                        Console.WriteLine($"Delete executed - Total rows affected: {totalRows}");
+                        return totalRows >= 1;
                     }
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Lỗi khi xóa nhân viên: {ex.Message}");
+                Console.WriteLine($"Lỗi khi xóa nhân viên: {ex.Message} - StackTrace: {ex.StackTrace}");
                 return false;
             }
         }
 
         public static bool CheckInNguoiDung(string maNV)
         {
-            string query = "SELECT MaNV FROM NguoiDung WHERE MaNV = @MaNV AND IsDeleted = 0";
+            string query = "SELECT COUNT(*) FROM NguoiDung WHERE MaNV = @MaNV AND (IsDeleted = 0 OR IsDeleted IS NULL)";
             SqlParameter[] parameters = new SqlParameter[]
             {
                 new SqlParameter("@MaNV", SqlDbType.NVarChar, 10) { Value = maNV }
             };
             DataTable dt = cls_DatabaseManager.TableRead(query, parameters);
-            return dt.Rows.Count > 0; // Trả về true nếu có bản ghi liên quan chưa xóa
+            int count = dt.Rows.Count > 0 ? Convert.ToInt32(dt.Rows[0][0]) : 0;
+            Console.WriteLine($"CheckInNguoiDung - MaNV: {maNV}, Count: {count}");
+            return count > 0; // Trả về true nếu có bản ghi liên quan chưa xóa hoặc NULL
         }
 
         public static bool CheckInHoaDon(string maNV)
         {
-            string query = "SELECT MaNV FROM HoaDon WHERE MaNV = @MaNV AND IsDeleted = 0";
+            string query = "SELECT COUNT(*) FROM HoaDon WHERE MaNV = @MaNV AND (IsDeleted = 0 OR IsDeleted IS NULL)";
             SqlParameter[] parameters = new SqlParameter[]
             {
                 new SqlParameter("@MaNV", SqlDbType.NVarChar, 10) { Value = maNV }
             };
             DataTable dt = cls_DatabaseManager.TableRead(query, parameters);
-            return dt.Rows.Count > 0; // Trả về true nếu có bản ghi liên quan chưa xóa
+            int count = dt.Rows.Count > 0 ? Convert.ToInt32(dt.Rows[0][0]) : 0;
+            Console.WriteLine($"CheckInHoaDon - MaNV: {maNV}, Count: {count}");
+            return count > 0; // Trả về true nếu có bản ghi liên quan chưa xóa hoặc NULL
         }
 
         public static DataTable GetIDEmployees()
@@ -307,20 +316,23 @@ namespace QLCHBanGaRan.lib
                 }
 
                 Console.WriteLine($"Update - maNVCu: {maNVCu}, maNV: {maNV}, TrangThai: {trangThai}, GioiTinh: {gioiTinh}, CMND: {cmnd}, Email: {email}");
+
                 string query = "sp_CapNhatNhanVien";
                 SqlParameter[] parameters = new SqlParameter[]
                 {
-                    new SqlParameter("@MaNVCu", SqlDbType.NVarChar, 10) { Value = maNVCu },
-                    new SqlParameter("@MaNV", SqlDbType.NVarChar, 10) { Value = maNV },
-                    new SqlParameter("@TenNV", SqlDbType.NVarChar, 50) { Value = (object)tenNV ?? DBNull.Value },
-                    new SqlParameter("@NgaySinh", SqlDbType.Date) { Value = ngaySinh },
-                    new SqlParameter("@GioiTinh", SqlDbType.Bit) { Value = gioiTinh },
-                    new SqlParameter("@DiaChi", SqlDbType.NVarChar, 255) { Value = (object)diaChi ?? DBNull.Value },
-                    new SqlParameter("@SDT", SqlDbType.NVarChar, 10) { Value = (object)sdt ?? DBNull.Value },
-                    new SqlParameter("@Email", SqlDbType.NVarChar, 100) { Value = (object)email ?? DBNull.Value },
-                    new SqlParameter("@CMND", SqlDbType.NVarChar, 12) { Value = (object)cmnd ?? DBNull.Value },
-                    new SqlParameter("@TrangThai", SqlDbType.Int) { Value = trangThai },
-                    new SqlParameter("@MaChucDanh", SqlDbType.NVarChar, 10) { Value = (object)maChucDanh ?? DBNull.Value }
+            new SqlParameter("@MaNVCu", SqlDbType.NVarChar, 10) { Value = maNVCu },
+            new SqlParameter("@MaNV", SqlDbType.NVarChar, 10) { Value = maNV },
+            new SqlParameter("@TenNV", SqlDbType.NVarChar, 50) { Value = (object)tenNV ?? DBNull.Value },
+            new SqlParameter("@NgaySinh", SqlDbType.Date) { Value = ngaySinh },
+            new SqlParameter("@GioiTinh", SqlDbType.Bit) { Value = gioiTinh },
+            new SqlParameter("@DiaChi", SqlDbType.NVarChar, 255) { Value = (object)diaChi ?? DBNull.Value },
+            new SqlParameter("@SDT", SqlDbType.NVarChar, 10) { Value = (object)sdt ?? DBNull.Value },
+            new SqlParameter("@Email", SqlDbType.NVarChar, 100) { Value = (object)email ?? DBNull.Value },
+            new SqlParameter("@CMND", SqlDbType.NVarChar, 12) { Value = (object)cmnd ?? DBNull.Value },
+            new SqlParameter("@TrangThai", SqlDbType.Int) { Value = trangThai },
+            new SqlParameter("@MaChucDanh", SqlDbType.NVarChar, 10) { Value = (object)maChucDanh ?? DBNull.Value },
+            // Thêm output parameter
+            new SqlParameter("@Success", SqlDbType.Bit) { Direction = ParameterDirection.Output }
                 };
 
                 using (SqlConnection conn = new SqlConnection(cls_DatabaseManager.connectionString))
@@ -330,11 +342,12 @@ namespace QLCHBanGaRan.lib
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.AddRange(parameters);
-
                         int rowsAffected = cmd.ExecuteNonQuery();
-                        Console.WriteLine($"Update executed - Rows affected: {rowsAffected}");
+                        bool success = (bool)cmd.Parameters["@Success"].Value; // Lấy giá trị từ output parameter
 
-                        if (rowsAffected > 0)
+                        Console.WriteLine($"Update executed - Rows affected: {rowsAffected}, Success: {success}");
+
+                        if (success)
                         {
                             Console.WriteLine("Update successful.");
                             return true;
@@ -361,12 +374,6 @@ namespace QLCHBanGaRan.lib
                                 MessageBox.Show("Không có thay đổi nào được thực hiện.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                 return false;
                             }
-                        }
-                        else if (rowsAffected == -1)
-                        {
-                            Console.WriteLine("Unexpected rows affected: -1. Possible stored procedure issue.");
-                            MessageBox.Show("Lỗi khi cập nhật: Stored procedure có thể không hoạt động đúng. Vui lòng kiểm tra lại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            return false;
                         }
                         else
                         {

@@ -64,14 +64,16 @@ namespace QLCHBanGaRan.UCFunction
         private List<string> _checkAvailable(string maNV)
         {
             List<string> msg = new List<string>();
-            if (!cls_EmployeeManagement.CheckInNguoiDung(maNV))
+            Console.WriteLine($"_checkAvailable - Checking MaNV: {maNV}");
+            if (cls_EmployeeManagement.CheckInNguoiDung(maNV)) // Sửa từ ! thành không có !
             {
                 msg.Add("Vui lòng xóa nhân viên này trong Người Dùng trước khi xóa nhân viên.");
             }
-            if (!cls_EmployeeManagement.CheckInHoaDon(maNV))
+            if (cls_EmployeeManagement.CheckInHoaDon(maNV)) // Sửa từ ! thành không có !
             {
                 msg.Add("Vui lòng xóa nhân viên này trong Hóa Đơn trước khi xóa nhân viên.");
             }
+            Console.WriteLine($"_checkAvailable - Result: {msg.Count} errors");
             return msg;
         }
 
@@ -183,25 +185,26 @@ namespace QLCHBanGaRan.UCFunction
 
             int index = dtListEmployess.CurrentCell.RowIndex;
             string maNV = dtListEmployess.Rows[index].Cells["MaNV"].Value.ToString();
+            Console.WriteLine($"btnXoa_Click - Selected MaNV: {maNV}");
 
             DialogResult result = MessageBox.Show("Bạn muốn xóa nhân viên này?", "Thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result == DialogResult.Yes)
             {
                 var checkAvailable = _checkAvailable(maNV);
+                Console.WriteLine($"btnXoa_Click - checkAvailable count: {checkAvailable.Count}, Errors: {string.Join(", ", checkAvailable)}");
                 if (checkAvailable.Count > 0)
                 {
                     MessageBox.Show("Đã có lỗi xảy ra:\n - " + string.Join("\n - ", checkAvailable.ToArray()), "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 else
                 {
-                    // Gọi phương thức DeleteEmployee để sử dụng stored procedure
-                    if (cls_EmployeeManagement.DeleteEmployee(maNV)) // Giả định cls_EmployeeManagement chứa DeleteEmployee
+                    if (cls_EmployeeManagement.DeleteEmployee(maNV))
                     {
                         MessageBox.Show($"Đã đánh dấu nhân viên có mã {maNV} là đã xóa!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        dtListEmployess.DataSource = cls_EmployeeManagement.ShowEmployees(); // Giả định đã lọc IsDeleted = 0
+                        dtListEmployess.DataSource = cls_EmployeeManagement.ShowEmployees();
                         _formatDT();
                         _reset();
-                        _sttButton(true, false, false, false, false); // Vô hiệu hóa btnSua và btnXoa sau khi xóa
+                        _sttButton(true, false, false, false, false);
                     }
                     else
                     {
