@@ -89,7 +89,7 @@ namespace QLCHBanGaRan.UCFunction
             cmbGioiTinh.DisplayMember = "GioiTinh";
 
             dtListEmployess.AutoGenerateColumns = false;
-            dtListEmployess.DataSource = cls_EmployeeManagement.ShowEmployees();
+            dtListEmployess.DataSource = cls_EmployeeManagement.ShowEmployees(); // Giả định đã lọc IsDeleted = 0
 
             _formatDT();
             _reset();
@@ -104,15 +104,29 @@ namespace QLCHBanGaRan.UCFunction
                 new { Text = "Giới tính", Value = "GioiTinh" }
             };
             cmbFilter.DataSource = items;
+
+            // Gắn sự kiện TextChanged cho tìm kiếm realtime
+            txtTimKiem.TextChanged += txtTimKiem_TextChanged;
         }
 
-        private void txtTimKiem_KeyPress(object sender, KeyPressEventArgs e)
+        private void txtTimKiem_TextChanged(object sender, EventArgs e)
         {
-            if (e.KeyChar == (char)Keys.Enter)
+            string searchText = txtTimKiem.Text.Trim();
+            DataTable dt = cls_EmployeeManagement.ShowEmployees(); // Giả định đã lọc IsDeleted = 0
+            if (dt != null && dt.Rows.Count > 0)
             {
-                string filterColumn = cmbFilter.SelectedValue.ToString();
-                string searchText = txtTimKiem.Text.Trim();
-                dtListEmployess.DataSource = cls_EmployeeManagement.SearchEmployees(filterColumn, searchText);
+                dt.DefaultView.RowFilter = string.Empty; // Xóa bộ lọc cũ
+                if (!string.IsNullOrEmpty(searchText))
+                {
+                    // Lọc chỉ theo cột được chọn trong cmbFilter
+                    string filterColumn = cmbFilter.SelectedValue?.ToString() ?? "MaNV"; // Giá trị mặc định là MaNV
+                    dt.DefaultView.RowFilter = $"{filterColumn} LIKE '%{searchText}%' AND IsDeleted = 0";
+                }
+                else
+                {
+                    dt.DefaultView.RowFilter = "IsDeleted = 0"; // Hiển thị chỉ nhân viên chưa xóa khi không tìm kiếm
+                }
+                dtListEmployess.DataSource = dt.DefaultView.ToTable();
                 _formatDT();
             }
         }
@@ -180,17 +194,18 @@ namespace QLCHBanGaRan.UCFunction
                 }
                 else
                 {
-                    if (cls_EmployeeManagement.DeleteEmployee(maNV))
+                    // Gọi phương thức DeleteEmployee để sử dụng stored procedure
+                    if (cls_EmployeeManagement.DeleteEmployee(maNV)) // Giả định cls_EmployeeManagement chứa DeleteEmployee
                     {
-                        MessageBox.Show("Đã xóa thành công.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        dtListEmployess.DataSource = cls_EmployeeManagement.ShowEmployees();
+                        MessageBox.Show($"Đã đánh dấu nhân viên có mã {maNV} là đã xóa!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        dtListEmployess.DataSource = cls_EmployeeManagement.ShowEmployees(); // Giả định đã lọc IsDeleted = 0
                         _formatDT();
                         _reset();
                         _sttButton(true, false, false, false, false); // Vô hiệu hóa btnSua và btnXoa sau khi xóa
                     }
                     else
                     {
-                        MessageBox.Show("Đã có lỗi xảy ra. Vui lòng kiểm tra lại", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show($"Không thể đánh dấu nhân viên có mã {maNV} là đã xóa. Vui lòng thử lại!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
@@ -205,47 +220,55 @@ namespace QLCHBanGaRan.UCFunction
                                                    .Where(s => !string.IsNullOrEmpty(s))
                                                    .ToList();
                 MessageBox.Show("Vui lòng kiểm tra lại thông tin nhân viên:\n - " + string.Join("\n - ", listOfErrors.ToArray()), "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
-            else
+
+            if (check == 2) // Chỉ cập nhật
             {
-                if (check == 2) // Chỉ cập nhật
+                DateTime ngaySinh = dtpNgaySinh.Value;
+                // Kiểm tra độ tuổi trên 18
+                int age = DateTime.Now.Year - ngaySinh.Year;
+                if (ngaySinh > DateTime.Now.AddYears(-age)) age--; // Điều chỉnh nếu chưa đến sinh nhật năm nay
+                if (age < 18)
                 {
-                    DateTime ngaySinh = dtpNgaySinh.Value;
-                    int gioiTinhValue = Convert.ToInt32(cmbGioiTinh.SelectedValue); // Lấy giá trị thô (0 hoặc 1)
-                    bool gioiTinh = gioiTinhValue == 1; // 1 = Nữ, 0 = Nam
-                    int trangThai = cbDiLam.Checked ? 1 : 0;
+                    MessageBox.Show("Nhân viên phải trên 18 tuổi!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
 
-                    // Lấy dữ liệu cũ từ cơ sở dữ liệu
-                    DataTable dtEmployee = cls_EmployeeManagement.GetEmployeeByMaNV(maNV);
-                    if (dtEmployee == null || dtEmployee.Rows.Count == 0)
-                    {
-                        MessageBox.Show("Không tìm thấy thông tin nhân viên để cập nhật!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
-                    }
+                int gioiTinhValue = Convert.ToInt32(cmbGioiTinh.SelectedValue); // Lấy giá trị thô (0 hoặc 1)
+                bool gioiTinh = gioiTinhValue == 1; // 1 = Nữ, 0 = Nam
+                int trangThai = cbDiLam.Checked ? 1 : 0;
 
-                    DataRow row = dtEmployee.Rows[0];
-                    string sdt = row["SDT"] != DBNull.Value ? row["SDT"].ToString() : null;
-                    string diaChi = row["DiaChi"] != DBNull.Value ? row["DiaChi"].ToString() : null;
-                    string email = row["Email"] != DBNull.Value ? row["Email"].ToString() : null;
-                    string cmnd = row["CMND"] != DBNull.Value ? row["CMND"].ToString() : null;
-                    string maChucDanh = row["MaChucDanh"] != DBNull.Value ? row["MaChucDanh"].ToString() : null;
+                // Lấy dữ liệu cũ từ cơ sở dữ liệu
+                DataTable dtEmployee = cls_EmployeeManagement.GetEmployeeByMaNV(maNV);
+                if (dtEmployee == null || dtEmployee.Rows.Count == 0)
+                {
+                    MessageBox.Show("Không tìm thấy thông tin nhân viên để cập nhật!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
 
-                    Console.WriteLine($"CapNhat - maNV: {maNV}, txtMaNV.Text: {txtMaNV.Text}, GioiTinhValue: {gioiTinhValue}, GioiTinh: {gioiTinh}, SDT: {sdt}");
-                    // Sử dụng giá trị NULL nếu dữ liệu cũ là NULL, hoặc giữ nguyên giá trị hợp lệ
-                    if (cls_EmployeeManagement.UpdateEmployee(maNV, txtMaNV.Text, txtTenNV.Text, ngaySinh, gioiTinh,
-                        diaChi, sdt, email, cmnd, trangThai, maChucDanh))
-                    {
-                        MessageBox.Show("Cập nhật thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        dtListEmployess.DataSource = cls_EmployeeManagement.ShowEmployees();
-                        _reset();
-                        _sttButton(true, true, false, false, false);
-                        txtTimKiem.Focus();
-                        maNV = null;
-                    }
-                    else
-                    {
-                        MessageBox.Show("Không thể cập nhật nhân viên này. Vui lòng kiểm tra lại!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
+                DataRow row = dtEmployee.Rows[0];
+                string sdt = row["SDT"] != DBNull.Value ? row["SDT"].ToString() : null;
+                string diaChi = row["DiaChi"] != DBNull.Value ? row["DiaChi"].ToString() : null;
+                string email = row["Email"] != DBNull.Value ? row["Email"].ToString() : null;
+                string cmnd = row["CMND"] != DBNull.Value ? row["CMND"].ToString() : null;
+                string maChucDanh = row["MaChucDanh"] != DBNull.Value ? row["MaChucDanh"].ToString() : null;
+
+                Console.WriteLine($"CapNhat - maNV: {maNV}, txtMaNV.Text: {txtMaNV.Text}, GioiTinhValue: {gioiTinhValue}, GioiTinh: {gioiTinh}, SDT: {sdt}");
+                // Sử dụng giá trị NULL nếu dữ liệu cũ là NULL, hoặc giữ nguyên giá trị hợp lệ
+                if (cls_EmployeeManagement.UpdateEmployee(maNV, txtMaNV.Text, txtTenNV.Text, ngaySinh, gioiTinh,
+                    diaChi, sdt, email, cmnd, trangThai, maChucDanh))
+                {
+                    MessageBox.Show("Cập nhật thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    dtListEmployess.DataSource = cls_EmployeeManagement.ShowEmployees(); // Giả định đã lọc IsDeleted = 0
+                    _reset();
+                    _sttButton(true, true, false, false, false);
+                    txtTimKiem.Focus();
+                    maNV = null;
+                }
+                else
+                {
+                    MessageBox.Show("Không thể cập nhật nhân viên này. Vui lòng kiểm tra lại!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -259,7 +282,17 @@ namespace QLCHBanGaRan.UCFunction
             }
             else
             {
-                errorProvider.SetError(dtpNgaySinh, "");
+                int age = DateTime.Now.Year - dtpNgaySinh.Value.Year;
+                if (dtpNgaySinh.Value > DateTime.Now.AddYears(-age)) age--; // Điều chỉnh nếu chưa đến sinh nhật
+                if (age < 18)
+                {
+                    errorProvider.SetError(dtpNgaySinh, "Nhân viên phải trên 18 tuổi.");
+                    e.Cancel = true;
+                }
+                else
+                {
+                    errorProvider.SetError(dtpNgaySinh, "");
+                }
             }
         }
 

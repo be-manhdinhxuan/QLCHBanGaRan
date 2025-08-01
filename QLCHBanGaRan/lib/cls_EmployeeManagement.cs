@@ -18,7 +18,7 @@ namespace QLCHBanGaRan.lib
             using (SqlConnection conn = new SqlConnection(cls_DatabaseManager.connectionString))
             {
                 conn.Open();
-                string query = "SELECT CMND, Email FROM NhanVien WHERE MaNV = @MaNV";
+                string query = "SELECT CMND, Email FROM NhanVien WHERE MaNV = @MaNV AND IsDeleted = 0";
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@MaNV", maNV);
@@ -57,25 +57,21 @@ namespace QLCHBanGaRan.lib
                         MaND = outputParameter.Value?.ToString();
                     }
                 }
-
-                // Nếu MaND null hoặc rỗng, trả về "ERROR" thay vì throw exception
                 return string.IsNullOrEmpty(MaND) ? "ERROR" : MaND;
             }
             catch (SqlException ex)
             {
-                // Ném lại SqlException để xử lý ở tầng UI
                 throw;
             }
             catch (Exception ex)
             {
-                // Ném lại exception khác
                 throw;
             }
         }
 
         public static bool CheckPermission(string maND)
         {
-            string query = "SELECT LaQuanTri FROM NguoiDung WHERE MaND = @MaND";
+            string query = "SELECT LaQuanTri FROM NguoiDung WHERE MaND = @MaND AND IsDeleted = 0";
             SqlParameter[] parameters = new SqlParameter[]
             {
                 new SqlParameter("@MaND", SqlDbType.NVarChar, 10) { Value = maND }
@@ -87,7 +83,7 @@ namespace QLCHBanGaRan.lib
         public static string[] GetEmployeeInfo(string maND)
         {
             string[] info = new string[2];
-            string query = "SELECT nv.MaNV, nv.TenNV FROM NguoiDung nd JOIN NhanVien nv ON nd.MaNV = nv.MaNV WHERE nd.MaND = @MaND";
+            string query = "SELECT nv.MaNV, nv.TenNV FROM NguoiDung nd JOIN NhanVien nv ON nd.MaNV = nv.MaNV WHERE nd.MaND = @MaND AND nd.IsDeleted = 0 AND nv.IsDeleted = 0";
             SqlParameter[] parameters = new SqlParameter[]
             {
                 new SqlParameter("@MaND", SqlDbType.NVarChar, 10) { Value = maND }
@@ -103,7 +99,7 @@ namespace QLCHBanGaRan.lib
 
         public static DataTable GetEmployeeByMaNV(string maNV)
         {
-            string query = "SELECT MaNV, TenNV, NgaySinh, GioiTinh, SDT, DiaChi, Email, CMND, TrangThai, MaChucDanh FROM NhanVien WHERE MaNV = @MaNV";
+            string query = "SELECT MaNV, TenNV, NgaySinh, GioiTinh, SDT, DiaChi, Email, CMND, TrangThai, MaChucDanh, IsDeleted FROM NhanVien WHERE MaNV = @MaNV AND IsDeleted = 0";
             SqlParameter[] parameters = new SqlParameter[]
             {
                 new SqlParameter("@MaNV", SqlDbType.NVarChar, 10) { Value = maNV }
@@ -131,7 +127,16 @@ namespace QLCHBanGaRan.lib
                     return false;
                 }
 
-                string query = "EXEC sp_ThemNhanVien @MaNV, @TenNV, @NgaySinh, @GioiTinh, @DiaChi, @SDT, @Email, @CMND, @TrangThai, @MaChucDanh";
+                // Kiểm tra độ tuổi trên 18
+                int age = DateTime.Now.Year - ngaySinh.Year;
+                if (ngaySinh > DateTime.Now.AddYears(-age)) age--;
+                if (age < 18)
+                {
+                    MessageBox.Show("Nhân viên phải trên 18 tuổi.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+
+                string query = "EXEC sp_ThemNhanVien @MaNV, @TenNV, @NgaySinh, @GioiTinh, @DiaChi, @SDT, @Email, @CMND, @TrangThai, @MaChucDanh, @IsDeleted";
                 SqlParameter[] parameters = new SqlParameter[]
                 {
                     new SqlParameter("@MaNV", SqlDbType.NVarChar, 10) { Value = maNV },
@@ -143,7 +148,8 @@ namespace QLCHBanGaRan.lib
                     new SqlParameter("@Email", SqlDbType.NVarChar, 100) { Value = (object)email ?? DBNull.Value },
                     new SqlParameter("@CMND", SqlDbType.NVarChar, 12) { Value = (object)cmnd ?? DBNull.Value },
                     new SqlParameter("@TrangThai", SqlDbType.Int) { Value = trangThai },
-                    new SqlParameter("@MaChucDanh", SqlDbType.NVarChar, 10) { Value = (object)maChucDanh ?? DBNull.Value }
+                    new SqlParameter("@MaChucDanh", SqlDbType.NVarChar, 10) { Value = (object)maChucDanh ?? DBNull.Value },
+                    new SqlParameter("@IsDeleted", SqlDbType.Bit) { Value = 0 } // Mặc định IsDeleted = 0 khi thêm
                 };
                 cls_DatabaseManager.ExecuteNonQuery(query, parameters);
                 return true;
@@ -194,9 +200,9 @@ namespace QLCHBanGaRan.lib
                            "nv.DiaChi, nv.SDT, nv.Email, nv.CMND, nv.TrangThai AS TrangThaiID, " +
                            "cd.MaChucDanh, COALESCE(cd.TenChucDanh, N'Chưa có chức danh') AS TenChucDanh " +
                            "FROM NhanVien nv " +
-                           "LEFT JOIN ChucDanh cd ON nv.MaChucDanh = cd.MaChucDanh";
+                           "LEFT JOIN ChucDanh cd ON nv.MaChucDanh = cd.MaChucDanh " +
+                           "WHERE nv.IsDeleted = 0"; // Chỉ lấy nhân viên chưa xóa
             DataTable dt = cls_DatabaseManager.TableRead(query);
-            // Debug chi tiết để kiểm tra giá trị TrangThai
             foreach (DataRow row in dt.Rows)
             {
                 int trangThaiValue = Convert.ToInt32(row["TrangThaiID"]);
@@ -213,7 +219,7 @@ namespace QLCHBanGaRan.lib
                            "cd.MaChucDanh, COALESCE(cd.TenChucDanh, N'Chưa có chức danh') AS TenChucDanh " +
                            "FROM NhanVien nv " +
                            "LEFT JOIN ChucDanh cd ON nv.MaChucDanh = cd.MaChucDanh " +
-                           "WHERE " + column + " LIKE @Keyword";
+                           "WHERE nv.IsDeleted = 0 AND " + column + " LIKE @Keyword";
 
             SqlParameter[] parameters = new SqlParameter[]
             {
@@ -233,49 +239,57 @@ namespace QLCHBanGaRan.lib
         {
             try
             {
-                if (CheckInNguoiDung(maNV) && CheckInHoaDon(maNV))
+                using (SqlConnection conn = new SqlConnection(cls_DatabaseManager.connectionString))
                 {
-                    string query = "DELETE FROM NhanVien WHERE MaNV = @MaNV";
-                    SqlParameter[] parameters = new SqlParameter[]
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand("sp_DeleteEmployee", conn))
                     {
-                        new SqlParameter("@MaNV", SqlDbType.NVarChar, 10) { Value = maNV }
-                    };
-                    cls_DatabaseManager.ExecuteNonQuery(query, parameters);
-                    return true;
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@MaNV", maNV);
+                        // Thêm output parameter
+                        SqlParameter outputParam = new SqlParameter("@TotalRowsAffected", SqlDbType.Int)
+                        {
+                            Direction = ParameterDirection.Output
+                        };
+                        cmd.Parameters.Add(outputParam);
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                        int totalRows = (int)outputParam.Value; // Lấy giá trị từ output parameter
+                        return totalRows > 0; // Sử dụng totalRows thay vì rowsAffected
+                    }
                 }
-                return false;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine($"Lỗi khi xóa nhân viên: {ex.Message}");
                 return false;
             }
         }
 
         public static bool CheckInNguoiDung(string maNV)
         {
-            string query = "SELECT MaNV FROM NguoiDung WHERE MaNV = @MaNV";
+            string query = "SELECT MaNV FROM NguoiDung WHERE MaNV = @MaNV AND IsDeleted = 0";
             SqlParameter[] parameters = new SqlParameter[]
             {
                 new SqlParameter("@MaNV", SqlDbType.NVarChar, 10) { Value = maNV }
             };
             DataTable dt = cls_DatabaseManager.TableRead(query, parameters);
-            return dt.Rows.Count == 0;
+            return dt.Rows.Count > 0; // Trả về true nếu có bản ghi liên quan chưa xóa
         }
 
         public static bool CheckInHoaDon(string maNV)
         {
-            string query = "SELECT MaNV FROM HoaDon WHERE MaNV = @MaNV";
+            string query = "SELECT MaNV FROM HoaDon WHERE MaNV = @MaNV AND IsDeleted = 0";
             SqlParameter[] parameters = new SqlParameter[]
             {
                 new SqlParameter("@MaNV", SqlDbType.NVarChar, 10) { Value = maNV }
             };
             DataTable dt = cls_DatabaseManager.TableRead(query, parameters);
-            return dt.Rows.Count == 0;
+            return dt.Rows.Count > 0; // Trả về true nếu có bản ghi liên quan chưa xóa
         }
 
         public static DataTable GetIDEmployees()
         {
-            string query = "SELECT MaNV FROM NhanVien ORDER BY MaNV";
+            string query = "SELECT MaNV FROM NhanVien WHERE IsDeleted = 0 ORDER BY MaNV";
             return cls_DatabaseManager.TableRead(query);
         }
 
@@ -283,21 +297,30 @@ namespace QLCHBanGaRan.lib
         {
             try
             {
+                // Kiểm tra độ tuổi trên 18
+                int age = DateTime.Now.Year - ngaySinh.Year;
+                if (ngaySinh > DateTime.Now.AddYears(-age)) age--;
+                if (age < 18)
+                {
+                    MessageBox.Show("Nhân viên phải trên 18 tuổi.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+
                 Console.WriteLine($"Update - maNVCu: {maNVCu}, maNV: {maNV}, TrangThai: {trangThai}, GioiTinh: {gioiTinh}, CMND: {cmnd}, Email: {email}");
                 string query = "sp_CapNhatNhanVien";
                 SqlParameter[] parameters = new SqlParameter[]
                 {
-            new SqlParameter("@MaNVCu", SqlDbType.NVarChar, 10) { Value = maNVCu },
-            new SqlParameter("@MaNV", SqlDbType.NVarChar, 10) { Value = maNV },
-            new SqlParameter("@TenNV", SqlDbType.NVarChar, 50) { Value = (object)tenNV ?? DBNull.Value },
-            new SqlParameter("@NgaySinh", SqlDbType.Date) { Value = ngaySinh },
-            new SqlParameter("@GioiTinh", SqlDbType.Bit) { Value = gioiTinh },
-            new SqlParameter("@DiaChi", SqlDbType.NVarChar, 255) { Value = (object)diaChi ?? DBNull.Value },
-            new SqlParameter("@SDT", SqlDbType.NVarChar, 10) { Value = (object)sdt ?? DBNull.Value },
-            new SqlParameter("@Email", SqlDbType.NVarChar, 100) { Value = (object)email ?? DBNull.Value },
-            new SqlParameter("@CMND", SqlDbType.NVarChar, 12) { Value = (object)cmnd ?? DBNull.Value },
-            new SqlParameter("@TrangThai", SqlDbType.Int) { Value = trangThai },
-            new SqlParameter("@MaChucDanh", SqlDbType.NVarChar, 10) { Value = (object)maChucDanh ?? DBNull.Value }
+                    new SqlParameter("@MaNVCu", SqlDbType.NVarChar, 10) { Value = maNVCu },
+                    new SqlParameter("@MaNV", SqlDbType.NVarChar, 10) { Value = maNV },
+                    new SqlParameter("@TenNV", SqlDbType.NVarChar, 50) { Value = (object)tenNV ?? DBNull.Value },
+                    new SqlParameter("@NgaySinh", SqlDbType.Date) { Value = ngaySinh },
+                    new SqlParameter("@GioiTinh", SqlDbType.Bit) { Value = gioiTinh },
+                    new SqlParameter("@DiaChi", SqlDbType.NVarChar, 255) { Value = (object)diaChi ?? DBNull.Value },
+                    new SqlParameter("@SDT", SqlDbType.NVarChar, 10) { Value = (object)sdt ?? DBNull.Value },
+                    new SqlParameter("@Email", SqlDbType.NVarChar, 100) { Value = (object)email ?? DBNull.Value },
+                    new SqlParameter("@CMND", SqlDbType.NVarChar, 12) { Value = (object)cmnd ?? DBNull.Value },
+                    new SqlParameter("@TrangThai", SqlDbType.Int) { Value = trangThai },
+                    new SqlParameter("@MaChucDanh", SqlDbType.NVarChar, 10) { Value = (object)maChucDanh ?? DBNull.Value }
                 };
 
                 using (SqlConnection conn = new SqlConnection(cls_DatabaseManager.connectionString))
@@ -401,10 +424,10 @@ namespace QLCHBanGaRan.lib
                            "FROM NhanVien nv " +
                            "JOIN ChucDanh cd ON nv.MaChucDanh = cd.MaChucDanh " +
                            "JOIN ThongKeChamCong tkc ON nv.MaNV = tkc.MaNV " +
-                           "WHERE tkc.Thang = @Thang";
+                           "WHERE tkc.Thang = @Thang AND nv.IsDeleted = 0";
             SqlParameter[] parameters = new SqlParameter[]
             {
-        new SqlParameter("@Thang", SqlDbType.Int) { Value = thang }
+                new SqlParameter("@Thang", SqlDbType.Int) { Value = thang }
             };
             return cls_DatabaseManager.TableRead(query, parameters);
         }

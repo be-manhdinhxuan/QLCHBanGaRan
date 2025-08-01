@@ -100,16 +100,24 @@ namespace QLCHBanGaRan.UCFunction
                 int successCount = 0;
                 foreach (DataGridViewRow row in dtDeletedProducts.SelectedRows)
                 {
-                    string maSP = row.Cells["MaSP"].Value.ToString();
-                    string updateQuery = "UPDATE NhanVien SET IsDeleted = 0 WHERE MaNV = @MaSP";
-                    SqlParameter[] parameters = { new SqlParameter("@MaSP", maSP) };
-                    if (cls_DatabaseManager.ExecuteNonQuery(updateQuery, parameters) > 0)
+                    string maNV = row.Cells["MaSP"].Value.ToString(); // Sử dụng MaSP vì nó đại diện cho MaNV
+                    using (SqlConnection conn = new SqlConnection(cls_DatabaseManager.connectionString))
                     {
-                        successCount++;
+                        conn.Open();
+                        using (SqlCommand cmd = new SqlCommand("sp_RestoreEmployee", conn))
+                        {
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.Parameters.AddWithValue("@MaNV", maNV);
+                            int rowsAffected = cmd.ExecuteNonQuery();
+                            if (rowsAffected > 0)
+                            {
+                                successCount++;
+                            }
+                        }
                     }
                 }
                 MessageBox.Show($"Đã khôi phục {successCount} nhân viên thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                LoadDeletedEmployees();
+                LoadDeletedEmployees(); // Tải lại danh sách để cập nhật giao diện
             }
             catch (Exception ex)
             {

@@ -61,6 +61,7 @@ namespace QLCHBanGaRan.UCFunction
             check = 1;
             _sttButton(false, false, false, true, true, true);
             txtMaNCC.Text = cls_NCC.GenerateMaNCC();
+            txtMaNCC.Enabled = false; // Không cho phép sửa mã NCC khi thêm mới
             txtTenNCC.Text = "";
             txtDiaChi.Text = "";
             txtSDT.Text = "";

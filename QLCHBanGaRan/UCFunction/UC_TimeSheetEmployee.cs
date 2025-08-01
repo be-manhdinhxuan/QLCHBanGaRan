@@ -138,9 +138,13 @@ namespace QLCHBanGaRan.UCFunction
         {
             switch (trangThai)
             {
-                case 1: return "Chưa chấm công";
-                case 2: return "Đi làm";
-                default: return "Nghỉ";
+                //case 1: return "Chưa chấm công";
+                //case 2: return "Đi làm";
+                //default: return "Nghỉ";
+                case 1: return "chưa chấm công";
+                case 2: return "đi làm";
+                case 3: return "nghỉ";
+                default: return "chưa chấm công";
             }
         }
 

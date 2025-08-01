@@ -136,7 +136,6 @@
             this.txtTimKiem.Name = "txtTimKiem";
             this.txtTimKiem.Size = new System.Drawing.Size(212, 27);
             this.txtTimKiem.TabIndex = 0;
-            this.txtTimKiem.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtTimKiem_KeyPress);
             // 
             // grpThongTin
             // 
