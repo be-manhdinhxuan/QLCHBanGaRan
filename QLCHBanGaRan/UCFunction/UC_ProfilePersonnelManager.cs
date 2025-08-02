@@ -111,16 +111,19 @@ namespace QLCHBanGaRan.UCFunction
         private List<string> _checkAvailable(string maNV)
         {
             List<string> msg = new List<string>();
-            if (!cls_EmployeeManagement.CheckInNguoiDung(maNV))
+            Console.WriteLine($"_checkAvailable - Checking MaNV: {maNV}");
+            int nguoiDungCount = cls_EmployeeManagement.CheckInNguoiDung(maNV) ? 1 : 0;
+            int hoaDonCount = cls_EmployeeManagement.CheckInHoaDon(maNV) ? 1 : 0;
+            Console.WriteLine($"_checkAvailable - NguoiDung Count: {nguoiDungCount}, HoaDon Count: {hoaDonCount}");
+            if (nguoiDungCount > 0 || hoaDonCount > 0)
             {
-                msg.Add("Vui lòng xóa nhân viên này trong Người Dùng trước khi xóa nhân viên.");
+                msg.Add($"Có {nguoiDungCount} bản ghi trong Người Dùng và {hoaDonCount} bản ghi trong Hóa Đơn sẽ được đánh dấu xóa cùng nhân viên.");
             }
-            if (!cls_EmployeeManagement.CheckInHoaDon(maNV))
-            {
-                msg.Add("Vui lòng xóa nhân viên này trong Hóa Đơn trước khi xóa nhân viên.");
-            }
-            return msg;
+            Console.WriteLine($"_checkAvailable - Result: {msg.Count} errors");
+            return msg; // Trả về thông báo, nhưng không ngăn xóa
         }
+
+        private DataTable employeeData; // Biến lưu dữ liệu ban đầu
 
         private void UC_ProfilePersonnelManager_Load(object sender, EventArgs e)
         {
@@ -140,15 +143,15 @@ namespace QLCHBanGaRan.UCFunction
             cmbChucDanh.ValueMember = "MaChucDanh";
             cmbChucDanh.DisplayMember = "TenChucDanh";
 
-            // Tạm thời để AutoGenerateColumns = true để kiểm tra
+            // Tải dữ liệu ban đầu
             dtListProfile.AutoGenerateColumns = false;
-            DataTable dt = cls_EmployeeManagement.ShowEmployees();
-            // Log để kiểm tra giá trị TrangThaiID
-            foreach (DataRow row in dt.Rows)
+            employeeData = cls_EmployeeManagement.ShowEmployees(); // Lưu dữ liệu vào biến
+                                                                   // Log để kiểm tra giá trị TrangThaiID
+            foreach (DataRow row in employeeData.Rows)
             {
                 Console.WriteLine($"Load - MaNV: {row["MaNV"]}, TrangThaiID: {row["TrangThaiID"]}, Type: {row["TrangThaiID"].GetType()}");
             }
-            dtListProfile.DataSource = dt;
+            dtListProfile.DataSource = employeeData;
             _formatDT();
 
             // Debug: Kiểm tra trạng thái checkbox sau khi load
@@ -156,7 +159,7 @@ namespace QLCHBanGaRan.UCFunction
             for (int i = 0; i < dtListProfile.Rows.Count; i++)
             {
                 var checkboxValue = dtListProfile.Rows[i].Cells["TrangThaiID"].Value;
-                var dataRowValue = dt.Rows[i]["TrangThaiID"];
+                var dataRowValue = employeeData.Rows[i]["TrangThaiID"];
                 Console.WriteLine($"Row {i}: Checkbox Value = {checkboxValue} ({checkboxValue?.GetType()}), DataRow Value = {dataRowValue} ({dataRowValue?.GetType()})");
             }
             Console.WriteLine("=== End Debug ===");
@@ -168,31 +171,33 @@ namespace QLCHBanGaRan.UCFunction
             cmbFilter.DisplayMember = "Text";
             var items = new[] {
                 new { Text = "Tên NV", Value = "TenNV" },
-                new { Text = "Số CMND", Value = "CMND" },
-                new { Text = "Số điện thoại", Value = "SDT" }
+                new { Text = "Số điện thoại", Value = "SDT" },
+                new { Text = "Giới tính", Value = "GioiTinh" }
             };
             cmbFilter.DataSource = items;
 
             // Gán sự kiện CellClick
             dtListProfile.CellClick += new DataGridViewCellEventHandler(dtListProfile_CellClick);
+            txtTimKiem.TextChanged += txtTimKiem_TextChanged;
         }
 
-        private void txtTimKiem_KeyPress(object sender, KeyPressEventArgs e)
+        private void txtTimKiem_TextChanged(object sender, EventArgs e)
         {
-            if (e.KeyChar == (char)Keys.Enter)
+            string searchText = txtTimKiem.Text.Trim();
+            if (employeeData != null && employeeData.Rows.Count > 0)
             {
-                string searchText = txtTimKiem.Text.Trim();
+                employeeData.DefaultView.RowFilter = string.Empty; // Xóa bộ lọc cũ
+                string filterColumn = cmbFilter.SelectedValue?.ToString() ?? "TenNV";
                 if (!string.IsNullOrEmpty(searchText))
                 {
-                    string filterColumn = cmbFilter.SelectedValue?.ToString() ?? "TenNV";
-                    dtListProfile.DataSource = cls_EmployeeManagement.SearchEmployees(filterColumn, searchText);
-                    _formatDT();
+                    employeeData.DefaultView.RowFilter = $"{filterColumn} LIKE '%{searchText}%' AND IsDeleted = 0";
                 }
                 else
                 {
-                    dtListProfile.DataSource = cls_EmployeeManagement.ShowEmployees();
-                    _formatDT();
+                    employeeData.DefaultView.RowFilter = "IsDeleted = 0"; // Hiển thị tất cả chưa xóa
                 }
+                dtListProfile.DataSource = employeeData.DefaultView.ToTable();
+                _formatDT();
             }
         }
 
@@ -291,34 +296,33 @@ namespace QLCHBanGaRan.UCFunction
             }
 
             int index = dtListProfile.CurrentCell.RowIndex;
-            string maNV = dtListProfile.Rows[index].Cells["MaNV"].Value?.ToString();
+            string maNV = dtListProfile.Rows[index].Cells["MaNV"].Value.ToString();
+            Console.WriteLine($"btnXoa_Click - Selected MaNV: {maNV}");
 
-            // Thêm thông báo hỏi ý kiến trước khi xóa
-            DialogResult result = MessageBox.Show($"Bạn có chắc muốn xóa nhân viên {maNV} không?", "Xác nhận xóa", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            DialogResult result = MessageBox.Show("Bạn muốn xóa nhân viên này?", "Thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result == DialogResult.Yes)
             {
                 var checkAvailable = _checkAvailable(maNV);
+                Console.WriteLine($"btnXoa_Click - checkAvailable count: {checkAvailable.Count}, Errors: {string.Join(", ", checkAvailable)}");
                 if (checkAvailable.Count > 0)
                 {
-                    MessageBox.Show("Đã có lỗi xảy ra:\n - " + string.Join("\n - ", checkAvailable.ToArray()), "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    // Thông báo nhưng tiếp tục xóa
+                    DialogResult confirm = MessageBox.Show(string.Join("\n", checkAvailable) + "\nBạn vẫn muốn tiếp tục?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                    if (confirm != DialogResult.Yes) return;
+                }
+                if (cls_EmployeeManagement.DeleteEmployee(maNV))
+                {
+                    MessageBox.Show($"Đã đánh dấu nhân viên có mã {maNV} là đã xóa!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    dtListProfile.DataSource = cls_EmployeeManagement.ShowEmployees();
+                    _formatDT();
+                    _reset();
+                    _sttButton(true, false, false, false, false, false);
                 }
                 else
                 {
-                    if (cls_EmployeeManagement.DeleteEmployee(maNV))
-                    {
-                        MessageBox.Show("Đã xóa thành công.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        dtListProfile.DataSource = cls_EmployeeManagement.ShowEmployees();
-                        _formatDT();
-                        _reset();
-                        _sttButton(true, false, false, false, false, false); // Vô hiệu hóa btnSua và btnXoa sau khi xóa
-                    }
-                    else
-                    {
-                        MessageBox.Show("Đã có lỗi xảy ra. Vui lòng kiểm tra lại", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
+                    MessageBox.Show($"Không thể đánh dấu nhân viên có mã {maNV} là đã xóa. Vui lòng thử lại!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-            // Nếu chọn No hoặc hủy, không làm gì thêm
         }
 
         private void btnCapNhat_Click(object sender, EventArgs e)
