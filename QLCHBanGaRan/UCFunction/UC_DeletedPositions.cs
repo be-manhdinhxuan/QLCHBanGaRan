@@ -101,19 +101,20 @@ namespace QLCHBanGaRan.UCFunction
                 foreach (DataGridViewRow row in dtDeletedProducts.SelectedRows)
                 {
                     string maSP = row.Cells["MaSP"].Value.ToString();
-                    string updateQuery = "UPDATE ChucDanh SET IsDeleted = 0 WHERE MaChucDanh = @MaSP";
-                    SqlParameter[] parameters = { new SqlParameter("@MaSP", maSP) };
-                    if (cls_DatabaseManager.ExecuteNonQuery(updateQuery, parameters) > 0)
+                    string query = "sp_RestoreChucDanh"; // Sử dụng stored procedure
+                    SqlParameter[] parameters = { new SqlParameter("@MaChucDanh", maSP) };
+                    if (cls_DatabaseManager.ExecuteNonQuery(query, parameters) > 0)
                     {
                         successCount++;
                     }
                 }
                 MessageBox.Show($"Đã khôi phục {successCount} chức danh thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                LoadDeletedPositions();
+                LoadDeletedPositions(); // Làm mới danh sách chức danh đã xóa
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Lỗi khi khôi phục: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Console.WriteLine("btnRestore_Click Error: " + ex.Message); // Ghi log lỗi
             }
         }
 

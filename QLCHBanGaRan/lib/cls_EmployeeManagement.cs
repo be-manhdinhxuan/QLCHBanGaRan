@@ -421,7 +421,7 @@ namespace QLCHBanGaRan.lib
 
         public static DataTable GetChucDanh()
         {
-            string query = "SELECT MaChucDanh, TenChucDanh FROM ChucDanh";
+            string query = "SELECT MaChucDanh, TenChucDanh FROM ChucDanh WHERE IsDeleted = 0";
             return cls_DatabaseManager.TableRead(query);
         }
 

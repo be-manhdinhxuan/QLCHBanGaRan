@@ -9,22 +9,22 @@ namespace QLCHBanGaRan.lib
         // Lấy danh sách chức danh
         public static DataTable GetChucDanh()
         {
-            string query = "SELECT MaChucDanh, TenChucDanh, LuongCoBan, PhuCap FROM ChucDanh";
+            string query = "SELECT MaChucDanh, TenChucDanh, LuongTheoGio, ThuongChucDanh FROM ChucDanh WHERE IsDeleted = 0";
             return cls_DatabaseManager.TableRead(query);
         }
 
         // Thêm chức danh
-        public static bool InsertChucDanh(string maChucDanh, string tenChucDanh, decimal luongCoBan, decimal phuCap)
+        public static bool InsertChucDanh(string maChucDanh, string tenChucDanh, decimal luongTheoGio, decimal thuongChucDanh)
         {
             try
             {
-                string query = "INSERT INTO ChucDanh (MaChucDanh, TenChucDanh, LuongCoBan, PhuCap) VALUES (@MaChucDanh, @TenChucDanh, @LuongCoBan, @PhuCap)";
+                string query = "sp_InsertChucDanh"; // Tên stored procedure
                 SqlParameter[] parameters = new SqlParameter[]
                 {
-                    new SqlParameter("@MaChucDanh", SqlDbType.NVarChar, 10) { Value = maChucDanh },
-                    new SqlParameter("@TenChucDanh", SqlDbType.NVarChar, 100) { Value = tenChucDanh },
-                    new SqlParameter("@LuongCoBan", SqlDbType.Decimal) { Value = luongCoBan },
-                    new SqlParameter("@PhuCap", SqlDbType.Decimal) { Value = phuCap }
+            new SqlParameter("@MaChucDanh", SqlDbType.NVarChar, 10) { Value = maChucDanh },
+            new SqlParameter("@TenChucDanh", SqlDbType.NVarChar, 100) { Value = tenChucDanh },
+            new SqlParameter("@LuongTheoGio", SqlDbType.Decimal) { Value = luongTheoGio },
+            new SqlParameter("@ThuongChucDanh", SqlDbType.Decimal) { Value = thuongChucDanh }
                 };
                 cls_DatabaseManager.ExecuteNonQuery(query, parameters);
                 return true;
@@ -37,19 +37,20 @@ namespace QLCHBanGaRan.lib
         }
 
         // Cập nhật chức danh
-        public static bool UpdateChucDanh(string tenChucDanh, decimal luongCoBan, decimal phuCap, string maChucDanh)
+        public static bool UpdateChucDanh(string tenChucDanh, decimal luongTheoGio, decimal thuongChucDanh, string maChucDanh)
         {
             try
             {
-                string query = "UPDATE ChucDanh SET TenChucDanh = @TenChucDanh, LuongCoBan = @LuongCoBan, PhuCap = @PhuCap WHERE MaChucDanh = @MaChucDanh";
+                string query = "sp_UpdateChucDanh";
                 SqlParameter[] parameters = new SqlParameter[]
                 {
-                    new SqlParameter("@TenChucDanh", SqlDbType.NVarChar, 100) { Value = tenChucDanh },
-                    new SqlParameter("@LuongCoBan", SqlDbType.Decimal) { Value = luongCoBan },
-                    new SqlParameter("@PhuCap", SqlDbType.Decimal) { Value = phuCap },
-                    new SqlParameter("@MaChucDanh", SqlDbType.NVarChar, 10) { Value = maChucDanh }
+                    new SqlParameter("@MaChucDanh", SqlDbType.NVarChar, 10) { Value = maChucDanh ?? (object)DBNull.Value },
+                    new SqlParameter("@TenChucDanh", SqlDbType.NVarChar, 100) { Value = tenChucDanh ?? (object)DBNull.Value },
+                    new SqlParameter("@LuongTheoGio", SqlDbType.Decimal) { Value = luongTheoGio },
+                    new SqlParameter("@ThuongChucDanh", SqlDbType.Decimal) { Value = thuongChucDanh }
                 };
                 int rowsAffected = cls_DatabaseManager.ExecuteNonQuery(query, parameters);
+                Console.WriteLine("UpdateChucDanh: Rows affected = " + rowsAffected + ", MaChucDanh = " + maChucDanh);
                 return rowsAffected > 0;
             }
             catch (Exception ex)
@@ -64,7 +65,7 @@ namespace QLCHBanGaRan.lib
         {
             try
             {
-                string query = "SELECT COUNT(*) FROM NhanVien WHERE MaChucDanh = @MaChucDanh";
+                string query = "SELECT COUNT(*) FROM NhanVien WHERE MaChucDanh = @MaChucDanh AND IsDeleted = 0";
                 SqlParameter[] parameters = new SqlParameter[]
                 {
                     new SqlParameter("@MaChucDanh", SqlDbType.NVarChar, 10) { Value = maChucDanh }
@@ -84,7 +85,7 @@ namespace QLCHBanGaRan.lib
         {
             try
             {
-                string query = "SELECT MaNV, TenNV FROM NhanVien WHERE MaChucDanh = @MaChucDanh";
+                string query = "SELECT MaNV, TenNV FROM NhanVien WHERE MaChucDanh = @MaChucDanh AND IsDeleted = 0";
                 SqlParameter[] parameters = new SqlParameter[]
                 {
                     new SqlParameter("@MaChucDanh", SqlDbType.NVarChar, 10) { Value = maChucDanh }
@@ -103,22 +104,11 @@ namespace QLCHBanGaRan.lib
         {
             try
             {
-                if (deleteRelatedNhanVien)
-                {
-                    // Xóa các bản ghi trong NhanVien liên quan trước
-                    string deleteNhanVienQuery = "DELETE FROM NhanVien WHERE MaChucDanh = @MaChucDanh";
-                    SqlParameter[] nhanVienParams = new SqlParameter[]
-                    {
-                        new SqlParameter("@MaChucDanh", SqlDbType.NVarChar, 10) { Value = maChucDanh }
-                    };
-                    cls_DatabaseManager.ExecuteNonQuery(deleteNhanVienQuery, nhanVienParams);
-                }
-
-                // Xóa bản ghi trong ChucDanh
-                string query = "DELETE FROM ChucDanh WHERE MaChucDanh = @MaChucDanh";
+                string query = "sp_DeleteChucDanh";
                 SqlParameter[] parameters = new SqlParameter[]
                 {
-                    new SqlParameter("@MaChucDanh", SqlDbType.NVarChar, 10) { Value = maChucDanh }
+            new SqlParameter("@MaChucDanh", SqlDbType.NVarChar, 10) { Value = maChucDanh },
+            new SqlParameter("@DeleteRelatedNhanVien", SqlDbType.Bit) { Value = deleteRelatedNhanVien }
                 };
                 int rowsAffected = cls_DatabaseManager.ExecuteNonQuery(query, parameters);
                 return rowsAffected > 0;
@@ -138,7 +128,7 @@ namespace QLCHBanGaRan.lib
                 string query = @"SELECT a.BoPhanID, a.NhanVienID, b.MaNV, b.TenNV, c.ChamCongID, 
                                 c.NgayCongChuan, c.NgayDiLam, c.NgayNghi, c.NgayTinhLuong, c.GhiChu, c.TrangThai, c.Thang
                                 FROM tbl_NhanVienBoPhan a
-                                INNER JOIN tbl_NhanVien b ON a.NhanVienID = b.NhanVienID
+                                INNER JOIN tbl_NhanVien b ON a.NhanVienID = b.NhanVienID AND b.IsDeleted = 0
                                 LEFT JOIN tbl_ChamCong c ON c.BoPhanID = a.BoPhanID AND c.NhanVienID = a.NhanVienID AND c.Thang = @Thang
                                 WHERE a.BoPhanID = @BoPhanID";
                 SqlParameter[] parameters = new SqlParameter[]
@@ -256,14 +246,15 @@ namespace QLCHBanGaRan.lib
         {
             try
             {
-                string query = @"SELECT d.ChiTietBanKeLuongID, a.NhanVienID, a.MaNV, a.TenNV, d.NgayCongChuan, d.NgayTinhLuong, c.LuongCoBan, 
-                                c.PhuCap * c.LuongCoBan / 100 AS [PhuCap],
-                                c.LuongCoBan * (CAST(d.NgayTinhLuong AS FLOAT) / CAST(d.NgayCongChuan AS FLOAT)) AS [TongLuong],
-                                c.LuongCoBan * (CAST(d.NgayTinhLuong AS FLOAT) / CAST(d.NgayCongChuan AS FLOAT)) + c.PhuCap * c.LuongCoBan / 100 AS [ThucLinh], 
+                string query = @"SELECT d.ChiTietBanKeLuongID, a.NhanVienID, a.MaNV, a.TenNV, d.NgayCongChuan, d.NgayTinhLuong, c.LuongTheoGio, 
+                                c.ThuongChucDanh AS [ThuongChucDanh],
+                                c.LuongTheoGio * (CAST(d.NgayTinhLuong AS FLOAT) / CAST(d.NgayCongChuan AS FLOAT)) AS [TongLuong],
+                                c.LuongTheoGio * (CAST(d.NgayTinhLuong AS FLOAT) / CAST(d.NgayCongChuan AS FLOAT)) + c.ThuongChucDanh AS [ThucLinh], 
                                 d.TrangThai
                                 FROM tbl_NhanVien a
-                                INNER JOIN ChucDanh c ON c.MaChucDanh = a.MaChucDanh
-                                LEFT JOIN tbl_ChiTietBanKeLuong d ON d.NhanVienID = a.NhanVienID AND d.ThangKeLuong = @Thang";
+                                INNER JOIN ChucDanh c ON c.MaChucDanh = a.MaChucDanh AND c.IsDeleted = 0
+                                LEFT JOIN tbl_ChiTietBanKeLuong d ON d.NhanVienID = a.NhanVienID AND d.ThangKeLuong = @Thang
+                                WHERE a.IsDeleted = 0";
                 SqlParameter[] parameters = new SqlParameter[]
                 {
                     new SqlParameter("@Thang", SqlDbType.NVarChar, 10) { Value = thang }
@@ -277,15 +268,15 @@ namespace QLCHBanGaRan.lib
         }
 
         // Cập nhật chi tiết bảng kê lương
-        public static bool UpdateChiTietBanKeLuong(decimal tienLuongCung, decimal phuCap, decimal tongLuong, decimal thucLinh, string chiTietBanKeLuongID)
+        public static bool UpdateChiTietBanKeLuong(decimal luongTheoGio, decimal thuongChucDanh, decimal tongLuong, decimal thucLinh, string chiTietBanKeLuongID)
         {
             try
             {
-                string query = "UPDATE tbl_ChiTietBanKeLuong SET TienLuongCung = @TienLuongCung, PhuCap = @PhuCap, TongLuong = @TongLuong, ThucLinh = @ThucLinh WHERE ChiTietBanKeLuongID = @ChiTietBanKeLuongID";
+                string query = "UPDATE tbl_ChiTietBanKeLuong SET TienLuongCung = @LuongTheoGio, PhuCap = @ThuongChucDanh, TongLuong = @TongLuong, ThucLinh = @ThucLinh WHERE ChiTietBanKeLuongID = @ChiTietBanKeLuongID";
                 SqlParameter[] parameters = new SqlParameter[]
                 {
-                    new SqlParameter("@TienLuongCung", SqlDbType.Decimal) { Value = tienLuongCung },
-                    new SqlParameter("@PhuCap", SqlDbType.Decimal) { Value = phuCap },
+                    new SqlParameter("@LuongTheoGio", SqlDbType.Decimal) { Value = luongTheoGio },
+                    new SqlParameter("@ThuongChucDanh", SqlDbType.Decimal) { Value = thuongChucDanh },
                     new SqlParameter("@TongLuong", SqlDbType.Decimal) { Value = tongLuong },
                     new SqlParameter("@ThucLinh", SqlDbType.Decimal) { Value = thucLinh },
                     new SqlParameter("@ChiTietBanKeLuongID", SqlDbType.NVarChar, 10) { Value = chiTietBanKeLuongID }

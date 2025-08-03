@@ -25,8 +25,8 @@ namespace QLCHBanGaRan.UCFunction
         private void _reset()
         {
             txtChucDanh.Text = "";
-            txtLuongCung.Text = "";
-            txtPhuCap.Text = "";
+            txtLuongTheoGio.Text = ""; // Thay txtLuongCung
+            txtThuongChucDanh.Text = ""; // Thay txtPhuCap
             txtMaChucDanh.Text = GenerateNewMaChucDanh(); // Tự động tạo mã mới khi reset
             errorProvider.Clear();
             dtList.Enabled = true; // Đảm bảo DataGridView được kích hoạt lại
@@ -93,9 +93,10 @@ namespace QLCHBanGaRan.UCFunction
         {
             check = 1;
             _sttButton(false, false, false, true, true, true, false); // Vô hiệu hóa dtList khi thêm
+            txtMaChucDanh.Enabled = false;
             txtChucDanh.Text = ""; // Làm sạch
-            txtLuongCung.Text = ""; // Làm sạch
-            txtPhuCap.Text = ""; // Làm sạch
+            txtLuongTheoGio.Text = ""; // Thay txtLuongCung, làm sạch
+            txtThuongChucDanh.Text = ""; // Thay txtPhuCap, làm sạch
             txtMaChucDanh.Text = GenerateNewMaChucDanh(); // Chỉ hiển thị mã mới
             txtChucDanh.Focus();
             Console.WriteLine("btnThem_Click: check set to 1, btnCapNhat enabled, MaChucDanh = " + txtMaChucDanh.Text);
@@ -119,27 +120,29 @@ namespace QLCHBanGaRan.UCFunction
             if (string.IsNullOrEmpty(_chucDanhID))
             {
                 MessageBox.Show("Vui lòng chọn thông tin cần xóa", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Console.WriteLine("btnXoa_Click: _chucDanhID is null or empty");
             }
             else
             {
-                DialogResult result = MessageBox.Show("Bạn muốn xóa lương chức danh " + txtChucDanh.Text + "?", "Thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                DialogResult result = MessageBox.Show("Bạn muốn xóa lương chức danh " + txtChucDanh.Text + "?\nLưu ý: Nhân viên liên quan sẽ được đánh dấu chức danh đã xóa nhưng vẫn hiển thị.", "Thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (result == DialogResult.Yes)
                 {
+                    Console.WriteLine("btnXoa_Click: Attempting to delete _chucDanhID = " + _chucDanhID);
                     if (!lib.cls_Salary.CheckChucDanh(_chucDanhID))
                     {
-                        // Lấy danh sách nhân viên liên quan để hiển thị
                         DataTable dtNhanVien = lib.cls_Salary.GetNhanVienByMaChucDanh(_chucDanhID);
                         if (dtNhanVien != null && dtNhanVien.Rows.Count > 0)
                         {
                             string nhanVienList = string.Join(", ", dtNhanVien.AsEnumerable().Select(r => r.Field<string>("TenNV")));
-                            DialogResult confirmDelete = MessageBox.Show($"Chức danh này đang được sử dụng bởi các nhân viên: {nhanVienList}.\nBạn có muốn xóa cả các nhân viên này không?",
+                            DialogResult confirmDelete = MessageBox.Show($"Chức danh này đang được sử dụng bởi các nhân viên: {nhanVienList}.\nBạn có muốn đánh dấu chức danh đã xóa cho các nhân viên này không?",
                                 "Xác nhận xóa", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
                             if (confirmDelete == DialogResult.Yes)
                             {
-                                bool _delCD = lib.cls_Salary.DeleteChucDanh(_chucDanhID, true); // Xóa cascade
+                                bool _delCD = lib.cls_Salary.DeleteChucDanh(_chucDanhID, true);
+                                Console.WriteLine("btnXoa_Click: DeleteChucDanh returned: " + _delCD + ", with cascade = true");
                                 if (_delCD)
                                 {
-                                    MessageBox.Show("Xóa thành công, bao gồm các nhân viên liên quan.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                    MessageBox.Show("Xóa chức danh thành công. Nhân viên liên quan được đánh dấu chức danh đã xóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                     _sttButton(true, false, true, false, false, false, true);
                                     _reset();
                                     dtList.DataSource = lib.cls_Salary.GetChucDanh();
@@ -148,20 +151,40 @@ namespace QLCHBanGaRan.UCFunction
                                 else
                                 {
                                     MessageBox.Show("Đã có lỗi xảy ra. Vui lòng kiểm tra và thử lại", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    Console.WriteLine("btnXoa_Click: DeleteChucDanh failed with cascade = true");
                                 }
                             }
                             else if (confirmDelete == DialogResult.No)
                             {
-                                MessageBox.Show("Vui lòng cập nhật hoặc xóa các nhân viên liên quan trước.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                MessageBox.Show("Vui lòng cập nhật hoặc xử lý các nhân viên liên quan trước.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            }
+                        }
+                        else
+                        {
+                            bool _delCD = lib.cls_Salary.DeleteChucDanh(_chucDanhID);
+                            Console.WriteLine("btnXoa_Click: DeleteChucDanh returned: " + _delCD + ", without cascade");
+                            if (_delCD)
+                            {
+                                MessageBox.Show("Xóa chức danh thành công.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                _sttButton(true, false, true, false, false, false, true);
+                                _reset();
+                                dtList.DataSource = lib.cls_Salary.GetChucDanh();
+                                _chucDanhID = "";
+                            }
+                            else
+                            {
+                                MessageBox.Show("Đã có lỗi xảy ra. Vui lòng kiểm tra và thử lại", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                Console.WriteLine("btnXoa_Click: DeleteChucDanh failed without cascade");
                             }
                         }
                     }
                     else
                     {
                         bool _delCD = lib.cls_Salary.DeleteChucDanh(_chucDanhID);
+                        Console.WriteLine("btnXoa_Click: DeleteChucDanh returned: " + _delCD + ", no related employees");
                         if (_delCD)
                         {
-                            MessageBox.Show("Xóa thành công.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            MessageBox.Show("Xóa chức danh thành công.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             _sttButton(true, false, true, false, false, false, true);
                             _reset();
                             dtList.DataSource = lib.cls_Salary.GetChucDanh();
@@ -170,6 +193,7 @@ namespace QLCHBanGaRan.UCFunction
                         else
                         {
                             MessageBox.Show("Đã có lỗi xảy ra. Vui lòng kiểm tra và thử lại", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            Console.WriteLine("btnXoa_Click: DeleteChucDanh failed, no related employees");
                         }
                     }
                 }
@@ -179,6 +203,9 @@ namespace QLCHBanGaRan.UCFunction
         private void btnCapNhat_Click(object sender, EventArgs e)
         {
             Console.WriteLine("btnCapNhat_Click: Started, check = " + check);
+            Console.WriteLine("Input: MaChucDanh = " + _chucDanhID + ", TenChucDanh = " + txtChucDanh.Text +
+                              ", LuongTheoGio = " + txtLuongTheoGio.Text + ", ThuongChucDanh = " + txtThuongChucDanh.Text);
+
             if (!this.ValidateChildren())
             {
                 var getChildControls = GetAll(this, typeof(TextBox));
@@ -190,23 +217,24 @@ namespace QLCHBanGaRan.UCFunction
                 return;
             }
 
-            decimal luongCoBan, phuCap;
-            // Loại bỏ định dạng hàng nghìn khi phân tích
-            if (!decimal.TryParse(txtLuongCung.Text.Replace(".", ""), NumberStyles.Any, CultureInfo.InvariantCulture, out luongCoBan) ||
-                !decimal.TryParse(txtPhuCap.Text.Replace(".", ""), NumberStyles.Any, CultureInfo.InvariantCulture, out phuCap))
+            decimal luongTheoGio, thuongChucDanh;
+            if (!decimal.TryParse(txtLuongTheoGio.Text.Replace(".", ""), NumberStyles.Any, CultureInfo.InvariantCulture, out luongTheoGio) ||
+                !decimal.TryParse(txtThuongChucDanh.Text.Replace(".", ""), NumberStyles.Any, CultureInfo.InvariantCulture, out thuongChucDanh))
             {
-                MessageBox.Show("Lương cơ bản và phụ cấp phải là số hợp lệ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Console.WriteLine("btnCapNhat_Click: Parse failed");
+                MessageBox.Show("Lương theo giờ và thưởng chức danh phải là số hợp lệ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Console.WriteLine("btnCapNhat_Click: Parse failed, LuongTheoGio = " + txtLuongTheoGio.Text + ", ThuongChucDanh = " + txtThuongChucDanh.Text);
                 return;
             }
 
+            Console.WriteLine("Parsed: LuongTheoGio = " + luongTheoGio + ", ThuongChucDanh = " + thuongChucDanh);
+
             if (check == 1)
             {
-                bool _insertCD = lib.cls_Salary.InsertChucDanh(txtMaChucDanh.Text, txtChucDanh.Text, luongCoBan, phuCap);
+                bool _insertCD = lib.cls_Salary.InsertChucDanh(txtMaChucDanh.Text, txtChucDanh.Text, luongTheoGio, thuongChucDanh);
                 if (_insertCD)
                 {
                     MessageBox.Show("Thêm thành công.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    _sttButton(true, false, true, false, false, false, true); // Kích hoạt lại dtList
+                    _sttButton(true, false, true, false, false, false, true);
                     _reset();
                     dtList.DataSource = lib.cls_Salary.GetChucDanh();
                 }
@@ -217,11 +245,19 @@ namespace QLCHBanGaRan.UCFunction
             }
             else if (check == 2)
             {
-                bool _updateCD = lib.cls_Salary.UpdateChucDanh(txtChucDanh.Text, luongCoBan, phuCap, _chucDanhID);
+                if (string.IsNullOrEmpty(_chucDanhID))
+                {
+                    MessageBox.Show("Mã chức danh không hợp lệ. Vui lòng chọn lại!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Console.WriteLine("btnCapNhat_Click: _chucDanhID is null or empty");
+                    return;
+                }
+                Console.WriteLine("Calling UpdateChucDanh with _chucDanhID = " + _chucDanhID);
+                bool _updateCD = lib.cls_Salary.UpdateChucDanh(txtChucDanh.Text, luongTheoGio, thuongChucDanh, _chucDanhID);
+                Console.WriteLine("UpdateChucDanh returned: " + _updateCD);
                 if (_updateCD)
                 {
                     MessageBox.Show("Cập nhật thành công.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    _sttButton(true, false, true, false, false, false, true); // Kích hoạt lại dtList
+                    _sttButton(true, false, true, false, false, false, true);
                     _reset();
                     dtList.DataSource = lib.cls_Salary.GetChucDanh();
                     _chucDanhID = "";
@@ -229,6 +265,7 @@ namespace QLCHBanGaRan.UCFunction
                 else
                 {
                     MessageBox.Show("Không thể cập nhật thông tin lương. Vui lòng kiểm tra lại!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Console.WriteLine("UpdateChucDanh failed, possible SQL error or no rows affected");
                 }
             }
             else
@@ -254,10 +291,10 @@ namespace QLCHBanGaRan.UCFunction
                 txtMaChucDanh.Text = _chucDanhID; // Sử dụng tên cột
                 txtChucDanh.Text = row.Cells["TenChucDanh"].Value?.ToString() ?? ""; // Sử dụng tên cột
                 // Lấy giá trị gốc từ DataRow thay vì chuỗi đã định dạng
-                txtLuongCung.Text = (row.DataBoundItem as DataRowView)?.Row.Field<decimal>("LuongCoBan").ToString("N0") ?? "0";
-                txtPhuCap.Text = (row.DataBoundItem as DataRowView)?.Row.Field<decimal>("PhuCap").ToString("N0") ?? "0";
+                txtLuongTheoGio.Text = (row.DataBoundItem as DataRowView)?.Row.Field<decimal>("LuongTheoGio").ToString("N0") ?? "0"; // Thay LuongCoBan
+                txtThuongChucDanh.Text = (row.DataBoundItem as DataRowView)?.Row.Field<decimal>("ThuongChucDanh").ToString("N0") ?? "0"; // Thay PhuCap
                 btnSua.Enabled = true;
-                Console.WriteLine("dtList_CellClick: _chucDanhID = " + _chucDanhID + ", LuongCoBan = " + (row.DataBoundItem as DataRowView)?.Row.Field<decimal>("LuongCoBan") + ", PhuCap = " + (row.DataBoundItem as DataRowView)?.Row.Field<decimal>("PhuCap"));
+                Console.WriteLine("dtList_CellClick: _chucDanhID = " + _chucDanhID + ", LuongTheoGio = " + (row.DataBoundItem as DataRowView)?.Row.Field<decimal>("LuongTheoGio") + ", ThuongChucDanh = " + (row.DataBoundItem as DataRowView)?.Row.Field<decimal>("ThuongChucDanh"));
             }
         }
 
@@ -274,45 +311,45 @@ namespace QLCHBanGaRan.UCFunction
             }
         }
 
-        private void txtLuongCung_Validating(object sender, CancelEventArgs e)
+        private void txtLuongTheoGio_Validating(object sender, CancelEventArgs e) // Thay txtLuongCung
         {
-            if (string.IsNullOrWhiteSpace(txtLuongCung.Text))
+            if (string.IsNullOrWhiteSpace(txtLuongTheoGio.Text))
             {
-                errorProvider.SetError(txtLuongCung, "Lương cơ bản không được trống.");
+                errorProvider.SetError(txtLuongTheoGio, "Lương theo giờ không được trống."); // Thay Lương cơ bản
                 e.Cancel = true;
             }
-            else if (!decimal.TryParse(txtLuongCung.Text.Replace(".", ""), NumberStyles.Any, CultureInfo.InvariantCulture, out _))
+            else if (!decimal.TryParse(txtLuongTheoGio.Text.Replace(".", ""), NumberStyles.Any, CultureInfo.InvariantCulture, out decimal luong) || luong <= 0)
             {
-                errorProvider.SetError(txtLuongCung, "Lương cơ bản phải là số hợp lệ.");
+                errorProvider.SetError(txtLuongTheoGio, "Lương theo giờ phải là số lớn hơn 0."); // Thay điều kiện
                 e.Cancel = true;
             }
             else
             {
-                errorProvider.SetError(txtLuongCung, "");
+                errorProvider.SetError(txtLuongTheoGio, "");
             }
         }
 
-        private void txtPhuCap_Validating(object sender, CancelEventArgs e)
+        private void txtThuongChucDanh_Validating(object sender, CancelEventArgs e) // Thay txtPhuCap
         {
-            if (string.IsNullOrWhiteSpace(txtPhuCap.Text))
+            if (string.IsNullOrWhiteSpace(txtThuongChucDanh.Text))
             {
-                errorProvider.SetError(txtPhuCap, "Phụ cấp không được trống.");
+                errorProvider.SetError(txtThuongChucDanh, "Thưởng chức danh không được trống."); // Thay Phụ cấp
                 e.Cancel = true;
             }
-            else if (!decimal.TryParse(txtPhuCap.Text.Replace(".", ""), NumberStyles.Any, CultureInfo.InvariantCulture, out _))
+            else if (!decimal.TryParse(txtThuongChucDanh.Text.Replace(".", ""), NumberStyles.Any, CultureInfo.InvariantCulture, out decimal thuong) || thuong < 0)
             {
-                errorProvider.SetError(txtPhuCap, "Phụ cấp phải là số hợp lệ.");
+                errorProvider.SetError(txtThuongChucDanh, "Thưởng chức danh phải là số không âm."); // Thay điều kiện
                 e.Cancel = true;
             }
             else
             {
-                errorProvider.SetError(txtPhuCap, "");
+                errorProvider.SetError(txtThuongChucDanh, "");
             }
         }
 
         private void dtList_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            if (dtList.Columns[e.ColumnIndex].Name == "TienLuong" || dtList.Columns[e.ColumnIndex].Name == "PhuCap") // Áp dụng cho cả hai cột
+            if (dtList.Columns[e.ColumnIndex].Name == "LuongTheoGio" || dtList.Columns[e.ColumnIndex].Name == "ThuongChucDanh") // Thay TienLuong, PhuCap
             {
                 e.Value = e.Value == null ? "0" : e.Value;
                 e.Value = decimal.Parse(e.Value.ToString()).ToString("N0"); // Định dạng với dấu phân cách hàng nghìn

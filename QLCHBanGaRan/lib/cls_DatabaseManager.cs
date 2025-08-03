@@ -67,24 +67,34 @@ namespace QLCHBanGaRan.lib
                 conn.Open();
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    cmd.CommandType = CommandType.Text; // Thay bằng CommandType.StoredProcedure nếu query là tên stored procedure
+                    // Phát hiện nếu query là tên stored procedure
+                    if (query.Trim().ToLower().StartsWith("sp_") || !query.ToLower().Contains("select") && !query.ToLower().Contains("insert") && !query.ToLower().Contains("update") && !query.ToLower().Contains("delete"))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                    }
+                    else
+                    {
+                        cmd.CommandType = CommandType.Text;
+                    }
+
                     if (parameters != null)
                     {
                         cmd.Parameters.AddRange(parameters);
                     }
+
                     try
                     {
                         rowsAffected = cmd.ExecuteNonQuery();
-                        Console.WriteLine($"ExecuteNonQuery - Rows affected: {rowsAffected}");
+                        Console.WriteLine($"ExecuteNonQuery - Rows affected: {rowsAffected}, CommandType: {cmd.CommandType}, Query: {query}");
                     }
                     catch (SqlException ex)
                     {
-                        Console.WriteLine($"ExecuteNonQuery Error - Number: {ex.Number}, Message: {ex.Message}");
+                        Console.WriteLine($"ExecuteNonQuery Error - Number: {ex.Number}, Message: {ex.Message}, Procedure: {query}, Parameters: {string.Join(", ", parameters?.Select(p => $"{p.ParameterName}={p.Value}") ?? new string[] { "None" })}");
                         throw; // Ném lại ngoại lệ để xử lý ở cấp cao hơn
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"General ExecuteNonQuery Error: {ex.Message}");
+                        Console.WriteLine($"General ExecuteNonQuery Error: {ex.Message}, Procedure: {query}");
                         throw;
                     }
                 }
