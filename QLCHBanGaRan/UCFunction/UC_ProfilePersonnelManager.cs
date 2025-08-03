@@ -336,6 +336,7 @@ namespace QLCHBanGaRan.UCFunction
                 MessageBox.Show("Nhân viên phải đủ 18 tuổi trở lên!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+
             if (!ValidateChildren())
             {
                 var getChildControls = GetAll(this, typeof(TextBox)).Concat(GetAll(this, typeof(DateTimePicker)));
@@ -356,7 +357,16 @@ namespace QLCHBanGaRan.UCFunction
 
                 if (cls_EmployeeManagement.AddEmployee(genMaNV, txtTenNV.Text, ngaySinh, gioiTinh, txtDiaChi.Text, txtSDT.Text, txtEmail.Text, txtCMND.Text, trangThai, maChucDanh))
                 {
-                    MessageBox.Show("Thêm nhân viên thành công.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    if (cls_EmployeeManagement.InsertNguoiDung(genMaNV))
+                    {
+                        Console.WriteLine("btnCapNhat_Click: NguoiDung inserted successfully for MaNV = " + genMaNV);
+                    }
+                    else
+                    {
+                        Console.WriteLine("btnCapNhat_Click: Failed to insert NguoiDung for MaNV = " + genMaNV);
+                    }
+
+                    MessageBox.Show("Thêm nhân viên thành công! Tài khoản đã được tạo với username = " + genMaNV + " và mật khẩu mặc định là " + genMaNV + ". Vui lòng yêu cầu nhân viên đổi mật khẩu sau khi đăng nhập.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     _reset();
                     _sttButton(true, true, true, false, false, false);
                     _formatDT();
@@ -367,6 +377,7 @@ namespace QLCHBanGaRan.UCFunction
                 else
                 {
                     txtMaNV.Text = genMaNV; // Giữ mã vừa tạo
+                    MessageBox.Show("Không thể thêm nhân viên. Vui lòng kiểm tra lại!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             else // Cập nhật

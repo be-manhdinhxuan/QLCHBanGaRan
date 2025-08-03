@@ -18,7 +18,6 @@ namespace QLCHBanGaRan.UCFunction
 
         private void _sttButton(bool add, bool edit, bool delete, bool update, bool cancel, bool grpinfo)
         {
-            btnThem.Enabled = add;
             btnSua.Enabled = edit;
             btnXoa.Enabled = delete;
             btnCapNhat.Enabled = update;
@@ -31,7 +30,6 @@ namespace QLCHBanGaRan.UCFunction
             txtTenDangNhap.Text = "";
             txtMatKhau.Text = "";
             cbQuanTri.Checked = false;
-            cmbNhanVien.SelectedIndex = -1;
             _MaND = "";
         }
 
@@ -47,9 +45,9 @@ namespace QLCHBanGaRan.UCFunction
         {
             string query = "SELECT MaNV, TenNV FROM NhanVien WHERE TrangThai = 1";
             DataTable dt = cls_DatabaseManager.TableRead(query);
-            cmbNhanVien.ValueMember = "MaNV";
-            cmbNhanVien.DisplayMember = "TenNV";
-            cmbNhanVien.DataSource = dt;
+            //txtNhanVien.ValueMember = "MaNV";
+            //txtNhanVien.DisplayMember = "TenNV";
+            //txtNhanVien.DataSource = dt;
         }
 
         private void LoadNguoiDung()
@@ -114,9 +112,9 @@ namespace QLCHBanGaRan.UCFunction
             {
                 int index = dtList.CurrentCell.RowIndex;
                 _MaND = dtList.Rows[index].Cells["NguoiDungID"].Value.ToString();
-                cmbNhanVien.SelectedValue = dtList.Rows[index].Cells["MaNV"].Value;
+                //txtNhanVien.SelectedValue = dtList.Rows[index].Cells["MaNV"].Value;
                 txtTenDangNhap.Text = dtList.Rows[index].Cells["TenDangNhap"].Value.ToString();
-                txtMatKhau.Text = cls_EnCrypt.DecryptMD5(dtList.Rows[index].Cells["MatKhau"].Value.ToString()); // Giải mã để hiển thị
+                txtMatKhau.Text = cls_AESEncryption.Encrypt(dtList.Rows[index].Cells["MatKhau"].Value.ToString()); // Giải mã để hiển thị
                 cbQuanTri.Checked = Convert.ToBoolean(dtList.Rows[index].Cells["QuanTri"].Value);
                 btnSua.Enabled = true;
             }
@@ -136,9 +134,9 @@ namespace QLCHBanGaRan.UCFunction
                 return;
             }
 
-            string maNV = cmbNhanVien.SelectedValue.ToString();
+            string maNV = txtNhanVien.Text;
             string tenDangNhap = txtTenDangNhap.Text;
-            string matKhau = cls_EnCrypt.EncryptMD5(txtMatKhau.Text); // Mã hóa mật khẩu
+            string matKhau = cls_AESEncryption.Encrypt(txtMatKhau.Text); // Mã hóa mật khẩu
             int laQuanTri = cbQuanTri.Checked ? 1 : 0;
 
             if (check == 1)
@@ -214,6 +212,22 @@ namespace QLCHBanGaRan.UCFunction
             _sttButton(true, false, true, false, false, false);
             // Thay thế bằng logic điều hướng của dự án bạn
             // Ví dụ: Forms.frm_Main.Instance.pnlContainer.Controls["UC_System"].BringToFront();
+        }
+
+
+        private void cmbNhanVien_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtMatKhau_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cbQuanTri_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

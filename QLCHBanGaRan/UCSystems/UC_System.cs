@@ -19,11 +19,6 @@ namespace QLCHBanGaRan.UCSystems
             InitializeComponent();
         }
 
-        // Xóa btnDoiMatKhau_Click vì không còn liên quan
-        // Xóa btnSaoluuDuLieu_Click vì không còn liên quan
-        // Xóa btnPhucHoiDuLieu_Click vì không còn liên quan
-        // Xóa btnThongTinCuaHang_Click vì không còn liên quan
-
         private void btnQuanLyNguoiDung_Click(object sender, EventArgs e)
         {
             if (!frm_Main.Instance.pnlContainer.Controls.ContainsKey("UC_UserManager"))

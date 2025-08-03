@@ -438,5 +438,45 @@ namespace QLCHBanGaRan.lib
             };
             return cls_DatabaseManager.TableRead(query, parameters);
         }
+
+        public static string GenerateNewMaND()
+        {
+            string query = "SELECT MaND FROM NguoiDung WHERE MaND LIKE 'ND%' ORDER BY MaND DESC";
+            DataTable dt = cls_DatabaseManager.TableRead(query);
+            int newNumber = 1; // Giá trị mặc định nếu không có bản ghi
+
+            if (dt.Rows.Count > 0)
+            {
+                string maxMaND = dt.Rows[0]["MaND"].ToString();
+                string numberPart = maxMaND.Substring(2); // Lấy phần số (ví dụ: "002" từ "ND002")
+                newNumber = int.Parse(numberPart) + 1; // Tăng số lên
+            }
+
+            return "ND" + newNumber.ToString("D3"); // Định dạng 3 chữ số (ND001, ND002, ...)
+        }
+
+        public static bool InsertNguoiDung(string maNV)
+        {
+            try
+            {
+                string defaultPassword = maNV; // Sử dụng MaNV làm mật khẩu mặc định
+                string maND = GenerateNewMaND();
+                string query = "INSERT INTO NguoiDung (MaND, MaNV, TenDangNhap, MatKhau, LaQuanTri, IsDeleted) VALUES (@MaND, @MaNV, @TenDangNhap, @MatKhau, 0, 0)";
+                SqlParameter[] parameters = new SqlParameter[]
+                {
+            new SqlParameter("@MaND", SqlDbType.NVarChar, 10) { Value = maND },
+            new SqlParameter("@MaNV", SqlDbType.NVarChar, 10) { Value = maNV },
+            new SqlParameter("@TenDangNhap", SqlDbType.NVarChar, 50) { Value = maNV },
+            new SqlParameter("@MatKhau", SqlDbType.NVarChar, 50) { Value = defaultPassword }
+                };
+                int rowsAffected = cls_DatabaseManager.ExecuteNonQuery(query, parameters);
+                return rowsAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("InsertNguoiDung Error - " + ex.Message);
+                return false;
+            }
+        }
     }
 }

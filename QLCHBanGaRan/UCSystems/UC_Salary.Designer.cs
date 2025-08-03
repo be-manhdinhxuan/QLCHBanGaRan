@@ -90,7 +90,7 @@
             // 
             // btnQuanLyChucDanh
             // 
-            this.btnQuanLyChucDanh.BackgroundImage = global::QLCHBanGaRan.Properties.Resources.admin_settings_male_120px;
+            this.btnQuanLyChucDanh.BackgroundImage = global::QLCHBanGaRan.Properties.Resources.salary_manager_120px;
             this.btnQuanLyChucDanh.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnQuanLyChucDanh.Location = new System.Drawing.Point(35, 28);
             this.btnQuanLyChucDanh.Name = "btnQuanLyChucDanh";
