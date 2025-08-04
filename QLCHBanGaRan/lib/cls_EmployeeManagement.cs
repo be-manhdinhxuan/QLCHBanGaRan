@@ -34,7 +34,7 @@ namespace QLCHBanGaRan.lib
             }
         }
 
-        public static string CheckLogin(string username, string password)
+        public static string CheckLogin(string username, string encryptedPassword)
         {
             string MaND = null;
             try
@@ -42,25 +42,30 @@ namespace QLCHBanGaRan.lib
                 using (SqlConnection conn = new SqlConnection(cls_DatabaseManager.connectionString))
                 {
                     conn.Open();
-                    using (SqlCommand cmd = new SqlCommand("sp_CheckLogin", conn))
+                    string query = @"
+                SELECT MaND 
+                FROM NguoiDung 
+                WHERE TenDangNhap = @TenDangNhap COLLATE Latin1_General_CS_AS 
+                AND MatKhau = @MatKhau 
+                AND (IsDeleted = 0 OR IsDeleted IS NULL)";
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
-                        cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.AddWithValue("@TenDangNhap", username);
-                        cmd.Parameters.AddWithValue("@MatKhau", password);
-                        SqlParameter outputParameter = new SqlParameter("@MaND", SqlDbType.NVarChar, 10)
+                        cmd.Parameters.AddWithValue("@MatKhau", encryptedPassword);
+                        using (SqlDataReader reader = cmd.ExecuteReader())
                         {
-                            Direction = ParameterDirection.Output
-                        };
-                        cmd.Parameters.Add(outputParameter);
-
-                        cmd.ExecuteNonQuery();
-                        MaND = outputParameter.Value?.ToString();
+                            if (reader.Read())
+                            {
+                                MaND = reader["MaND"].ToString();
+                            }
+                        }
                     }
                 }
                 return string.IsNullOrEmpty(MaND) ? "ERROR" : MaND;
             }
             catch (SqlException ex)
             {
+                // Ném lại exception để xử lý ở tầng trên
                 throw;
             }
             catch (Exception ex)
@@ -459,16 +464,23 @@ namespace QLCHBanGaRan.lib
         {
             try
             {
-                string defaultPassword = maNV; // Sử dụng MaNV làm mật khẩu mặc định
+                string defaultPassword = maNV; // Mật khẩu mặc định là MaNV
+                Console.WriteLine($"InsertNguoiDung - MaNV: {maNV}, DefaultPassword: {defaultPassword}");
                 string maND = GenerateNewMaND();
-                string query = "INSERT INTO NguoiDung (MaND, MaNV, TenDangNhap, MatKhau, LaQuanTri, IsDeleted) VALUES (@MaND, @MaNV, @TenDangNhap, @MatKhau, 0, 0)";
+                string encryptedPassword = cls_Encryption.Encrypt(defaultPassword); // Mã hóa bằng AES
+
+                string query = @"
+            INSERT INTO NguoiDung (MaND, MaNV, TenDangNhap, MatKhau, LaQuanTri, IsDeleted) 
+            VALUES (@MaND, @MaNV, @TenDangNhap, @MatKhau, 0, 0)";
+
                 SqlParameter[] parameters = new SqlParameter[]
                 {
-            new SqlParameter("@MaND", SqlDbType.NVarChar, 10) { Value = maND },
-            new SqlParameter("@MaNV", SqlDbType.NVarChar, 10) { Value = maNV },
-            new SqlParameter("@TenDangNhap", SqlDbType.NVarChar, 50) { Value = maNV },
-            new SqlParameter("@MatKhau", SqlDbType.NVarChar, 50) { Value = defaultPassword }
+                    new SqlParameter("@MaND", SqlDbType.NVarChar, 10) { Value = maND },
+                    new SqlParameter("@MaNV", SqlDbType.NVarChar, 10) { Value = maNV },
+                    new SqlParameter("@TenDangNhap", SqlDbType.NVarChar, 50) { Value = maNV },
+                    new SqlParameter("@MatKhau", SqlDbType.NVarChar, 256) { Value = encryptedPassword } // Cần độ dài lớn hơn do Base64
                 };
+
                 int rowsAffected = cls_DatabaseManager.ExecuteNonQuery(query, parameters);
                 return rowsAffected > 0;
             }
@@ -478,5 +490,6 @@ namespace QLCHBanGaRan.lib
                 return false;
             }
         }
+
     }
 }

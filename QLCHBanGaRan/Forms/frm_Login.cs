@@ -219,8 +219,8 @@ namespace QLCHBanGaRan
 
                 try
                 {
-                    string username = txtTenDangNhap.Text.Trim();
-                    string password = txtPassword.Text.Trim();
+                    string username = txtTenDangNhap.Text; // Không trim để giữ nguyên ký tự
+                    string password = txtPassword.Text;    // Không trim để giữ nguyên ký tự
 
                     if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
                     {
@@ -229,7 +229,9 @@ namespace QLCHBanGaRan
                         return;
                     }
 
-                    string maND = cls_EmployeeManagement.CheckLogin(username, password);
+                    // Mã hóa mật khẩu trước khi kiểm tra
+                    string encryptedPassword = cls_Encryption.Encrypt(password);
+                    string maND = cls_EmployeeManagement.CheckLogin(username, encryptedPassword);
 
                     if (maND != "ERROR")
                     {

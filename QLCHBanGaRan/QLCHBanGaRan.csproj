@@ -165,7 +165,7 @@
     <Compile Include="lib\cls_DatabaseManager.cs" />
     <Compile Include="lib\cls_EmployeeManagement.cs" />
     <Compile Include="lib\cls_EmployeeTitleManagement.cs" />
-    <Compile Include="lib\cls_AESEncryption.cs" />
+    <Compile Include="lib\cls_Encryption.cs" />
     <Compile Include="lib\cls_NCC.cs" />
     <Compile Include="lib\cls_Product.cs" />
     <Compile Include="lib\cls_Report.cs" />

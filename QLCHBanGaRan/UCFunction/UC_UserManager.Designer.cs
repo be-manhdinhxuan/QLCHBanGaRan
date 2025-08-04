@@ -36,6 +36,7 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
             this.lblTitle = new System.Windows.Forms.Label();
             this.grpThongTin = new System.Windows.Forms.GroupBox();
+            this.pictureEye = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
             this.cbQuanTri = new System.Windows.Forms.CheckBox();
             this.txtMatKhau = new System.Windows.Forms.TextBox();
@@ -49,7 +50,7 @@
             this.TenNV = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TenDangNhap = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.MatKhau = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.QuanTri = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            //this.QuanTri = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.NguoiDungID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.MaNV = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.grpDanhSach = new System.Windows.Forms.GroupBox();
@@ -59,6 +60,7 @@
             this.btnBack = new System.Windows.Forms.Button();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.grpThongTin.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureEye)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dtList)).BeginInit();
             this.grpDanhSach.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
@@ -77,6 +79,7 @@
             // 
             // grpThongTin
             // 
+            this.grpThongTin.Controls.Add(this.pictureEye);
             this.grpThongTin.Controls.Add(this.label1);
             this.grpThongTin.Controls.Add(this.cbQuanTri);
             this.grpThongTin.Controls.Add(this.txtMatKhau);
@@ -93,6 +96,19 @@
             this.grpThongTin.TabIndex = 72;
             this.grpThongTin.TabStop = false;
             this.grpThongTin.Text = "Thông tin";
+            // 
+            // pictureEye
+            // 
+            this.pictureEye.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.pictureEye.Image = global::QLCHBanGaRan.Properties.Resources.eye;
+            this.pictureEye.Location = new System.Drawing.Point(749, 44);
+            this.pictureEye.Name = "pictureEye";
+            this.pictureEye.Size = new System.Drawing.Size(20, 20);
+            this.pictureEye.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureEye.TabIndex = 76;
+            this.pictureEye.TabStop = false;
+            this.pictureEye.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureEye_MouseUp);
+            this.pictureEye.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureEye_MouseDown);
             // 
             // label1
             // 
@@ -115,7 +131,6 @@
             this.cbQuanTri.TabIndex = 74;
             this.cbQuanTri.Text = "Quản trị";
             this.cbQuanTri.UseVisualStyleBackColor = true;
-            this.cbQuanTri.CheckedChanged += new System.EventHandler(this.cbQuanTri_CheckedChanged);
             // 
             // txtMatKhau
             // 
@@ -124,7 +139,6 @@
             this.txtMatKhau.Name = "txtMatKhau";
             this.txtMatKhau.Size = new System.Drawing.Size(234, 27);
             this.txtMatKhau.TabIndex = 73;
-            this.txtMatKhau.TextChanged += new System.EventHandler(this.txtMatKhau_TextChanged);
             // 
             // txtTenDangNhap
             // 
@@ -211,7 +225,7 @@
             this.TenNV,
             this.TenDangNhap,
             this.MatKhau,
-            this.QuanTri,
+            //this.QuanTri,
             this.NguoiDungID,
             this.MaNV});
             dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
@@ -270,14 +284,14 @@
             // 
             // QuanTri
             // 
-            this.QuanTri.DataPropertyName = "LaQuanTri";
-            this.QuanTri.FalseValue = "0";
-            this.QuanTri.HeaderText = "Vai trò";
-            this.QuanTri.Name = "QuanTri";
-            this.QuanTri.ReadOnly = true;
-            this.QuanTri.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.QuanTri.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.QuanTri.TrueValue = "1";
+            //this.QuanTri.DataPropertyName = "LaQuanTri";
+            //this.QuanTri.FalseValue = "0";
+            //this.QuanTri.HeaderText = "Vai trò";
+            //this.QuanTri.Name = "QuanTri";
+            //this.QuanTri.ReadOnly = true;
+            //this.QuanTri.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            //this.QuanTri.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            //this.QuanTri.TrueValue = "1";
             // 
             // NguoiDungID
             // 
@@ -383,6 +397,7 @@
             this.Load += new System.EventHandler(this.UC_UserManager_Load);
             this.grpThongTin.ResumeLayout(false);
             this.grpThongTin.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureEye)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dtList)).EndInit();
             this.grpDanhSach.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
@@ -412,10 +427,11 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn TenNV;
         private System.Windows.Forms.DataGridViewTextBoxColumn TenDangNhap;
         private System.Windows.Forms.DataGridViewTextBoxColumn MatKhau;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn QuanTri;
+        //private System.Windows.Forms.DataGridViewCheckBoxColumn QuanTri;
         private System.Windows.Forms.DataGridViewTextBoxColumn NguoiDungID;
         private System.Windows.Forms.DataGridViewTextBoxColumn MaNV;
         private System.Windows.Forms.ErrorProvider errorProvider;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.PictureBox pictureEye;
     }
 }
