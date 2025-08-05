@@ -11,9 +11,12 @@ namespace QLCHBanGaRan.lib
         // Lấy danh sách nhân viên - chức danh
         public static DataTable GetEmployeeTitles()
         {
-            string query = "SELECT nv.MaNV, nv.TenNV, nv.MaChucDanh, cd.TenChucDanh " +
+            string query = "SELECT nv.MaNV AS MaNhanVien, nv.TenNV AS TenNhanVien, CONVERT(VARCHAR, nv.NgaySinh, 103) AS NgaySinh, nv.GioiTinh, nv.DiaChi, nv.SDT, nv.Email, nv.CMND, " +
+                           "nv.MaChucDanh, " +
+                           "CASE WHEN nv.IsDeletedCD = 1 THEN NULL ELSE cd.TenChucDanh END AS ChucDanh " +
                            "FROM NhanVien nv " +
-                           "LEFT JOIN ChucDanh cd ON nv.MaChucDanh = cd.MaChucDanh";
+                           "LEFT JOIN ChucDanh cd ON nv.MaChucDanh = cd.MaChucDanh " +
+                           "WHERE nv.IsDeleted = 0";
             return cls_DatabaseManager.TableRead(query);
         }
 

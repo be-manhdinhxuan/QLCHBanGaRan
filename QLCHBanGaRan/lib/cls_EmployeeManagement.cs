@@ -204,7 +204,9 @@ namespace QLCHBanGaRan.lib
                            "CASE nv.GioiTinh WHEN 0 THEN N'Nam' WHEN 1 THEN N'Nữ' END AS GioiTinh, " +
                            "nv.DiaChi, nv.SDT, nv.Email, nv.CMND, nv.TrangThai AS TrangThaiID, " +
                            "nv.IsDeleted, " + // Thêm cột IsDeleted
-                           "cd.MaChucDanh, COALESCE(cd.TenChucDanh, N'Chưa có chức danh') AS TenChucDanh " +
+                           "nv.MaChucDanh, " +
+                           "CASE WHEN nv.IsDeletedCD = 1 THEN N'Chưa có chức danh' " +
+                           "ELSE COALESCE(cd.TenChucDanh, N'Chưa có chức danh') END AS TenChucDanh " +
                            "FROM NhanVien nv " +
                            "LEFT JOIN ChucDanh cd ON nv.MaChucDanh = cd.MaChucDanh " +
                            "WHERE nv.IsDeleted = 0"; // Chỉ lấy nhân viên chưa xóa
@@ -214,7 +216,7 @@ namespace QLCHBanGaRan.lib
             foreach (DataRow row in dt.Rows)
             {
                 int trangThaiValue = Convert.ToInt32(row["TrangThaiID"]);
-                Console.WriteLine($"ShowEmployees - MaNV: {row["MaNV"]}, TrangThaiID: {trangThaiValue}, GioiTinh: {row["GioiTinh"]}, IsDeleted: {row["IsDeleted"]}");
+                //Console.WriteLine($"ShowEmployees - MaNV: {row["MaNV"]}, TrangThaiID: {trangThaiValue}, GioiTinh: {row["GioiTinh"]}, IsDeleted: {row["IsDeleted"]}, IsDeletedCD: {row["IsDeletedCD"]}, TenChucDanh: {row["TenChucDanh"]}");
             }
 
             return dt;
