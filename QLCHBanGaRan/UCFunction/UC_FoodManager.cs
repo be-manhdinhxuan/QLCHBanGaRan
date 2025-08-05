@@ -308,8 +308,7 @@ namespace QLCHBanGaRan.UCFunction
                     }
                     else
                     {
-                        cmbNhaCungCap.SelectedIndex = -1;
-                        MessageBox.Show("Không tìm thấy nhà cung cấp phù hợp!", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        cmbNhaCungCap.SelectedIndex = -1; // Không chọn nhà cung cấp nếu MaNCC là NULL
                     }
                     txtGiamGia.Text = dtListProduct.Rows[index].Cells["GiamGia"].Value?.ToString() ?? "0";
                     txtSoLuong.Text = dtListProduct.Rows[index].Cells["SoLuong"].Value?.ToString() ?? "0";
@@ -411,7 +410,7 @@ namespace QLCHBanGaRan.UCFunction
                     bool updateProduct = cls_Product._updateDoAn(txtMaMonAn.Text, txtTenMonAn.Text, cmbNhaCungCap.SelectedValue?.ToString(), giaTien, int.Parse(txtGiamGia.Text), int.Parse(txtSoLuong.Text));
                     if (updateProduct)
                     {
-                        MessageBox.Show("Cập nhật thành công !", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show("Cập nhật nhà cung cấp và thông tin sản phẩm thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         LoadProductList();
                         _formatDT();
                         _reset();
@@ -420,7 +419,7 @@ namespace QLCHBanGaRan.UCFunction
                     }
                     else
                     {
-                        MessageBox.Show("Không thể cập nhật sản phẩm này. Vui lòng kiểm tra lại !", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("Không thể cập nhật sản phẩm này. Vui lòng kiểm tra lại!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }

@@ -103,7 +103,7 @@ namespace QLCHBanGaRan.UCFunction
                     if (cls_NCC._delNCC(maNCC))
                     {
                         MessageBox.Show($"Đã đánh dấu nhà cung cấp có mã {maNCC} là đã xóa!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        dtListNCC.DataSource = cls_NCC._showDetailNCC();
+                        dtListNCC.DataSource = cls_NCC._showDetailNCC(); // Cập nhật lại danh sách
                         _formatDT();
                     }
                     else

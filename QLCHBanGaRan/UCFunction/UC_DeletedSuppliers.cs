@@ -100,12 +100,21 @@ namespace QLCHBanGaRan.UCFunction
                 int successCount = 0;
                 foreach (DataGridViewRow row in dtDeletedProducts.SelectedRows)
                 {
-                    string maSP = row.Cells["MaSP"].Value.ToString();
-                    string updateQuery = "UPDATE NhaCungCap SET IsDeleted = 0 WHERE MaNCC = @MaSP";
-                    SqlParameter[] parameters = { new SqlParameter("@MaSP", maSP) };
-                    if (cls_DatabaseManager.ExecuteNonQuery(updateQuery, parameters) > 0)
+                    string maNCC = row.Cells["MaSP"].Value.ToString();
+                    using (SqlConnection conn = new SqlConnection(cls_DatabaseManager.connectionString))
                     {
-                        successCount++;
+                        conn.Open();
+                        SqlCommand cmd = new SqlCommand("sp_RestoreNCC", conn);
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@MaNCC", maNCC);
+                        SqlParameter returnParam = new SqlParameter("@ReturnValue", SqlDbType.Int);
+                        returnParam.Direction = ParameterDirection.ReturnValue;
+                        cmd.Parameters.Add(returnParam);
+                        cmd.ExecuteNonQuery();
+                        if ((int)returnParam.Value == 1) // Kiểm tra giá trị trả về từ stored procedure
+                        {
+                            successCount++;
+                        }
                     }
                 }
                 MessageBox.Show($"Đã khôi phục {successCount} nhà cung cấp thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);

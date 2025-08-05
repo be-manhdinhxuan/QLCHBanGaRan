@@ -61,7 +61,6 @@ namespace QLCHBanGaRan.UCSystems
 
         private void btnRpSanPham_Click(object sender, EventArgs e)
         {
-            // Tạm thời vô hiệu hóa
             
             if (!Forms.frm_Main.Instance.pnlContainer.Controls.ContainsKey("UC_RpProduct"))
             {

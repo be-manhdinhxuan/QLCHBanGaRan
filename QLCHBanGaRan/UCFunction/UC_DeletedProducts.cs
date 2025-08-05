@@ -148,12 +148,30 @@ namespace QLCHBanGaRan.UCFunction
                     int successCount = 0;
                     string tableName = cbCategory.SelectedItem.ToString() == "Đồ ăn" ? "DoAn" : "DoUong";
                     string idColumn = tableName == "DoAn" ? "MaMon" : "MaDoUong";
+
                     foreach (DataGridViewRow row in dtDeletedProducts.SelectedRows)
                     {
                         string maSP = row.Cells["MaSP"].Value.ToString();
+
+                        // Lấy MaNCC từ bảng DoAn hoặc DoUong
+                        string getMaNCCQuery = $"SELECT MaNCC FROM {tableName} WHERE {idColumn} = @MaSP";
+                        SqlParameter[] getParams = { new SqlParameter("@MaSP", maSP) };
+                        string maNCC = cls_DatabaseManager.ExecuteScalar(getMaNCCQuery, getParams)?.ToString();
+
+                        if (!string.IsNullOrEmpty(maNCC))
+                        {
+                            // Cập nhật MaNCC = NULL trong DoAn và DoUong
+                            string updateDoAnQuery = "UPDATE DoAn SET MaNCC = NULL WHERE MaNCC = @MaNCC";
+                            string updateDoUongQuery = "UPDATE DoUong SET MaNCC = NULL WHERE MaNCC = @MaNCC";
+                            SqlParameter[] updateParams = { new SqlParameter("@MaNCC", maNCC) };
+                            cls_DatabaseManager.ExecuteNonQuery(updateDoAnQuery, updateParams);
+                            cls_DatabaseManager.ExecuteNonQuery(updateDoUongQuery, updateParams);
+                        }
+
+                        // Xóa vĩnh viễn sản phẩm
                         string deleteQuery = $"DELETE FROM {tableName} WHERE {idColumn} = @MaSP";
-                        SqlParameter[] parameters = { new SqlParameter("@MaSP", maSP) };
-                        if (cls_DatabaseManager.ExecuteNonQuery(deleteQuery, parameters) > 0)
+                        SqlParameter[] deleteParams = { new SqlParameter("@MaSP", maSP) };
+                        if (cls_DatabaseManager.ExecuteNonQuery(deleteQuery, deleteParams) > 0)
                         {
                             successCount++;
                         }

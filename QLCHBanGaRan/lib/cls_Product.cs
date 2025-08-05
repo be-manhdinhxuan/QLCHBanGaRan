@@ -11,7 +11,7 @@ namespace QLCHBanGaRan.lib
         {
             string query = "SELECT da.MaMon, da.TenMon, da.MaNCC, ncc.TenNCC, da.GiaTien, da.GiamGia, da.SoLuong, da.SoLuongDaBan, da.IsDeleted " +
                            "FROM DoAn da " +
-                           "JOIN NhaCungCap ncc ON da.MaNCC = ncc.MaNCC " +
+                           "LEFT JOIN NhaCungCap ncc ON da.MaNCC = ncc.MaNCC " +
                            "WHERE da.IsDeleted = 0";
             return cls_DatabaseManager.TableRead(query, null);
         }
@@ -21,7 +21,7 @@ namespace QLCHBanGaRan.lib
         {
             string query = "SELECT du.MaDoUong, du.TenDoUong, du.MaNCC, ncc.TenNCC, du.GiaTien, du.GiamGia, du.SoLuong, du.IsDeleted " +
                            "FROM DoUong du " +
-                           "JOIN NhaCungCap ncc ON du.MaNCC = ncc.MaNCC " +
+                           "LEFT JOIN NhaCungCap ncc ON du.MaNCC = ncc.MaNCC " +
                            "WHERE du.IsDeleted = 0";
             return cls_DatabaseManager.TableRead(query, null);
         }
@@ -29,7 +29,7 @@ namespace QLCHBanGaRan.lib
         // Hiển thị danh sách nhà cung cấp
         public static DataTable _showNCC()
         {
-            string query = "SELECT MaNCC, TenNCC FROM NhaCungCap";
+            string query = "SELECT MaNCC, TenNCC FROM NhaCungCap WHERE IsDeleted = 0";
             return cls_DatabaseManager.TableRead(query);
         }
 

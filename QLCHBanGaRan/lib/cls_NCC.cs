@@ -76,10 +76,18 @@ namespace QLCHBanGaRan.lib
         {
             try
             {
-                string query = "UPDATE NhaCungCap SET IsDeleted = 1 WHERE MaNCC = @MaNCC";
-                SqlParameter[] parameters = new SqlParameter[] { new SqlParameter("@MaNCC", maNCC) };
-                int rowsAffected = cls_DatabaseManager.ExecuteNonQuery(query, parameters);
-                return rowsAffected > 0;
+                using (SqlConnection conn = new SqlConnection(cls_DatabaseManager.connectionString))
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand("sp_DelNCC", conn);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@MaNCC", maNCC);
+                    SqlParameter returnParam = new SqlParameter("@ReturnValue", SqlDbType.Int);
+                    returnParam.Direction = ParameterDirection.ReturnValue;
+                    cmd.Parameters.Add(returnParam);
+                    cmd.ExecuteNonQuery();
+                    return (int)returnParam.Value == 1; // Trả về true nếu stored procedure thành công (return 1)
+                }
             }
             catch (SqlException ex)
             {
