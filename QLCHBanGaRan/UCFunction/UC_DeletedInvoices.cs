@@ -133,21 +133,52 @@ namespace QLCHBanGaRan.UCFunction
 
             try
             {
-                if (MessageBox.Show("Bạn có chắc muốn xóa vĩnh viễn " + dtDeletedProducts.SelectedRows.Count + " hóa đơn đã chọn?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                if (MessageBox.Show($"Bạn có chắc muốn xóa vĩnh viễn {dtDeletedProducts.SelectedRows.Count} hóa đơn đã chọn?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
                     int successCount = 0;
-                    foreach (DataGridViewRow row in dtDeletedProducts.SelectedRows)
+                    using (SqlConnection conn = new SqlConnection(cls_DatabaseManager.connectionString))
                     {
-                        string maSP = row.Cells["MaSP"].Value.ToString();
-                        string deleteQuery = "DELETE FROM HoaDon WHERE MaHD = @MaSP";
-                        SqlParameter[] parameters = { new SqlParameter("@MaSP", maSP) };
-                        if (cls_DatabaseManager.ExecuteNonQuery(deleteQuery, parameters) > 0)
+                        conn.Open();
+                        SqlTransaction transaction = conn.BeginTransaction();
+
+                        try
                         {
-                            successCount++;
+                            foreach (DataGridViewRow row in dtDeletedProducts.SelectedRows)
+                            {
+                                string maHD = row.Cells["MaSP"].Value.ToString();
+
+                                // Xóa từ ChiTietHoaDon trước
+                                string deleteChiTietHoaDonQuery = "DELETE FROM ChiTietHoaDon WHERE MaHD = @MaHD";
+                                using (SqlCommand cmdDeleteChiTietHoaDon = new SqlCommand(deleteChiTietHoaDonQuery, conn, transaction))
+                                {
+                                    cmdDeleteChiTietHoaDon.Parameters.AddWithValue("@MaHD", maHD);
+                                    int rowsAffected = cmdDeleteChiTietHoaDon.ExecuteNonQuery();
+                                    Console.WriteLine($"Deleted {rowsAffected} rows from ChiTietHoaDon for MaHD: {maHD}");
+                                }
+
+                                // Xóa từ HoaDon
+                                string deleteHoaDonQuery = "DELETE FROM HoaDon WHERE MaHD = @MaHD";
+                                using (SqlCommand cmdDeleteHoaDon = new SqlCommand(deleteHoaDonQuery, conn, transaction))
+                                {
+                                    cmdDeleteHoaDon.Parameters.AddWithValue("@MaHD", maHD);
+                                    if (cmdDeleteHoaDon.ExecuteNonQuery() > 0)
+                                    {
+                                        successCount++;
+                                        Console.WriteLine($"Successfully deleted MaHD: {maHD} from HoaDon");
+                                    }
+                                }
+                            }
+
+                            transaction.Commit();
+                            MessageBox.Show($"Đã xóa vĩnh viễn {successCount} hóa đơn thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            LoadDeletedInvoices();
+                        }
+                        catch (Exception ex)
+                        {
+                            transaction.Rollback();
+                            throw; // Ném lỗi để xử lý bên ngoài
                         }
                     }
-                    MessageBox.Show($"Đã xóa vĩnh viễn {successCount} hóa đơn thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    LoadDeletedInvoices();
                 }
             }
             catch (Exception ex)

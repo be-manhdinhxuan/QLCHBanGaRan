@@ -131,18 +131,49 @@ namespace QLCHBanGaRan.UCFunction
                 if (MessageBox.Show($"Bạn có chắc muốn xóa vĩnh viễn {dtDeletedProducts.SelectedRows.Count} chức danh đã chọn?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
                     int successCount = 0;
-                    foreach (DataGridViewRow row in dtDeletedProducts.SelectedRows)
+                    using (SqlConnection conn = new SqlConnection(cls_DatabaseManager.connectionString))
                     {
-                        string maSP = row.Cells["MaSP"].Value.ToString();
-                        string deleteQuery = "DELETE FROM ChucDanh WHERE MaChucDanh = @MaSP";
-                        SqlParameter[] parameters = { new SqlParameter("@MaSP", maSP) };
-                        if (cls_DatabaseManager.ExecuteNonQuery(deleteQuery, parameters) > 0)
+                        conn.Open();
+                        SqlTransaction transaction = conn.BeginTransaction();
+
+                        try
                         {
-                            successCount++;
+                            foreach (DataGridViewRow row in dtDeletedProducts.SelectedRows)
+                            {
+                                string maChucDanh = row.Cells["MaSP"].Value.ToString();
+
+                                // Cập nhật MaChucDanh trong NhanVien thành NULL
+                                string updateNhanVienQuery = "UPDATE NhanVien SET MaChucDanh = NULL WHERE MaChucDanh = @MaChucDanh";
+                                using (SqlCommand cmdUpdateNhanVien = new SqlCommand(updateNhanVienQuery, conn, transaction))
+                                {
+                                    cmdUpdateNhanVien.Parameters.AddWithValue("@MaChucDanh", maChucDanh);
+                                    int rowsAffected = cmdUpdateNhanVien.ExecuteNonQuery();
+                                    Console.WriteLine($"Updated {rowsAffected} rows in NhanVien for MaChucDanh: {maChucDanh}");
+                                }
+
+                                // Xóa từ ChucDanh
+                                string deleteChucDanhQuery = "DELETE FROM ChucDanh WHERE MaChucDanh = @MaChucDanh";
+                                using (SqlCommand cmdDeleteChucDanh = new SqlCommand(deleteChucDanhQuery, conn, transaction))
+                                {
+                                    cmdDeleteChucDanh.Parameters.AddWithValue("@MaChucDanh", maChucDanh);
+                                    if (cmdDeleteChucDanh.ExecuteNonQuery() > 0)
+                                    {
+                                        successCount++;
+                                        Console.WriteLine($"Successfully deleted MaChucDanh: {maChucDanh} from ChucDanh");
+                                    }
+                                }
+                            }
+
+                            transaction.Commit();
+                            MessageBox.Show($"Đã xóa vĩnh viễn {successCount} chức danh thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            LoadDeletedPositions();
+                        }
+                        catch (Exception ex)
+                        {
+                            transaction.Rollback();
+                            throw; // Ném lỗi để xử lý bên ngoài
                         }
                     }
-                    MessageBox.Show($"Đã xóa vĩnh viễn {successCount} chức danh thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    LoadDeletedPositions();
                 }
             }
             catch (Exception ex)
