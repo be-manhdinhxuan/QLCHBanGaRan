@@ -30,12 +30,5 @@ namespace QLCHBanGaRan.UCSystems
             frm_Main.Instance.pnlContainer.Controls["UC_UserManager"].BringToFront();
         }
 
-        private void btnPhanQuyenNguoiDung_Click(object sender, EventArgs e)
-        {
-            using (frm_UserPermission userPermission = new frm_UserPermission())
-            {
-                userPermission.ShowDialog();
-            }
-        }
     }
 }

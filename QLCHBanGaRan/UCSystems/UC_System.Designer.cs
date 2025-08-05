@@ -29,12 +29,9 @@
         private void InitializeComponent()
         {
             this.grpPhanQuyen = new System.Windows.Forms.GroupBox();
-            this.grpPhanQuyenNguoiDung = new System.Windows.Forms.GroupBox();
             this.grpQuanLyNguoiDung = new System.Windows.Forms.GroupBox();
-            this.btnPhanQuyenNguoiDung = new System.Windows.Forms.Button();
             this.btnQuanLyNguoiDung = new System.Windows.Forms.Button();
             this.grpPhanQuyen.SuspendLayout();
-            this.grpPhanQuyenNguoiDung.SuspendLayout();
             this.grpQuanLyNguoiDung.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -42,28 +39,15 @@
             // 
             this.grpPhanQuyen.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.grpPhanQuyen.BackColor = System.Drawing.Color.Transparent;
-            this.grpPhanQuyen.Controls.Add(this.grpPhanQuyenNguoiDung);
             this.grpPhanQuyen.Controls.Add(this.grpQuanLyNguoiDung);
             this.grpPhanQuyen.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.grpPhanQuyen.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(0)))), ((int)(((byte)(42)))));
-            this.grpPhanQuyen.Location = new System.Drawing.Point(184, 164);
+            this.grpPhanQuyen.Location = new System.Drawing.Point(285, 154);
             this.grpPhanQuyen.Name = "grpPhanQuyen";
-            this.grpPhanQuyen.Size = new System.Drawing.Size(536, 255);
+            this.grpPhanQuyen.Size = new System.Drawing.Size(292, 255);
             this.grpPhanQuyen.TabIndex = 6;
             this.grpPhanQuyen.TabStop = false;
             this.grpPhanQuyen.Text = "Phân quyền";
-            // 
-            // grpPhanQuyenNguoiDung
-            // 
-            this.grpPhanQuyenNguoiDung.Controls.Add(this.btnPhanQuyenNguoiDung);
-            this.grpPhanQuyenNguoiDung.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.grpPhanQuyenNguoiDung.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(0)))), ((int)(((byte)(42)))));
-            this.grpPhanQuyenNguoiDung.Location = new System.Drawing.Point(283, 28);
-            this.grpPhanQuyenNguoiDung.Name = "grpPhanQuyenNguoiDung";
-            this.grpPhanQuyenNguoiDung.Size = new System.Drawing.Size(207, 200);
-            this.grpPhanQuyenNguoiDung.TabIndex = 1;
-            this.grpPhanQuyenNguoiDung.TabStop = false;
-            this.grpPhanQuyenNguoiDung.Text = "Phân quyền người dùng";
             // 
             // grpQuanLyNguoiDung
             // 
@@ -76,17 +60,6 @@
             this.grpQuanLyNguoiDung.TabIndex = 0;
             this.grpQuanLyNguoiDung.TabStop = false;
             this.grpQuanLyNguoiDung.Text = "Quản lý người dùng";
-            // 
-            // btnPhanQuyenNguoiDung
-            // 
-            this.btnPhanQuyenNguoiDung.BackgroundImage = global::QLCHBanGaRan.Properties.Resources.administrative_tools_120px;
-            this.btnPhanQuyenNguoiDung.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnPhanQuyenNguoiDung.Location = new System.Drawing.Point(35, 28);
-            this.btnPhanQuyenNguoiDung.Name = "btnPhanQuyenNguoiDung";
-            this.btnPhanQuyenNguoiDung.Size = new System.Drawing.Size(145, 145);
-            this.btnPhanQuyenNguoiDung.TabIndex = 0;
-            this.btnPhanQuyenNguoiDung.UseVisualStyleBackColor = true;
-            this.btnPhanQuyenNguoiDung.Click += new System.EventHandler(this.btnPhanQuyenNguoiDung_Click);
             // 
             // btnQuanLyNguoiDung
             // 
@@ -108,7 +81,6 @@
             this.Name = "UC_System";
             this.Size = new System.Drawing.Size(893, 619);
             this.grpPhanQuyen.ResumeLayout(false);
-            this.grpPhanQuyenNguoiDung.ResumeLayout(false);
             this.grpQuanLyNguoiDung.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -117,8 +89,6 @@
         #endregion
 
         private System.Windows.Forms.GroupBox grpPhanQuyen;
-        private System.Windows.Forms.GroupBox grpPhanQuyenNguoiDung;
-        private System.Windows.Forms.Button btnPhanQuyenNguoiDung;
         private System.Windows.Forms.GroupBox grpQuanLyNguoiDung;
         private System.Windows.Forms.Button btnQuanLyNguoiDung;
     }

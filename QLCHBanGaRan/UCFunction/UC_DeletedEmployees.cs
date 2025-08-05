@@ -138,18 +138,85 @@ namespace QLCHBanGaRan.UCFunction
                 if (MessageBox.Show($"Bạn có chắc muốn xóa vĩnh viễn {dtDeletedProducts.SelectedRows.Count} nhân viên đã chọn?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
                     int successCount = 0;
-                    foreach (DataGridViewRow row in dtDeletedProducts.SelectedRows)
+                    using (SqlConnection conn = new SqlConnection(cls_DatabaseManager.connectionString))
                     {
-                        string maSP = row.Cells["MaSP"].Value.ToString();
-                        string deleteQuery = "DELETE FROM NhanVien WHERE MaNV = @MaSP";
-                        SqlParameter[] parameters = { new SqlParameter("@MaSP", maSP) };
-                        if (cls_DatabaseManager.ExecuteNonQuery(deleteQuery, parameters) > 0)
+                        conn.Open();
+                        SqlTransaction transaction = conn.BeginTransaction();
+
+                        try
                         {
-                            successCount++;
+                            foreach (DataGridViewRow row in dtDeletedProducts.SelectedRows)
+                            {
+                                string maNV = row.Cells["MaSP"].Value.ToString(); // Sử dụng MaSP
+
+                                // Xóa từ ChamCongTheoNgay
+                                string deleteChamCongTheoNgay = "DELETE FROM ChamCongTheoNgay WHERE MaNV = @MaNV";
+                                using (SqlCommand cmdChamCongTheoNgay = new SqlCommand(deleteChamCongTheoNgay, conn, transaction))
+                                {
+                                    cmdChamCongTheoNgay.Parameters.AddWithValue("@MaNV", maNV);
+                                    int rowsAffected = cmdChamCongTheoNgay.ExecuteNonQuery();
+                                    Console.WriteLine($"Deleted {rowsAffected} rows from ChamCongTheoNgay for MaNV: {maNV}");
+                                }
+
+                                // Xóa từ ThongKeChamCong
+                                string deleteThongKeChamCong = "DELETE FROM ThongKeChamCong WHERE MaNV = @MaNV";
+                                using (SqlCommand cmdThongKeChamCong = new SqlCommand(deleteThongKeChamCong, conn, transaction))
+                                {
+                                    cmdThongKeChamCong.Parameters.AddWithValue("@MaNV", maNV);
+                                    int rowsAffected = cmdThongKeChamCong.ExecuteNonQuery();
+                                    Console.WriteLine($"Deleted {rowsAffected} rows from ThongKeChamCong for MaNV: {maNV}");
+                                }
+
+                                // Xóa từ ChiTietHoaDon (thêm mới)
+                                string deleteChiTietHoaDon = "DELETE FROM ChiTietHoaDon WHERE MaHD IN (SELECT MaHD FROM HoaDon WHERE MaNV = @MaNV)";
+                                using (SqlCommand cmdChiTietHoaDon = new SqlCommand(deleteChiTietHoaDon, conn, transaction))
+                                {
+                                    cmdChiTietHoaDon.Parameters.AddWithValue("@MaNV", maNV);
+                                    int rowsAffected = cmdChiTietHoaDon.ExecuteNonQuery();
+                                    Console.WriteLine($"Deleted {rowsAffected} rows from ChiTietHoaDon for MaNV: {maNV}");
+                                }
+
+                                // Xóa từ HoaDon
+                                string deleteHoaDon = "DELETE FROM HoaDon WHERE MaNV = @MaNV";
+                                using (SqlCommand cmdHoaDon = new SqlCommand(deleteHoaDon, conn, transaction))
+                                {
+                                    cmdHoaDon.Parameters.AddWithValue("@MaNV", maNV);
+                                    int rowsAffected = cmdHoaDon.ExecuteNonQuery();
+                                    Console.WriteLine($"Deleted {rowsAffected} rows from HoaDon for MaNV: {maNV}");
+                                }
+
+                                // Xóa từ NguoiDung
+                                string deleteNguoiDung = "DELETE FROM NguoiDung WHERE MaNV = @MaNV";
+                                using (SqlCommand cmdNguoiDung = new SqlCommand(deleteNguoiDung, conn, transaction))
+                                {
+                                    cmdNguoiDung.Parameters.AddWithValue("@MaNV", maNV);
+                                    int rowsAffected = cmdNguoiDung.ExecuteNonQuery();
+                                    Console.WriteLine($"Deleted {rowsAffected} rows from NguoiDung for MaNV: {maNV}");
+                                }
+
+                                // Xóa từ NhanVien
+                                string deleteNhanVien = "DELETE FROM NhanVien WHERE MaNV = @MaNV";
+                                using (SqlCommand cmdNhanVien = new SqlCommand(deleteNhanVien, conn, transaction))
+                                {
+                                    cmdNhanVien.Parameters.AddWithValue("@MaNV", maNV);
+                                    if (cmdNhanVien.ExecuteNonQuery() > 0)
+                                    {
+                                        successCount++;
+                                        Console.WriteLine($"Successfully deleted MaNV: {maNV} from NhanVien");
+                                    }
+                                }
+                            }
+
+                            transaction.Commit();
+                            MessageBox.Show($"Đã xóa vĩnh viễn {successCount} nhân viên thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            LoadDeletedEmployees();
+                        }
+                        catch (Exception ex)
+                        {
+                            transaction.Rollback();
+                            throw; // Ném lỗi để xử lý bên ngoài
                         }
                     }
-                    MessageBox.Show($"Đã xóa vĩnh viễn {successCount} nhân viên thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    LoadDeletedEmployees();
                 }
             }
             catch (Exception ex)
