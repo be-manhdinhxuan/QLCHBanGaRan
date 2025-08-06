@@ -47,7 +47,7 @@ namespace QLCHBanGaRan.UCFunction
             }
 
             if (dtListProduct.Columns.Contains("MaNCC"))
-                dtListProduct.Columns["MaNCC"].Width = 150;
+                dtListProduct.Columns["MaNCC"].Visible = false; // Ẩn cột MaNCC
 
             if (dtListProduct.Columns.Contains("TenNhaCungCap"))
             {
@@ -143,7 +143,7 @@ namespace QLCHBanGaRan.UCFunction
 
             // Cấu hình ComboBox bộ lọc
             var items = new[] {
-                new { Text = "Tên món", Value = "TenMon" }, // Sửa thành TenMon
+                new { Text = "Tên món", Value = "TenSanPham" }, // Sửa thành TenSanPham
                 new { Text = "Giá tiền", Value = "GiaTien" },
                 new { Text = "Giảm giá (%)", Value = "GiamGia" }
             };
@@ -158,7 +158,7 @@ namespace QLCHBanGaRan.UCFunction
             DataTable nccData = cls_Product._showNCC();
             if (nccData != null && nccData.Rows.Count > 0)
             {
-                cmbNhaCungCap.DropDownStyle = ComboBoxStyle.DropDownList; // Thêm để không cho phép chỉnh sửa
+                cmbNhaCungCap.DropDownStyle = ComboBoxStyle.DropDownList;
                 cmbNhaCungCap.DataSource = nccData;
                 cmbNhaCungCap.ValueMember = "MaNCC";
                 cmbNhaCungCap.DisplayMember = "TenNCC";
@@ -211,9 +211,9 @@ namespace QLCHBanGaRan.UCFunction
             if (dtListProduct.Columns.Contains("MaNCC"))
                 dtListProduct.Columns["MaNCC"].Visible = false;
             if (dtListProduct.Columns.Contains("GiaTienStr"))
-                dtListProduct.Columns["GiaTienStr"].Visible = false; // Ẩn cột
+                dtListProduct.Columns["GiaTienStr"].Visible = false;
             if (dtListProduct.Columns.Contains("GiamGiaStr"))
-                dtListProduct.Columns["GiamGiaStr"].Visible = false; // Ẩn cột
+                dtListProduct.Columns["GiamGiaStr"].Visible = false;
 
             if (dtListProduct.Columns.Contains("TenNhaCungCap"))
             {
@@ -221,7 +221,7 @@ namespace QLCHBanGaRan.UCFunction
                 dtListProduct.Columns["TenNhaCungCap"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             }
 
-            string filterColumn = "TenMon"; // Giá trị mặc định
+            string filterColumn = "TenSanPham"; // Giá trị mặc định
             if (cmbFilter.SelectedValue != null)
             {
                 filterColumn = cmbFilter.SelectedValue.ToString();
@@ -237,38 +237,21 @@ namespace QLCHBanGaRan.UCFunction
             dt.DefaultView.RowFilter = $"IsDeleted = 0";
             if (!string.IsNullOrEmpty(searchText))
             {
-                if (dt.Columns.Contains(filterColumn)) // Kiểm tra cột tồn tại
+                if (dt.Columns.Contains(filterColumn))
                 {
-                    string filterColumnStr = filterColumn; // Giá trị gốc
+                    string filterColumnStr = filterColumn;
                     if (filterColumn == "GiaTien")
-                    {
-                        filterColumnStr = "GiaTienStr"; // Sử dụng cột chuỗi
-                    }
+                        filterColumnStr = "GiaTienStr";
                     else if (filterColumn == "GiamGia")
-                    {
-                        filterColumnStr = "GiamGiaStr"; // Sử dụng cột chuỗi
-                    }
+                        filterColumnStr = "GiamGiaStr";
 
                     if (filterColumnStr != filterColumn || dt.Columns.Contains(filterColumnStr))
                     {
-                        if (filterColumn == "TenMon")
-                        {
+                        if (filterColumn == "TenSanPham")
                             dt.DefaultView.RowFilter += $" AND {filterColumnStr} LIKE '%{searchText}%'";
-                        }
                         else
-                        {
                             dt.DefaultView.RowFilter += $" AND {filterColumnStr} LIKE '{searchText}%'";
-                        }
-
                     }
-                    else
-                    {
-                        MessageBox.Show($"Cột {filterColumnStr} không tồn tại để lọc. Vui lòng kiểm tra lại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
-                else
-                {
-                    MessageBox.Show($"Cột {filterColumn} không tồn tại trong DataTable. Vui lòng kiểm tra cấu hình bộ lọc.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
 

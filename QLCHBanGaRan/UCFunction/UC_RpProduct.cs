@@ -66,7 +66,9 @@ namespace QLCHBanGaRan.UCFunction
                     r.RecordSelectionFormula = "{Command.LoaiSanPham} = \"Đồ uống\"";
                     break;
             }
+            r.SetParameterValue("LoaiSPID", cmbLoaiSP.Text);
             rpProfile.ReportSource = r;
+            
         }
     }
 }

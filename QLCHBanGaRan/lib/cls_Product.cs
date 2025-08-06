@@ -6,12 +6,12 @@ namespace QLCHBanGaRan.lib
 {
     class cls_Product
     {
-        // Hiển thị danh sách món ăn
+        // Hiển thị danh sách đồ ăn
         public static DataTable _showDoAn()
         {
-            string query = "SELECT da.MaMon, da.TenMon, da.MaNCC, ncc.TenNCC, da.GiaTien, da.GiamGia, da.SoLuong, da.SoLuongDaBan, da.IsDeleted " +
+            string query = "SELECT da.MaMon, da.TenMon, da.MaNCC, COALESCE(ncc.TenNCC, N'Chưa xác định') AS TenNCC, da.GiaTien, da.GiamGia, da.SoLuong, da.SoLuongDaBan, da.IsDeleted " +
                            "FROM DoAn da " +
-                           "LEFT JOIN NhaCungCap ncc ON da.MaNCC = ncc.MaNCC " +
+                           "LEFT JOIN NhaCungCap ncc ON da.MaNCC = ncc.MaNCC AND ncc.IsDeleted = 0 " +
                            "WHERE da.IsDeleted = 0";
             return cls_DatabaseManager.TableRead(query, null);
         }
@@ -19,9 +19,9 @@ namespace QLCHBanGaRan.lib
         // Hiển thị danh sách đồ uống
         public static DataTable _showDoUong()
         {
-            string query = "SELECT du.MaDoUong, du.TenDoUong, du.MaNCC, ncc.TenNCC, du.GiaTien, du.GiamGia, du.SoLuong, du.IsDeleted " +
+            string query = "SELECT du.MaDoUong, du.TenDoUong, COALESCE(ncc.TenNCC, N'Chưa xác định') AS TenNhaCungCap, du.GiaTien, du.GiamGia, du.SoLuong, du.SoLuongDaBan, du.MaNCC, du.IsDeleted " +
                            "FROM DoUong du " +
-                           "LEFT JOIN NhaCungCap ncc ON du.MaNCC = ncc.MaNCC " +
+                           "LEFT JOIN NhaCungCap ncc ON du.MaNCC = ncc.MaNCC AND ncc.IsDeleted = 0 " +
                            "WHERE du.IsDeleted = 0";
             return cls_DatabaseManager.TableRead(query, null);
         }
@@ -178,7 +178,7 @@ namespace QLCHBanGaRan.lib
         {
             try
             {
-                string query = "INSERT INTO DoAn (MaMon, TenMon, MaNCC, GiaTien, GiamGia, SoLuong, SoLuongDaBan) VALUES (@MaMon, @TenMon, @MaNCC, @GiaTien, @GiamGia, @SoLuong, 0)";
+                string query = "INSERT INTO DoAn (MaMon, TenMon, MaNCC, GiaTien, GiamGia, SoLuong, SoLuongDaBan, IsDeletedNCC) VALUES (@MaMon, @TenMon, @MaNCC, @GiaTien, @GiamGia, @SoLuong, 0, 0)";
                 SqlParameter[] parameters = new SqlParameter[]
                 {
                     new SqlParameter("@MaMon", SqlDbType.NVarChar, 10) { Value = maMon },
@@ -202,7 +202,7 @@ namespace QLCHBanGaRan.lib
         {
             try
             {
-                string query = "INSERT INTO DoUong (MaDoUong, TenDoUong, MaNCC, GiaTien, GiamGia, SoLuong, SoLuongDaBan) VALUES (@MaDoUong, @TenDoUong, @MaNCC, @GiaTien, @GiamGia, @SoLuong, 0)";
+                string query = "INSERT INTO DoUong (MaDoUong, TenDoUong, MaNCC, GiaTien, GiamGia, SoLuong, SoLuongDaBan, IsDeletedNCC) VALUES (@MaDoUong, @TenDoUong, @MaNCC, @GiaTien, @GiamGia, @SoLuong, 0, 0)";
                 SqlParameter[] parameters = new SqlParameter[]
                 {
                     new SqlParameter("@MaDoUong", SqlDbType.NVarChar, 10) { Value = maDoUong },
