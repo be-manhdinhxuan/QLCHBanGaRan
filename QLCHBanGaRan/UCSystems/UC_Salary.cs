@@ -57,5 +57,20 @@ namespace QLCHBanGaRan.UCSystems
             bool isAdmin = QLCHBanGaRan.lib.cls_EmployeeManagement.CheckPermission(QLCHBanGaRan.Forms.frm_Main.NguoiDungID);
             btnQuanLyChucDanh.Visible = isAdmin;
         }
+
+        private void btnThongKeChamCong_Click(object sender, EventArgs e)
+        {
+            string controlName = "UC_TimeSheetManager";
+
+            if (!frm_Main.Instance.pnlContainer.Controls.ContainsKey(controlName))
+            {
+                UC_TimeSheetManager timeSheetManager = new UC_TimeSheetManager(); // Truyền maND
+                timeSheetManager.Name = controlName;
+                timeSheetManager.Dock = DockStyle.Fill;
+                frm_Main.Instance.pnlContainer.Controls.Add(timeSheetManager);
+            }
+
+            frm_Main.Instance.pnlContainer.Controls[controlName].BringToFront();
+        }
     }
 }

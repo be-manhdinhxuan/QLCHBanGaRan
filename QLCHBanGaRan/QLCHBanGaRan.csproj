@@ -202,6 +202,11 @@
       <DependentUpon>rp_Salary.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Report\rp_Salary1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>rp_Salary.rpt</DependentUpon>
+    </Compile>
     <Compile Include="UCFunction\UC_DeletedEmployees.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -433,7 +438,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Report\rp_Salary.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>rp_Salary.cs</LastGenOutput>
+      <LastGenOutput>rp_Salary1.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="UCFunction\UC_DeletedEmployees.resx">
       <DependentUpon>UC_DeletedEmployees.cs</DependentUpon>

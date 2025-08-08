@@ -1,520 +1,355 @@
-﻿using System;
+﻿using QLCHBanGaRan.lib;
+using QLCHBanGaRan.Utilities;
+using System;
 using System.Data;
+using System.Data.SqlClient;
+using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
-using QLCHBanGaRan.lib;
 
 namespace QLCHBanGaRan.UCFunction
 {
     public partial class UC_TimeSheetManager : UserControl
     {
-        private string currentMaND; // Lưu mã người dùng đang đăng nhập
-        private bool isAdmin; // Biến xác định quyền quản trị
+        private DateTimePicker dtpGioRaPicker;
 
         public UC_TimeSheetManager()
         {
             InitializeComponent();
-            // Constructor mặc định, cần kiểm tra đăng nhập sau khi tạo
-            currentMaND = null; // Giá trị mặc định
-            CheckAdminRole();
-        }
+            dtpThang.Value = DateTime.Now; // Đặt giá trị mặc định là tháng hiện tại
+            LoadNhanVienComboBox(); // Tải danh sách nhân viên vào combobox
 
-        public UC_TimeSheetManager(string maND)
-        {
-            InitializeComponent();
-            currentMaND = maND; // Nhận mã người dùng từ form đăng nhập hoặc hệ thống
-            CheckAdminRole();
-        }
-
-        private void CheckAdminRole()
-        {
-            if (string.IsNullOrEmpty(currentMaND)) return;
-            string query = "SELECT LaQuanTri FROM NguoiDung WHERE MaND = @MaND";
-            var parameters = new System.Data.SqlClient.SqlParameter[] {
-                new System.Data.SqlClient.SqlParameter("@MaND", currentMaND)
+            dtList.CellBeginEdit += (s, e) =>
+            {
+                if (e.ColumnIndex != dtList.Columns["gioRaDataGridViewTextBoxColumn"].Index)
+                {
+                    dtpGioRaPicker.Visible = false;
+                }
             };
-            DataTable dt = cls_DatabaseManager.TableRead(query, parameters);
-            if (dt.Rows.Count > 0)
-            {
-                int laQuanTri = Convert.ToInt32(dt.Rows[0]["LaQuanTri"]);
-                isAdmin = (laQuanTri == 1); // LaQuanTri = 1 là quản trị viên
-            }
-            else
-            {
-                isAdmin = false;
-            }
+
+            // Gán sự kiện cuộn để ẩn DateTimePicker
+            dtList.Scroll += (s, e) => dtpGioRaPicker.Visible = false;
         }
 
-        private void btnBack_Click(object sender, EventArgs e)
+        private void LoadNhanVienComboBox()
         {
-            // Thay thế bằng logic điều hướng của dự án bạn
-            // Ví dụ: Forms.frm_Main.Instance.pnlContainer.Controls["UC_Salary"].BringToFront();
+            string query = "SELECT MaNV, TenNV FROM NhanVien WHERE IsDeleted = 0 ORDER BY TenNV";
+            DataTable dtNhanVien = cls_DatabaseManager.TableRead(query);
+            cmbFilterNV.DropDownStyle = ComboBoxStyle.DropDownList; // Đặt kiểu dropdown list
+            cmbFilterNV.Items.Clear(); // Xóa các mục cũ trong combobox
+            cmbFilterNV.DataSource = dtNhanVien;
+            cmbFilterNV.DisplayMember = "TenNV"; // Hiển thị tên nhân viên
+            cmbFilterNV.ValueMember = "MaNV";    // Giá trị thực sự là mã nhân viên
+            cmbFilterNV.SelectedIndex = -1;      // Không chọn mặc định, hiển thị tất cả nếu không chọn
         }
 
         private void UC_TimeSheetManager_Load(object sender, EventArgs e)
         {
-            dtpThang.Value = DateTime.Now; // Đặt giá trị mặc định là tháng hiện tại
-            if (string.IsNullOrEmpty(currentMaND))
-            {
-                lblStatus.Text = "Vui lòng đăng nhập để sử dụng chức năng.";
-                lblStatus.ForeColor = System.Drawing.Color.Red;
-                return;
-            }
-            LoadNhanVienInfo();
+            btnHienThi_Click(sender, e); // Tự động hiển thị dữ liệu khi load
+
+            dtpGioRaPicker = new DateTimePicker();
+            dtpGioRaPicker.Format = DateTimePickerFormat.Custom;
+            dtpGioRaPicker.CustomFormat = "HH:mm";
+            dtpGioRaPicker.ShowUpDown = true; // Chỉ hiển thị giờ, không có lịch
+            dtpGioRaPicker.Visible = false;
+            dtpGioRaPicker.Width = 100;
+
+            dtpGioRaPicker.CloseUp += DtpGioRaPicker_CloseUp;
+            dtpGioRaPicker.ValueChanged += DtpGioRaPicker_ValueChanged;
+
+            dtList.Controls.Add(dtpGioRaPicker);
+            dtList.CellDoubleClick += dtList_CellDoubleClick;
         }
 
-        private void LoadNhanVienInfo()
+        private void dtList_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (string.IsNullOrEmpty(currentMaND)) return;
-            string query = @"
-                SELECT nv.TenNV, nv.MaChucDanh 
-                FROM NguoiDung nd
-                LEFT JOIN NhanVien nv ON nd.MaNV = nv.MaNV
-                WHERE nd.MaND = @MaND";
-            var parameters = new System.Data.SqlClient.SqlParameter[] {
-                new System.Data.SqlClient.SqlParameter("@MaND", currentMaND)
-            };
-            DataTable dt = cls_DatabaseManager.TableRead(query, parameters);
-            if (dt.Rows.Count > 0)
+            if (e.RowIndex >= 0 && e.ColumnIndex == dtList.Columns["gioRaDataGridViewTextBoxColumn"].Index)
             {
-                lblTitle.Text = isAdmin ? "QUẢN LÝ CHẤM CÔNG (QUẢN TRỊ VIÊN)" :
-                    $"QUẢN LÝ CHẤM CÔNG - {dt.Rows[0]["TenNV"]} ({dt.Rows[0]["MaChucDanh"]})";
+                Rectangle rect = dtList.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, true);
+                dtpGioRaPicker.Location = new Point(rect.X, rect.Y);
+                dtpGioRaPicker.Width = rect.Width;
+                dtpGioRaPicker.Height = rect.Height;
+                dtpGioRaPicker.Visible = true;
+                dtpGioRaPicker.BringToFront();
+                dtpGioRaPicker.Focus();
+
+                var cellValue = dtList.Rows[e.RowIndex].Cells[e.ColumnIndex].Value?.ToString();
+                if (TimeSpan.TryParse(cellValue, out TimeSpan parsedTime))
+                {
+                    dtpGioRaPicker.Value = DateTime.Today.Add(parsedTime);
+                }
+                else
+                {
+                    // Nếu không parse được thì giữ nguyên giá trị hiện tại (không reset về giờ hệ thống)
+                }
+
+                dtpGioRaPicker.Tag = new Point(e.RowIndex, e.ColumnIndex); // Ghi lại vị trí
             }
             else
             {
-                lblStatus.Text = "Không tìm thấy thông tin nhân viên.";
-                lblStatus.ForeColor = System.Drawing.Color.Red;
+                dtpGioRaPicker.Visible = false;
             }
+        }
+
+        private void DtpGioRaPicker_ValueChanged(object sender, EventArgs e)
+        {
+            if (dtpGioRaPicker.Tag is Point cellPos)
+            {
+                int row = cellPos.X;
+                int col = cellPos.Y;
+                string gioMoi = dtpGioRaPicker.Value.ToString("HH:mm");
+
+                var cell = dtList.Rows[row].Cells[col];
+                var gioCu = cell.Value?.ToString();
+
+                if (gioCu != gioMoi)
+                {
+                    cell.Value = gioMoi;
+
+                    // Tính lại số giờ làm dưới dạng thập phân và hiển thị dưới dạng HH:mm
+                    var gioVaoStr = dtList.Rows[row].Cells["gioVaoDataGridViewTextBoxColumn"].Value?.ToString();
+                    if (TimeSpan.TryParse(gioVaoStr, out TimeSpan gioVao) && TimeSpan.TryParse(gioMoi, out TimeSpan gioRa))
+                    {
+                        TimeSpan thoiGianLam = gioRa - gioVao;
+                        if (thoiGianLam.TotalMinutes >= 0)
+                        {
+                            double soGioThapPhan = thoiGianLam.TotalHours;
+                            dtList.Rows[row].Cells["soGioLamDataGridViewTextBoxColumn"].Value = TimeSpan.FromHours(soGioThapPhan).ToString(@"hh\:mm");
+                        }
+                        else
+                        {
+                            // Nếu giờ ra nhỏ hơn giờ vào, giả định ca làm qua ngày (nửa đêm)
+                            thoiGianLam = gioRa.Add(new TimeSpan(24, 0, 0)) - gioVao;
+                            double soGioThapPhan = thoiGianLam.TotalHours;
+                            dtList.Rows[row].Cells["soGioLamDataGridViewTextBoxColumn"].Value = TimeSpan.FromHours(soGioThapPhan).ToString(@"hh\:mm");
+                        }
+                    }
+                    else
+                    {
+                        dtList.Rows[row].Cells["soGioLamDataGridViewTextBoxColumn"].Value = "00:00"; // Mặc định nếu không tính được
+                    }
+                }
+            }
+        }
+
+        private void DtpGioRaPicker_CloseUp(object sender, EventArgs e)
+        {
+            dtpGioRaPicker.Visible = false;
+        }
+
+        private void btnBack_Click(object sender, EventArgs e)
+        {
+            Forms.frm_Main.Instance.pnlContainer.Controls["UC_Salary"].BringToFront();
         }
 
         private void btnHienThi_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(currentMaND))
-            {
-                lblStatus.Text = "Vui lòng đăng nhập để chấm công.";
-                lblStatus.ForeColor = System.Drawing.Color.Red;
-                return;
-            }
+            string thang = dtpThang.Value.ToString("yyyyMM");
+            string maNV = cmbFilterNV.SelectedValue != null ? cmbFilterNV.SelectedValue.ToString() : null;
 
-            DataTable dtChamCong;
-            string maNV = GetMaNVFromMaND(currentMaND);
-            if (isAdmin)
-            {
-                // Hiển thị cho tất cả nhân viên
-                dtChamCong = new DataTable();
-                dtChamCong.Columns.Add("MaNV", typeof(string));
-                dtChamCong.Columns.Add("TenNV", typeof(string));
-                dtChamCong.Columns.Add("ChucDanh", typeof(string));
+            // Gọi stored procedure để lấy dữ liệu chấm công
+            var parameters = new System.Data.SqlClient.SqlParameter[] {
+                new System.Data.SqlClient.SqlParameter("@MaND", maNV ?? (object)DBNull.Value),
+                new System.Data.SqlClient.SqlParameter("@Thang", thang),
+                new System.Data.SqlClient.SqlParameter("@IsAdmin", DBNull.Value)
+            };
+            DataTable dtChamCong = cls_DatabaseManager.TableReadStoredProc("sp_GetChamCong", parameters);
 
+            // Tạo DataTable với cấu trúc phù hợp
+            DataTable dtFormatted = new DataTable();
+            dtFormatted.Columns.Add("MaNV", typeof(string));
+            dtFormatted.Columns.Add("TenNV", typeof(string));
+            dtFormatted.Columns.Add("ChucDanh", typeof(string)); // Sử dụng tên chức danh
+            dtFormatted.Columns.Add("Ngay", typeof(DateTime));
+            dtFormatted.Columns.Add("GioVao", typeof(string));
+            dtFormatted.Columns.Add("GioRa", typeof(string));
+            dtFormatted.Columns.Add("TrangThai", typeof(string)); // Sử dụng chuỗi thay vì số
+            dtFormatted.Columns.Add("LyDoNghi", typeof(string));
+            dtFormatted.Columns.Add("SoGioLam", typeof(string)); // Thay đổi thành string để hiển thị HH:mm
+            dtFormatted.Columns.Add("MaChamCong", typeof(int));
+
+            // Thêm dữ liệu mặc định cho nhân viên được chọn
+            if (maNV != null)
+            {
                 string queryNhanVien = @"
-                    SELECT nv.MaNV, nv.TenNV, nv.MaChucDanh 
-                    FROM NguoiDung nd
-                    LEFT JOIN NhanVien nv ON nd.MaNV = nv.MaNV
-                    WHERE nd.LaQuanTri = 0";
-                DataTable dtNhanVien = cls_DatabaseManager.TableRead(queryNhanVien);
+                    SELECT nv.MaNV, nv.TenNV, cd.TenChucDanh AS ChucDanh 
+                    FROM NhanVien nv 
+                    LEFT JOIN ChucDanh cd ON nv.MaChucDanh = cd.MaChucDanh 
+                    WHERE nv.MaNV = @MaNV";
+                var nvParameters = new System.Data.SqlClient.SqlParameter[] { new System.Data.SqlClient.SqlParameter("@MaNV", maNV) };
+                DataTable dtNhanVien = cls_DatabaseManager.TableRead(queryNhanVien, nvParameters);
+
                 if (dtNhanVien == null || dtNhanVien.Rows.Count == 0)
                 {
                     lblStatus.Text = "Không có nhân viên nào để hiển thị.";
                     lblStatus.ForeColor = System.Drawing.Color.Red;
                     dtList.DataSource = null;
-                    dtList.Columns.Clear();
                     return;
                 }
 
                 int daysInMonth = DateTime.DaysInMonth(dtpThang.Value.Year, dtpThang.Value.Month);
-                for (int day = 1; day <= daysInMonth; day++)
-                {
-                    dtChamCong.Columns.Add($"Day{day}", typeof(string));
-                    dtChamCong.Columns.Add($"LyDoNghi{day}", typeof(string));
-                }
-
                 foreach (DataRow nvRow in dtNhanVien.Rows)
                 {
-                    DataRow newRow = dtChamCong.NewRow();
-                    newRow["MaNV"] = nvRow["MaNV"].ToString();
-                    newRow["TenNV"] = nvRow["TenNV"].ToString();
-                    newRow["ChucDanh"] = nvRow["MaChucDanh"].ToString();
                     for (int day = 1; day <= daysInMonth; day++)
                     {
-                        newRow[$"Day{day}"] = "Chưa nộp";
-                        newRow[$"LyDoNghi{day}"] = "";
-                    }
-                    dtChamCong.Rows.Add(newRow);
-                }
-
-                // Cập nhật từ dữ liệu hiện có
-                string queryExisting = @"
-                    SELECT cc.MaNV, nv.TenNV, nv.MaChucDanh, CONVERT(VARCHAR(2), DAY(cc.NgayChamCong)) AS Ngay, 
-                           cc.TrangThai, cc.LyDoNghi
-                    FROM ChamCongTheoNgay cc
-                    LEFT JOIN NhanVien nv ON cc.MaNV = nv.MaNV
-                    LEFT JOIN NguoiDung nd ON nv.MaNV = nd.MaNV
-                    WHERE CONVERT(VARCHAR(6), cc.NgayChamCong, 112) = @Thang AND nd.LaQuanTri = 0";
-                var parameters = new System.Data.SqlClient.SqlParameter[] {
-                    new System.Data.SqlClient.SqlParameter("@Thang", dtpThang.Value.ToString("yyyyMM"))
-                };
-                DataTable dtExisting = cls_DatabaseManager.TableRead(queryExisting, parameters);
-
-                if (dtExisting != null && dtExisting.Rows.Count > 0)
-                {
-                    foreach (DataRow existingRow in dtExisting.Rows)
-                    {
-                        string maNVExisting = existingRow["MaNV"].ToString();
-                        string ngay = existingRow["Ngay"].ToString();
-                        string trangThai = ConvertToStatus(Convert.ToInt32(existingRow["TrangThai"]));
-                        string lyDoNghi = existingRow["LyDoNghi"].ToString() ?? "";
-                        DataRow[] rowsToUpdate = dtChamCong.Select($"MaNV = '{maNVExisting}'");
-                        if (rowsToUpdate.Length > 0)
-                        {
-                            rowsToUpdate[0][$"Day{ngay}"] = trangThai;
-                            rowsToUpdate[0][$"LyDoNghi{ngay}"] = lyDoNghi;
-                        }
+                        DateTime ngay = new DateTime(dtpThang.Value.Year, dtpThang.Value.Month, day);
+                        DataRow newRow = dtFormatted.NewRow();
+                        newRow["MaNV"] = nvRow["MaNV"].ToString();
+                        newRow["TenNV"] = nvRow["TenNV"].ToString();
+                        newRow["ChucDanh"] = nvRow["ChucDanh"].ToString();
+                        newRow["Ngay"] = ngay;
+                        newRow["GioVao"] = "";
+                        newRow["GioRa"] = "";
+                        newRow["TrangThai"] = "Chưa chấm công"; // Mặc định
+                        newRow["LyDoNghi"] = "";
+                        newRow["SoGioLam"] = "00:00"; // Mặc định hiển thị HH:mm
+                        newRow["MaChamCong"] = DBNull.Value;
+                        dtFormatted.Rows.Add(newRow);
                     }
                 }
             }
-            else
+
+            // Cập nhật dữ liệu từ stored procedure nếu có
+            if (dtChamCong != null && dtChamCong.Rows.Count > 0)
             {
-                // Hiển thị cho nhân viên cá nhân
-                dtChamCong = new DataTable();
-                dtChamCong.Columns.Add("Ngay", typeof(string));
-                dtChamCong.Columns.Add("TrangThai", typeof(string));
-                dtChamCong.Columns.Add("LyDoNghi", typeof(string));
-
-                int daysInMonth = DateTime.DaysInMonth(dtpThang.Value.Year, dtpThang.Value.Month);
-                for (int day = 1; day <= daysInMonth; day++)
+                foreach (DataRow row in dtChamCong.Rows)
                 {
-                    DataRow newRow = dtChamCong.NewRow();
-                    newRow["Ngay"] = day.ToString();
-                    newRow["TrangThai"] = "Chưa nộp";
-                    newRow["LyDoNghi"] = "";
-                    dtChamCong.Rows.Add(newRow);
-                }
-
-                // Cập nhật từ dữ liệu hiện có
-                string query = @"
-                    SELECT CONVERT(VARCHAR(2), DAY(NgayChamCong)) AS Ngay, TrangThai, LyDoNghi
-                    FROM ChamCongTheoNgay
-                    WHERE MaNV = @MaNV AND CONVERT(VARCHAR(6), NgayChamCong, 112) = @Thang";
-                var parameters = new System.Data.SqlClient.SqlParameter[] {
-                    new System.Data.SqlClient.SqlParameter("@MaNV", maNV),
-                    new System.Data.SqlClient.SqlParameter("@Thang", dtpThang.Value.ToString("yyyyMM"))
-                };
-                DataTable dtExisting = cls_DatabaseManager.TableRead(query, parameters);
-
-                if (dtExisting != null && dtExisting.Rows.Count > 0)
-                {
-                    foreach (DataRow existingRow in dtExisting.Rows)
+                    string dbMaNV = row["MaNV"].ToString();
+                    if (maNV == null || dbMaNV == maNV)
                     {
-                        string ngay = existingRow["Ngay"].ToString();
-                        string trangThai = ConvertToStatus(Convert.ToInt32(existingRow["TrangThai"]));
-                        string lyDoNghi = existingRow["LyDoNghi"].ToString() ?? "";
-                        DataRow[] rowsToUpdate = dtChamCong.Select($"Ngay = '{ngay}'");
+                        DateTime ngay = Convert.ToDateTime(row["Ngay"]);
+                        string gioVao = row["GioVao"].ToString();
+                        string gioRa = row["GioRa"].ToString() ?? "";
+                        int trangThaiNum = row["TrangThai"] != DBNull.Value ? Convert.ToInt32(row["TrangThai"]) : 1; // Mặc định 1 nếu null
+                        string lyDoNghi = row["LyDoNghi"].ToString() ?? "";
+                        double soGioLam = row["SoGioLam"] != DBNull.Value ? Convert.ToDouble(row["SoGioLam"]) : 0.0;
+
+                        // Chuyển số trạng thái thành chữ
+                        string trangThaiText = "Chưa chấm công";
+                        switch (trangThaiNum)
+                        {
+                            case 1:
+                                trangThaiText = "Chưa chấm công";
+                                break;
+                            case 2:
+                                trangThaiText = "Đi làm";
+                                break;
+                            case 3:
+                                trangThaiText = "Nghỉ";
+                                break;
+                            default:
+                                trangThaiText = "Chưa chấm công";
+                                break;
+                        }
+
+                        // Chuyển số giờ thập phân thành định dạng HH:mm
+                        string soGioLamFormatted = TimeSpan.FromHours(soGioLam).ToString(@"hh\:mm");
+
+                        DataRow[] rowsToUpdate = dtFormatted.Select($"MaNV = '{dbMaNV}' AND Ngay = '{ngay:yyyy-MM-dd}'");
                         if (rowsToUpdate.Length > 0)
                         {
-                            rowsToUpdate[0]["TrangThai"] = trangThai;
+                            rowsToUpdate[0]["GioVao"] = gioVao;
+                            rowsToUpdate[0]["GioRa"] = gioRa;
+                            rowsToUpdate[0]["TrangThai"] = trangThaiText;
                             rowsToUpdate[0]["LyDoNghi"] = lyDoNghi;
+                            rowsToUpdate[0]["SoGioLam"] = soGioLamFormatted;
+                            rowsToUpdate[0]["MaChamCong"] = row["MaChamCong"];
                         }
                     }
                 }
             }
 
-            // Cấu hình cột trong dtList
-            dtList.Columns.Clear();
-            if (isAdmin)
-            {
-                dtList.Columns.Add("MaNV", "Mã NV");
-                dtList.Columns["MaNV"].ReadOnly = true;
-                dtList.Columns.Add("TenNV", "Tên NV");
-                dtList.Columns["TenNV"].ReadOnly = true;
-                dtList.Columns.Add("ChucDanh", "Chức danh");
-                dtList.Columns["ChucDanh"].ReadOnly = true;
-                int daysInMonth = DateTime.DaysInMonth(dtpThang.Value.Year, dtpThang.Value.Month);
-                for (int day = 1; day <= daysInMonth; day++)
-                {
-                    dtList.Columns.Add($"Day{day}", day.ToString());
-                    DataGridViewComboBoxColumn comboColumn = new DataGridViewComboBoxColumn
-                    {
-                        Name = $"Day{day}",
-                        Items = { "Chưa nộp", "Đã nộp", "Nghỉ" },
-                        FlatStyle = FlatStyle.Flat,
-                        Width = 80
-                    };
-                    dtList.Columns.Add(comboColumn);
+            // Gán DataSource
+            dtList.DataSource = dtFormatted;
 
-                    DataGridViewTextBoxColumn lyDoColumn = new DataGridViewTextBoxColumn
-                    {
-                        Name = $"LyDoNghi{day}",
-                        HeaderText = $"Lý do {day}",
-                        Width = 120
-                    };
-                    dtList.Columns.Add(lyDoColumn);
-                }
-            }
-            else
+            lblStatus.Text = $"Đã tải lịch chấm công cho tháng {dtpThang.Value:MM/yyyy}.";
+            if (maNV != null)
             {
-                dtList.Columns.Add("Ngay", "Ngày");
-                dtList.Columns["Ngay"].ReadOnly = true;
-                DataGridViewComboBoxColumn comboColumn = new DataGridViewComboBoxColumn
-                {
-                    Name = "TrangThai",
-                    HeaderText = "Trạng thái",
-                    Items = { "Chưa nộp", "Đã nộp", "Nghỉ" },
-                    FlatStyle = FlatStyle.Flat,
-                    Width = 100
-                };
-                dtList.Columns.Add(comboColumn);
-                dtList.Columns.Add("LyDoNghi", "Lý do nghỉ");
-                dtList.Columns["LyDoNghi"].Width = 200;
+                lblStatus.Text += $" - Nhân viên: {cmbFilterNV.Text}";
             }
-
-            dtList.DataSource = dtChamCong;
-            lblStatus.Text = isAdmin ? $"Đã tải lịch chấm công của tất cả nhân viên cho tháng {dtpThang.Value:MM/yyyy}." :
-                $"Đã tải lịch chấm công cho tháng {dtpThang.Value:MM/yyyy}.";
             lblStatus.ForeColor = System.Drawing.Color.Green;
-        }
-
-        private string GetMaNVFromMaND(string maND)
-        {
-            string query = "SELECT MaNV FROM NguoiDung WHERE MaND = @MaND";
-            var parameters = new System.Data.SqlClient.SqlParameter[] {
-                new System.Data.SqlClient.SqlParameter("@MaND", maND)
-            };
-            DataTable dt = cls_DatabaseManager.TableRead(query, parameters);
-            return dt.Rows.Count > 0 ? dt.Rows[0]["MaNV"].ToString() : "";
-        }
-
-        private string ConvertToStatus(int trangThai)
-        {
-            switch (trangThai)
-            {
-                case 1: return "Chưa nộp";
-                case 2: return "Đã nộp";
-                default: return "Nghỉ";
-            }
-        }
-
-        private int ConvertToStatusCode(string trangThai)
-        {
-            switch (trangThai)
-            {
-                case "Chưa nộp": return 1;
-                case "Đã nộp": return 2;
-                case "Nghỉ": return 2;
-                default: return 1;
-            }
         }
 
         private void btnLuu_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(currentMaND))
-            {
-                lblStatus.Text = "Vui lòng đăng nhập để lưu.";
-                lblStatus.ForeColor = System.Drawing.Color.Red;
-                return;
-            }
+            if (dtList.Rows.Count == 0) return;
 
-            int flag = 0;
-            DataTable dtChamCong = dtList.DataSource as DataTable;
-            if (dtChamCong == null)
+            using (SqlConnection conn = new SqlConnection(cls_DatabaseManager.connectionString))
             {
-                lblStatus.Text = "Không có dữ liệu để lưu.";
-                lblStatus.ForeColor = System.Drawing.Color.Red;
-                return;
-            }
-
-            foreach (DataRow row in dtChamCong.Rows)
-            {
-                string maNV = isAdmin ? row["MaNV"].ToString() : GetMaNVFromMaND(currentMaND);
-                int daysInMonth = DateTime.DaysInMonth(dtpThang.Value.Year, dtpThang.Value.Month);
-                for (int day = 1; day <= daysInMonth; day++)
+                try
                 {
-                    string trangThai = isAdmin ? row[$"Day{day}"].ToString() : row["TrangThai"].ToString();
-                    string lyDoNghi = isAdmin ? row[$"LyDoNghi{day}"].ToString() : row["LyDoNghi"].ToString();
-                    DateTime ngayChamCong = new DateTime(dtpThang.Value.Year, dtpThang.Value.Month, day);
+                    conn.Open();
+                    foreach (DataGridViewRow row in dtList.Rows)
+                    {
+                        if (!row.IsNewRow)
+                        {
+                            // Lấy các giá trị cần thiết
+                            int maChamCong = row.Cells["maChamCongDataGridViewTextBoxColumn"].Value != DBNull.Value ? Convert.ToInt32(row.Cells["maChamCongDataGridViewTextBoxColumn"].Value) : 0;
+                            if (maChamCong == 0)
+                            {
+                                continue; // Bỏ qua nếu MaChamCong chưa có (bản ghi mới chưa lưu)
+                            }
 
-                    // Kiểm tra dữ liệu hiện có
-                    string checkQuery = "SELECT MaChamCong FROM ChamCongTheoNgay WHERE MaNV = @MaNV AND NgayChamCong = @NgayChamCong";
-                    var checkParams = new System.Data.SqlClient.SqlParameter[] {
-                        new System.Data.SqlClient.SqlParameter("@MaNV", maNV),
-                        new System.Data.SqlClient.SqlParameter("@NgayChamCong", ngayChamCong)
-                    };
-                    DataTable dtCheck = cls_DatabaseManager.TableRead(checkQuery, checkParams);
-                    if (dtCheck.Rows.Count > 0)
-                    {
-                        string maChamCong = dtCheck.Rows[0]["MaChamCong"].ToString();
-                        string updateQuery = "UPDATE ChamCongTheoNgay SET TrangThai = @TrangThai, LyDoNghi = @LyDoNghi WHERE MaChamCong = @MaChamCong";
-                        bool updateSuccess = cls_DatabaseManager.ExecuteNonQuery(updateQuery, new System.Data.SqlClient.SqlParameter[] {
-                            new System.Data.SqlClient.SqlParameter("@TrangThai", ConvertToStatusCode(trangThai)),
-                            new System.Data.SqlClient.SqlParameter("@LyDoNghi", lyDoNghi),
-                            new System.Data.SqlClient.SqlParameter("@MaChamCong", maChamCong)
-                        }) > 0;
-                        if (updateSuccess) flag++;
+                            string gioRa = row.Cells["gioRaDataGridViewTextBoxColumn"].Value?.ToString() ?? "";
+                            string lyDoNghi = row.Cells["lyDoNghiDataGridViewTextBoxColumn"].Value?.ToString() ?? "";
+
+                            using (SqlCommand cmd = new SqlCommand("sp_UpdateChamCong", conn))
+                            {
+                                cmd.CommandType = CommandType.StoredProcedure;
+
+                                // Thêm tham số
+                                cmd.Parameters.AddWithValue("@MaChamCong", maChamCong);
+                                cmd.Parameters.AddWithValue("@GioRa", string.IsNullOrEmpty(gioRa) ? (object)DBNull.Value : gioRa);
+                                cmd.Parameters.AddWithValue("@LyDoNghi", string.IsNullOrEmpty(lyDoNghi) ? (object)DBNull.Value : lyDoNghi);
+
+                                // Thực thi stored procedure
+                                cmd.ExecuteNonQuery();
+                            }
+                        }
                     }
-                    else
-                    {
-                        string insertQuery = "INSERT INTO ChamCongTheoNgay (MaNV, NgayChamCong, TrangThai, LyDoNghi) VALUES (@MaNV, @NgayChamCong, @TrangThai, @LyDoNghi)";
-                        bool insertSuccess = cls_DatabaseManager.ExecuteNonQuery(insertQuery, new System.Data.SqlClient.SqlParameter[] {
-                            new System.Data.SqlClient.SqlParameter("@MaNV", maNV),
-                            new System.Data.SqlClient.SqlParameter("@NgayChamCong", ngayChamCong),
-                            new System.Data.SqlClient.SqlParameter("@TrangThai", ConvertToStatusCode(trangThai)),
-                            new System.Data.SqlClient.SqlParameter("@LyDoNghi", lyDoNghi)
-                        }) > 0;
-                        if (insertSuccess) flag++;
-                    }
+                    lblStatus.Text = "Đã lưu dữ liệu thành công.";
+                    lblStatus.ForeColor = System.Drawing.Color.Green;
                 }
-            }
-
-            if (flag > 0)
-            {
-                lblStatus.Text = isAdmin ? $"Đã lưu {flag} bản ghi cho tất cả nhân viên." : $"Đã lưu {flag} bản ghi thành công.";
-                lblStatus.ForeColor = System.Drawing.Color.Green;
-                btnHienThi_Click(sender, e);
-            }
-            else
-            {
-                lblStatus.Text = "Không có bản ghi nào thay đổi.";
-                lblStatus.ForeColor = System.Drawing.Color.Red;
+                catch (Exception ex)
+                {
+                    lblStatus.Text = "Lỗi khi lưu dữ liệu: " + ex.Message;
+                    lblStatus.ForeColor = System.Drawing.Color.Red;
+                }
             }
         }
 
         private void btnNop_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(currentMaND))
+            if (dtList.Rows.Count == 0 || cmbFilterNV.SelectedValue == null)
             {
-                lblStatus.Text = "Vui lòng đăng nhập để nộp.";
+                lblStatus.Text = "Vui lòng chọn nhân viên và hiển thị dữ liệu trước khi nộp.";
                 lblStatus.ForeColor = System.Drawing.Color.Red;
                 return;
             }
 
-            DialogResult result = MessageBox.Show("Bạn có muốn nộp bản chấm công này không? Nếu nộp, bạn sẽ không thể thay đổi dữ liệu!",
-                "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (result == DialogResult.Yes)
-            {
-                int flag = 0;
-                DataTable dtChamCong = dtList.DataSource as DataTable;
-                if (dtChamCong == null)
-                {
-                    lblStatus.Text = "Không có dữ liệu để nộp.";
-                    lblStatus.ForeColor = System.Drawing.Color.Red;
-                    return;
-                }
+            string maNV = cmbFilterNV.SelectedValue.ToString();
+            string thang = dtpThang.Value.ToString("yyyyMM");
 
-                string thang = dtpThang.Value.ToString("yyyyMM");
-                foreach (DataRow row in dtChamCong.Rows)
+            using (SqlConnection conn = new SqlConnection(cls_DatabaseManager.connectionString))
+            {
+                try
                 {
-                    string maNV = isAdmin ? row["MaNV"].ToString() : GetMaNVFromMaND(currentMaND);
-                    int daysInMonth = DateTime.DaysInMonth(dtpThang.Value.Year, dtpThang.Value.Month);
-                    for (int day = 1; day <= daysInMonth; day++)
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand("sp_InsertThongKeChamCong", conn))
                     {
-                        string trangThai = isAdmin ? row[$"Day{day}"].ToString() : row["TrangThai"].ToString();
-                        if (trangThai == "Chưa nộp")
-                        {
-                            DateTime ngayChamCong = new DateTime(dtpThang.Value.Year, dtpThang.Value.Month, day);
-                            string checkQuery = "SELECT MaChamCong FROM ChamCongTheoNgay WHERE MaNV = @MaNV AND NgayChamCong = @NgayChamCong";
-                            var checkParams = new System.Data.SqlClient.SqlParameter[] {
-                                new System.Data.SqlClient.SqlParameter("@MaNV", maNV),
-                                new System.Data.SqlClient.SqlParameter("@NgayChamCong", ngayChamCong)
-                            };
-                            DataTable dtCheck = cls_DatabaseManager.TableRead(checkQuery, checkParams);
-                            if (dtCheck.Rows.Count > 0)
-                            {
-                                string maChamCong = dtCheck.Rows[0]["MaChamCong"].ToString();
-                                string updateQuery = "UPDATE ChamCongTheoNgay SET TrangThai = 2 WHERE MaChamCong = @MaChamCong";
-                                if (cls_DatabaseManager.ExecuteNonQuery(updateQuery, new System.Data.SqlClient.SqlParameter[] {
-                                    new System.Data.SqlClient.SqlParameter("@MaChamCong", maChamCong)
-                                }) > 0)
-                                {
-                                    string tkQuery = @"
-                                        INSERT INTO ThongKeChamCong (MaNV, Thang, NgayCongChuan, NgayDiLam, NgayNghi, TongLuong, ThucLinh, TrangThai)
-                                        VALUES (@MaNV, @Thang, 26, 0, 0, 0, 0, 1)";
-                                    if (cls_DatabaseManager.ExecuteNonQuery(tkQuery, new System.Data.SqlClient.SqlParameter[] {
-                                        new System.Data.SqlClient.SqlParameter("@MaNV", maNV),
-                                        new System.Data.SqlClient.SqlParameter("@Thang", thang)
-                                    }) > 0)
-                                    {
-                                        flag++;
-                                    }
-                                }
-                            }
-                        }
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@MaNV", maNV);
+                        cmd.Parameters.AddWithValue("@Thang", thang);
+
+                        cmd.ExecuteNonQuery();
                     }
-                }
-
-                if (flag > 0)
-                {
-                    lblStatus.Text = isAdmin ? $"Đã nộp {flag} bản ghi cho tất cả nhân viên." : $"Đã nộp {flag} bản ghi thành công.";
+                    lblStatus.Text = "Đã nộp và thống kê thành công.";
                     lblStatus.ForeColor = System.Drawing.Color.Green;
-                    btnHienThi_Click(sender, e);
                 }
-                else
+                catch (Exception ex)
                 {
-                    lblStatus.Text = "Không có bản ghi nào được nộp.";
+                    lblStatus.Text = "Lỗi khi nộp thống kê: " + ex.Message;
                     lblStatus.ForeColor = System.Drawing.Color.Red;
-                }
-            }
-        }
-
-        private void dtList_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
-        {
-            if (isAdmin && e.ColumnIndex > 2 && dtList.Columns[e.ColumnIndex].Name.StartsWith("Day"))
-            {
-                string status = e.Value?.ToString() ?? "Chưa nộp";
-                switch (status)
-                {
-                    case "Chưa nộp":
-                        e.CellStyle.BackColor = System.Drawing.Color.LightYellow;
-                        break;
-                    case "Đã nộp":
-                        e.CellStyle.BackColor = System.Drawing.Color.LightGreen;
-                        break;
-                    case "Nghỉ":
-                        e.CellStyle.BackColor = System.Drawing.Color.LightCoral;
-                        break;
-                }
-            }
-            else if (!isAdmin && e.ColumnIndex == 1) // Cột TrangThai cho nhân viên
-            {
-                string status = e.Value?.ToString() ?? "Chưa nộp";
-                switch (status)
-                {
-                    case "Chưa nộp":
-                        e.CellStyle.BackColor = System.Drawing.Color.LightYellow;
-                        break;
-                    case "Đã nộp":
-                        e.CellStyle.BackColor = System.Drawing.Color.LightGreen;
-                        break;
-                    case "Nghỉ":
-                        e.CellStyle.BackColor = System.Drawing.Color.LightCoral;
-                        break;
-                }
-            }
-            else if (e.ColumnIndex == 2 || (isAdmin && e.ColumnIndex > 2 && dtList.Columns[e.ColumnIndex].Name.StartsWith("LyDoNghi")))
-            {
-                e.Value = e.Value?.ToString() ?? "";
-            }
-        }
-
-        private void dtList_CellEndEdit(object sender, DataGridViewCellEventArgs e)
-        {
-            if (isAdmin && e.ColumnIndex > 2 && dtList.Columns[e.ColumnIndex].Name.StartsWith("Day"))
-            {
-                string status = dtList.Rows[e.RowIndex].Cells[e.ColumnIndex].Value?.ToString() ?? "Chưa nộp";
-                int day = int.Parse(dtList.Columns[e.ColumnIndex].Name.Replace("Day", ""));
-                string lyDoColumn = $"LyDoNghi{day}";
-                if (status == "Nghỉ" && string.IsNullOrEmpty(dtList.Rows[e.RowIndex].Cells[lyDoColumn].Value?.ToString()))
-                {
-                    MessageBox.Show("Vui lòng nhập lý do nghỉ.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    dtList.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = "Chưa nộp";
-                    dtList.CurrentCell = dtList.Rows[e.RowIndex].Cells[lyDoColumn];
-                }
-            }
-            else if (!isAdmin && e.ColumnIndex == 1) // Cột TrangThai cho nhân viên
-            {
-                string status = dtList.Rows[e.RowIndex].Cells[e.ColumnIndex].Value?.ToString() ?? "Chưa nộp";
-                if (status == "Nghỉ" && string.IsNullOrEmpty(dtList.Rows[e.RowIndex].Cells[2].Value?.ToString()))
-                {
-                    MessageBox.Show("Vui lòng nhập lý do nghỉ.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    dtList.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = "Chưa nộp";
-                    dtList.CurrentCell = dtList.Rows[e.RowIndex].Cells[2];
                 }
             }
         }

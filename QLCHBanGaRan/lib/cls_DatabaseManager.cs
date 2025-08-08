@@ -59,6 +59,39 @@ namespace QLCHBanGaRan.lib
             return dt;
         }
 
+        public static DataTable TableReadStoredProc(string storedProcName, SqlParameter[] parameters = null)
+        {
+            DataTable dt = new DataTable();
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand(storedProcName, conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure; // Chỉ định là stored procedure
+                        if (parameters != null)
+                        {
+                            cmd.Parameters.AddRange(parameters);
+                        }
+                        using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                        {
+                            adapter.Fill(dt);
+                        }
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    MessageBox.Show("Lỗi truy vấn dữ liệu: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Lỗi không xác định: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            return dt;
+        }
+
         public static int ExecuteNonQuery(string query, SqlParameter[] parameters = null)
         {
             int rowsAffected = 0;
