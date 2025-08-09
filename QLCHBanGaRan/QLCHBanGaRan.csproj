@@ -298,6 +298,12 @@
     <Compile Include="UCFunction\UC_RpProfileEmployess.Designer.cs">
       <DependentUpon>UC_RpProfileEmployess.cs</DependentUpon>
     </Compile>
+    <Compile Include="UCFunction\UC_RpRevenue.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UCFunction\UC_RpRevenue.Designer.cs">
+      <DependentUpon>UC_RpRevenue.cs</DependentUpon>
+    </Compile>
     <Compile Include="UCFunction\UC_RpSalary.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -476,6 +482,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UCFunction\UC_RpProfileEmployess.resx">
       <DependentUpon>UC_RpProfileEmployess.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UCFunction\UC_RpRevenue.resx">
+      <DependentUpon>UC_RpRevenue.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UCFunction\UC_RpSalary.resx">
       <DependentUpon>UC_RpSalary.cs</DependentUpon>

@@ -85,8 +85,6 @@ namespace QLCHBanGaRan.UCSystems
 
         private void btnRpDoanhThu_Click(object sender, EventArgs e)
         {
-            // Tạm thời vô hiệu hóa
-            /*
             if (!Forms.frm_Main.Instance.pnlContainer.Controls.ContainsKey("UC_RpRevenue"))
             {
                 UC_RpRevenue rpRevenue = new UC_RpRevenue();
@@ -94,7 +92,7 @@ namespace QLCHBanGaRan.UCSystems
                 Forms.frm_Main.Instance.pnlContainer.Controls.Add(rpRevenue);
             }
             Forms.frm_Main.Instance.pnlContainer.Controls["UC_RpRevenue"].BringToFront();
-            */
+            
         }
 
         private void btnRpHoaDon_Click(object sender, EventArgs e)
