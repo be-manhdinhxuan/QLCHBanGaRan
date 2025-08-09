@@ -432,16 +432,40 @@ namespace QLCHBanGaRan.lib
             return cls_DatabaseManager.TableRead(query);
         }
 
-        public static DataTable GetSalaryData(int thang)
+        public static DataTable GetSalaryData(int thang, string chucDanhID = "-1")
         {
-            string query = "SELECT nv.MaNV, nv.TenNV, cd.TenChucDanh, cd.LuongCoBan, cd.PhuCap, tkc.Thang, tkc.NgayDiLam, tkc.NgayNghi, tkc.TongLuong, tkc.ThucLinh, nv.MaChucDanh " +
-                           "FROM NhanVien nv " +
-                           "JOIN ChucDanh cd ON nv.MaChucDanh = cd.MaChucDanh " +
-                           "JOIN ThongKeChamCong tkc ON nv.MaNV = tkc.MaNV " +
-                           "WHERE tkc.Thang = @Thang AND nv.IsDeleted = 0";
+            string query = @"
+        SELECT 
+            nv.MaNV,
+            nv.TenNV,
+            cd.TenChucDanh AS ChucDanh,
+            cd.LuongTheoGio,
+            cd.ThuongChucDanh AS Thuong,
+            nv.MaChucDanh, -- Thêm cột MaChucDanh vào SELECT
+            COALESCE(SUM(CASE 
+                WHEN cc.TrangThai = 2 AND cc.GioVao IS NOT NULL AND cc.GioRa IS NOT NULL 
+                THEN DATEDIFF(HOUR, CAST(cc.GioVao AS TIME), CAST(cc.GioRa AS TIME))
+                ELSE 0 
+            END), 0) AS SoGioLam,
+            (COALESCE(SUM(CASE 
+                WHEN cc.TrangThai = 2 AND cc.GioVao IS NOT NULL AND cc.GioRa IS NOT NULL 
+                THEN DATEDIFF(HOUR, CAST(cc.GioVao AS TIME), CAST(cc.GioRa AS TIME))
+                ELSE 0 
+            END), 0) * cd.LuongTheoGio) + cd.ThuongChucDanh - 
+            (COALESCE(COUNT(CASE WHEN cc.TrangThai = 3 AND cc.LyDoNghi IS NULL THEN 1 END), 0) * 50000 + 
+             COALESCE(COUNT(CASE WHEN cc.TrangThai = 1 THEN 1 END), 0) * 50000) AS TienLuong
+        FROM NhanVien nv
+        LEFT JOIN ChucDanh cd ON nv.MaChucDanh = cd.MaChucDanh AND cd.IsDeleted = 0
+        LEFT JOIN ChamCongTheoNgay cc ON nv.MaNV = cc.MaNV AND cc.IsDeleted = 0 
+            AND (YEAR(cc.NgayChamCong) * 100 + MONTH(cc.NgayChamCong)) = @Thang
+        WHERE nv.IsDeleted = 0
+        AND (nv.MaChucDanh IS NULL OR nv.MaChucDanh = @ChucDanhID OR @ChucDanhID = '-1')
+        GROUP BY nv.MaNV, nv.TenNV, cd.TenChucDanh, cd.LuongTheoGio, cd.ThuongChucDanh, nv.MaChucDanh;";
+
             SqlParameter[] parameters = new SqlParameter[]
             {
-                new SqlParameter("@Thang", SqlDbType.Int) { Value = thang }
+        new SqlParameter("@Thang", SqlDbType.Int) { Value = thang },
+        new SqlParameter("@ChucDanhID", SqlDbType.NVarChar, 10) { Value = chucDanhID }
             };
             return cls_DatabaseManager.TableRead(query, parameters);
         }

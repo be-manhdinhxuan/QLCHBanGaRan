@@ -2,7 +2,7 @@
 using System.Data;
 using System.Windows.Forms;
 
-namespace QLCHBanGaRan.UCFunction // Thay bằng namespace của bạn nếu khác
+namespace QLCHBanGaRan.UCFunction
 {
     public partial class UC_RpSalary : UserControl
     {
@@ -14,7 +14,7 @@ namespace QLCHBanGaRan.UCFunction // Thay bằng namespace của bạn nếu kh�
         private void UC_RpSalary_Load(object sender, EventArgs e)
         {
             // Đặt tháng mặc định là tháng hiện tại (07/2025)
-            dtpThang.Value = new DateTime(2025, 7, 1); // Hoặc dùng DateTime.Now.Month với năm hiện tại
+            dtpThang.Value = new DateTime(2025, 7, 1); // Hoặc dùng DateTime.Now với năm hiện tại
 
             // Lấy danh sách chức danh
             DataTable dtTitles = QLCHBanGaRan.lib.cls_EmployeeManagement.GetChucDanh();
@@ -43,10 +43,9 @@ namespace QLCHBanGaRan.UCFunction // Thay bằng namespace của bạn nếu kh�
                 Report.rp_Salary r = new Report.rp_Salary();
                 string maChucDanh = cmbChucDanh.SelectedValue?.ToString() ?? "-1"; // Xử lý null
 
-                // Lấy dữ liệu từ ThongKeChamCong dựa trên tháng
-                DataTable dtSalaryData = QLCHBanGaRan.lib.cls_EmployeeManagement.GetSalaryData(dtpThang.Value.Month);
-
-                
+                // Lấy dữ liệu từ ChamCongTheoNgay dựa trên tháng và chức danh
+                int thang = int.Parse(dtpThang.Value.ToString("yyyyMM")); // Chuyển thành YYYYMM (ví dụ: 202507)
+                DataTable dtSalaryData = QLCHBanGaRan.lib.cls_EmployeeManagement.GetSalaryData(thang, maChucDanh);
 
                 // Kiểm tra cột MaChucDanh
                 if (!dtSalaryData.Columns.Contains("MaChucDanh"))
@@ -77,13 +76,15 @@ namespace QLCHBanGaRan.UCFunction // Thay bằng namespace của bạn nếu kh�
                     }
                 }
 
-
-
-                // Gán dữ liệu và tham số (luôn hiển thị báo cáo, dù trống)
+                // Gán dữ liệu
                 r.SetDataSource(filteredDt);
+
+                // Đặt giá trị tham số
                 r.SetParameterValue("MaChucDanh", maChucDanh);
                 r.SetParameterValue("TenChucDanh", cmbChucDanh.Text);
-                r.SetParameterValue("Thang", dtpThang.Value.Month);
+                r.SetParameterValue("Thang", dtpThang.Value.ToString("yyyyMM")); // Đảm bảo khớp với định nghĩa
+                r.SetParameterValue("ThangKe", dtpThang.Value.ToString("MM/yyyy"));
+
                 rpProfile.ReportSource = r;
                 rpProfile.Zoom(75);
                 rpProfile.Refresh(); // Đảm bảo làm mới báo cáo

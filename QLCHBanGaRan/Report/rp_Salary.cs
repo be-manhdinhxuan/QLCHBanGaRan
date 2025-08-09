@@ -90,7 +90,7 @@ namespace QLCHBanGaRan.Report {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_MaChucDanh {
+        public CrystalDecisions.Shared.IParameterField Parameter_ChucDanhID {
             get {
                 return this.DataDefinition.ParameterFields[0];
             }
@@ -106,9 +106,25 @@ namespace QLCHBanGaRan.Report {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_TenChucDanh {
+        public CrystalDecisions.Shared.IParameterField Parameter_MaChucDanh {
             get {
                 return this.DataDefinition.ParameterFields[2];
+            }
+        }
+        
+        [Browsable(false)]
+        [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+        public CrystalDecisions.Shared.IParameterField Parameter_TenChucDanh {
+            get {
+                return this.DataDefinition.ParameterFields[3];
+            }
+        }
+        
+        [Browsable(false)]
+        [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+        public CrystalDecisions.Shared.IParameterField Parameter_ThangKe {
+            get {
+                return this.DataDefinition.ParameterFields[4];
             }
         }
     }

@@ -34,8 +34,6 @@ namespace QLCHBanGaRan.UCSystems
 
         private void btnRpChamCong_Click(object sender, EventArgs e)
         {
-            // Tạm thời vô hiệu hóa
-            /*
             if (!Forms.frm_Main.Instance.pnlContainer.Controls.ContainsKey("UC_RpProfileEmployess"))
             {
                 UC_RpProfileEmployess profileEmployess = new UC_RpProfileEmployess();
@@ -43,7 +41,7 @@ namespace QLCHBanGaRan.UCSystems
                 Forms.frm_Main.Instance.pnlContainer.Controls.Add(profileEmployess);
             }
             Forms.frm_Main.Instance.pnlContainer.Controls["UC_RpProfileEmployess"].BringToFront();
-            */
+            
         }
 
         private void btnRpSalary_Click(object sender, EventArgs e)
