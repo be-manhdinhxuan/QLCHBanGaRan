@@ -97,8 +97,6 @@ namespace QLCHBanGaRan.UCSystems
 
         private void btnRpHoaDon_Click(object sender, EventArgs e)
         {
-            // Tạm thời vô hiệu hóa
-            /*
             if (!Forms.frm_Main.Instance.pnlContainer.Controls.ContainsKey("UC_InvoiceDetails"))
             {
                 UC_InvoiceDetails invoiceDetails = new UC_InvoiceDetails();
@@ -106,7 +104,7 @@ namespace QLCHBanGaRan.UCSystems
                 Forms.frm_Main.Instance.pnlContainer.Controls.Add(invoiceDetails);
             }
             Forms.frm_Main.Instance.pnlContainer.Controls["UC_InvoiceDetails"].BringToFront();
-            */
+            
         }
 
         private void btnRpSPTonKho_Click(object sender, EventArgs e)

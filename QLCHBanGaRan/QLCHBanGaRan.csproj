@@ -154,6 +154,12 @@
     <Compile Include="lib\cls_Salary.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Report\rp_InvoiceDetails.cs">
+      <DependentUpon>rp_InvoiceDetails.rpt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <SubType>Component</SubType>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Report\rp_PrintInvoice.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -396,6 +402,9 @@
     <EmbeddedResource Include="Forms\frm_About.resx">
       <DependentUpon>frm_About.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frm_InvoiceDetails.resx">
+      <DependentUpon>frm_InvoiceDetails.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frm_Login.resx">
       <DependentUpon>frm_Login.cs</DependentUpon>
     </EmbeddedResource>
@@ -415,6 +424,10 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="Report\rp_InvoiceDetails.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>rp_InvoiceDetails.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Report\rp_PrintInvoice.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>rp_PrintInvoice.cs</LastGenOutput>
@@ -464,6 +477,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UCFunction\UC_FoodManager.resx">
       <DependentUpon>UC_FoodManager.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UCFunction\UC_InvoiceDetails.resx">
+      <DependentUpon>UC_InvoiceDetails.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UCFunction\UC_NCCManager.resx">
       <DependentUpon>UC_NCCManager.cs</DependentUpon>

@@ -16,7 +16,7 @@ namespace QLCHBanGaRan.UCFunction
         {
             try
             {
-                dtList.DataSource = cls_Report._searchInvoice(""); // Tải toàn bộ danh sách
+                dtList.DataSource = cls_Report._searchInvoice(""); // Tải toàn bộ danh sách khi khởi động
             }
             catch (Exception ex)
             {
@@ -39,14 +39,15 @@ namespace QLCHBanGaRan.UCFunction
 
         private void txtTimKiem_TextChanged(object sender, EventArgs e)
         {
-            SearchInvoices();
+            SearchInvoices(); // Tìm kiếm theo thời gian thực khi nhập
         }
 
         private void SearchInvoices()
         {
             try
             {
-                dtList.DataSource = cls_Report._searchInvoice(txtTimKiem.Text);
+                string searchText = txtTimKiem.Text.Trim(); // Loại bỏ khoảng trắng thừa
+                dtList.DataSource = cls_Report._searchInvoice(searchText); // Tìm theo tên nhân viên
             }
             catch (Exception ex)
             {
@@ -73,9 +74,8 @@ namespace QLCHBanGaRan.UCFunction
             if (dtList.SelectedRows.Count > 0)
             {
                 string maHD = dtList.SelectedRows[0].Cells["MaHD"].Value.ToString();
-                using (Forms.frm_InvoiceDetails invoiceDetails = new Forms.frm_InvoiceDetails())
+                using (Forms.frm_InvoiceDetails invoiceDetails = new Forms.frm_InvoiceDetails(maHD))
                 {
-                    invoiceDetails.numReceipt = maHD;
                     invoiceDetails.ShowDialog();
                 }
             }

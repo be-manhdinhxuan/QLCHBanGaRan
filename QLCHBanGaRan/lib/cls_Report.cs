@@ -28,13 +28,14 @@ namespace QLCHBanGaRan.lib
             return cls_DatabaseManager.TableRead(query);
         }
 
-        public static DataTable _searchInvoice(string id)
+        public static DataTable _searchInvoice(string tenNV)
         {
-            string query = @"SELECT a.MaHD, a.TenNV AS TenKhach, b.TenNV, a.NgayLapHD, a.TongTien
-                            FROM HoaDon a
-                            INNER JOIN NhanVien b ON a.MaNV = b.MaNV
-                            WHERE a.MaHD LIKE @Keyword";
-            return cls_DatabaseManager.TableRead(query, new SqlParameter[] { new SqlParameter("@Keyword", $"%{id}%") });
+            string query = @"SELECT a.MaHD, COALESCE(a.TenKhachHang, N'Không có') AS TenKhach, b.TenNV, a.NgayLapHD, a.TongTien
+                    FROM HoaDon a
+                    INNER JOIN NhanVien b ON a.MaNV = b.MaNV
+                    WHERE b.TenNV LIKE @Keyword
+                    AND a.IsDeleted = 0"; // Giả định có cột IsDeleted để lọc hóa đơn chưa xóa
+            return cls_DatabaseManager.TableRead(query, new SqlParameter[] { new SqlParameter("@Keyword", $"%{tenNV}%") });
         }
     }
 }

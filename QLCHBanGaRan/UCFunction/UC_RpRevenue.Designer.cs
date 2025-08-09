@@ -121,7 +121,7 @@
             this.dtpThang.Name = "dtpThang";
             this.dtpThang.Size = new System.Drawing.Size(79, 27);
             this.dtpThang.TabIndex = 90;
-            this.dtpThang.Value = new System.DateTime(2019, 12, 12, 9, 43, 23, 0);
+            this.dtpThang.Value = new System.DateTime(2025, 12, 12, 9, 43, 23, 0);
             // 
             // label1
             // 
