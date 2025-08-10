@@ -208,6 +208,12 @@
       <DependentUpon>rp_Salary.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Report\rp_TimeSheet.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>rp_TimeSheet.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="UCFunction\UC_DeletedEmployees.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -298,11 +304,11 @@
     <Compile Include="UCFunction\UC_RpProfileAllEmployess.Designer.cs">
       <DependentUpon>UC_RpProfileAllEmployess.cs</DependentUpon>
     </Compile>
-    <Compile Include="UCFunction\UC_RpProfileEmployess.cs">
+    <Compile Include="UCFunction\UC_RpTimeSheet.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UCFunction\UC_RpProfileEmployess.Designer.cs">
-      <DependentUpon>UC_RpProfileEmployess.cs</DependentUpon>
+    <Compile Include="UCFunction\UC_RpTimeSheet.Designer.cs">
+      <DependentUpon>UC_RpTimeSheet.cs</DependentUpon>
     </Compile>
     <Compile Include="UCFunction\UC_RpRevenue.cs">
       <SubType>UserControl</SubType>
@@ -460,6 +466,10 @@
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>rp_Salary.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Report\rp_TimeSheet.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>rp_TimeSheet.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="UCFunction\UC_DeletedEmployees.resx">
       <DependentUpon>UC_DeletedEmployees.cs</DependentUpon>
     </EmbeddedResource>
@@ -496,8 +506,8 @@
     <EmbeddedResource Include="UCFunction\UC_RpProfileAllEmployess.resx">
       <DependentUpon>UC_RpProfileAllEmployess.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UCFunction\UC_RpProfileEmployess.resx">
-      <DependentUpon>UC_RpProfileEmployess.cs</DependentUpon>
+    <EmbeddedResource Include="UCFunction\UC_RpTimeSheet.resx">
+      <DependentUpon>UC_RpTimeSheet.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UCFunction\UC_RpRevenue.resx">
       <DependentUpon>UC_RpRevenue.cs</DependentUpon>

@@ -1,6 +1,6 @@
 ﻿namespace QLCHBanGaRan.UCFunction
 {
-    partial class UC_RpProfileEmployess
+    partial class UC_RpTimeSheet
     {
         /// <summary> 
         /// Required designer variable.
@@ -150,7 +150,7 @@
             this.Controls.Add(this.lblTitle);
             this.Controls.Add(this.grpThongTin);
             this.Controls.Add(this.rpProfile);
-            this.Name = "UC_RpProfileEmployess";
+            this.Name = "UC_RpTimeSheet";
             this.Size = new System.Drawing.Size(893, 630);
             this.grpThongTin.ResumeLayout(false);
             this.grpThongTin.PerformLayout();

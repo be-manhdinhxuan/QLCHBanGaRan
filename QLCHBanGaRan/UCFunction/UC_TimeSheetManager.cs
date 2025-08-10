@@ -342,9 +342,9 @@ namespace QLCHBanGaRan.UCFunction
                         cmd.Parameters.AddWithValue("@Thang", thang);
 
                         cmd.ExecuteNonQuery();
+                        lblStatus.Text = "Đã nộp và thống kê thành công cho tháng " + thang.Substring(4, 2) + "/" + thang.Substring(0, 4) + ".";
+                        lblStatus.ForeColor = System.Drawing.Color.Green;
                     }
-                    lblStatus.Text = "Đã nộp và thống kê thành công.";
-                    lblStatus.ForeColor = System.Drawing.Color.Green;
                 }
                 catch (Exception ex)
                 {

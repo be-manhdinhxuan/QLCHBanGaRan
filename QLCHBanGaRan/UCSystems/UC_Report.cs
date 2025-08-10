@@ -34,13 +34,13 @@ namespace QLCHBanGaRan.UCSystems
 
         private void btnRpChamCong_Click(object sender, EventArgs e)
         {
-            if (!Forms.frm_Main.Instance.pnlContainer.Controls.ContainsKey("UC_RpProfileEmployess"))
+            if (!Forms.frm_Main.Instance.pnlContainer.Controls.ContainsKey("UC_RpTimeSheet"))
             {
-                UC_RpProfileEmployess profileEmployess = new UC_RpProfileEmployess();
-                profileEmployess.Dock = DockStyle.Fill;
-                Forms.frm_Main.Instance.pnlContainer.Controls.Add(profileEmployess);
+                UC_RpTimeSheet timeSheet = new UC_RpTimeSheet();
+                timeSheet.Dock = DockStyle.Fill;
+                Forms.frm_Main.Instance.pnlContainer.Controls.Add(timeSheet);
             }
-            Forms.frm_Main.Instance.pnlContainer.Controls["UC_RpProfileEmployess"].BringToFront();
+            Forms.frm_Main.Instance.pnlContainer.Controls["UC_RpTimeSheet"].BringToFront();
             
         }
 

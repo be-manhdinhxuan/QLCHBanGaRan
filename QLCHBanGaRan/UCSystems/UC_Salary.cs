@@ -61,6 +61,12 @@ namespace QLCHBanGaRan.UCSystems
         private void btnThongKeChamCong_Click(object sender, EventArgs e)
         {
             string controlName = "UC_TimeSheetManager";
+            bool isAdmin = QLCHBanGaRan.lib.cls_EmployeeManagement.CheckPermission(QLCHBanGaRan.Forms.frm_Main.NguoiDungID);
+            if (!isAdmin)
+            {
+                MessageBox.Show("Bạn không có quyền truy cập chức năng này!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
             if (!frm_Main.Instance.pnlContainer.Controls.ContainsKey(controlName))
             {
