@@ -1,5 +1,4 @@
 ﻿using QLCHBanGaRan.lib;
-using QLCHBanGaRan.UCSystems;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

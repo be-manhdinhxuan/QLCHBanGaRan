@@ -36,59 +36,59 @@
             this.panelBanner.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBanner)).BeginInit();
             this.SuspendLayout();
-            //
+            // 
             // panelTitle
-            //
+            // 
             this.panelTitle.Controls.Add(this.labelTitle);
             this.panelTitle.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelTitle.Location = new System.Drawing.Point(0, 0);
             this.panelTitle.Name = "panelTitle";
-            this.panelTitle.Size = new System.Drawing.Size(893, 70);
+            this.panelTitle.Size = new System.Drawing.Size(908, 70);
             this.panelTitle.TabIndex = 2;
-            //
+            // 
             // labelTitle
-            //
-            this.labelTitle.BackColor = System.Drawing.Color.Transparent; // Đảm bảo trong suốt
+            // 
+            this.labelTitle.BackColor = System.Drawing.Color.Transparent;
             this.labelTitle.Font = new System.Drawing.Font("Segoe UI", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(0)))), ((int)(((byte)(42))))); // Màu chữ đỏ
+            this.labelTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(0)))), ((int)(((byte)(42)))));
             this.labelTitle.Location = new System.Drawing.Point(0, 15);
             this.labelTitle.Name = "labelTitle";
-            this.labelTitle.Size = new System.Drawing.Size(893, 40); // Kích thước đầy đủ chiều ngang
+            this.labelTitle.Size = new System.Drawing.Size(893, 40);
             this.labelTitle.TabIndex = 0;
             this.labelTitle.Text = "QUẢN LÝ CỬA HÀNG FASTFOOD CHICKEN BÔNG";
-            this.labelTitle.TabStop = false;
-            this.labelTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter; // Căn giữa nội dung
-            //
+            this.labelTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // panelBanner
-            //
+            // 
             this.panelBanner.Controls.Add(this.pictureBoxBanner);
             this.panelBanner.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelBanner.Location = new System.Drawing.Point(0, 70);
             this.panelBanner.Name = "panelBanner";
-            this.panelBanner.Size = new System.Drawing.Size(893, 549);
+            this.panelBanner.Size = new System.Drawing.Size(908, 575);
             this.panelBanner.TabIndex = 3;
-            //
+            // 
             // pictureBoxBanner
-            //
-            this.pictureBoxBanner.Image = global::QLCHBanGaRan.Properties.Resources.banner_home; // Sử dụng tài nguyên banner_home
+            // 
+            this.pictureBoxBanner.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pictureBoxBanner.Image = global::QLCHBanGaRan.Properties.Resources.banner_home;
             this.pictureBoxBanner.Location = new System.Drawing.Point(0, 0);
             this.pictureBoxBanner.Name = "pictureBoxBanner";
-            this.pictureBoxBanner.Size = new System.Drawing.Size(893, 549);
-            this.pictureBoxBanner.Dock = System.Windows.Forms.DockStyle.Fill; // Sử dụng Fill trong panel container
+            this.pictureBoxBanner.Size = new System.Drawing.Size(908, 575);
             this.pictureBoxBanner.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBoxBanner.TabIndex = 1;
             this.pictureBoxBanner.TabStop = false;
-            //
-            //
-            //
+            // 
+            // frm_Home
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
+            this.ClientSize = new System.Drawing.Size(908, 645);
             this.Controls.Add(this.panelBanner);
             this.Controls.Add(this.panelTitle);
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "frm_Home";
-            this.Size = new System.Drawing.Size(893, 619);
             this.panelTitle.ResumeLayout(false);
             this.panelBanner.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBanner)).EndInit();

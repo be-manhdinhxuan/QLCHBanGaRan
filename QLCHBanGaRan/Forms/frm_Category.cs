@@ -1,4 +1,4 @@
-﻿using QLCHBanGaRan.UCFunction;
+﻿
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -20,75 +20,167 @@ namespace QLCHBanGaRan.Forms
 
         private void btnManageDeletedProducts_Click(object sender, EventArgs e)
         {
-            if (!frm_Main.Instance.Controls.ContainsKey("frm_DeletedProducts"))
+            if (frm_Main.Instance != null)
             {
-                UC_DeletedProducts deletedProducts = new UC_DeletedProducts();
-                deletedProducts.Dock = DockStyle.Fill;
-                frm_Main.Instance.Controls.Add(deletedProducts);
+                bool deletedProductsFound = false;
+                foreach (Form child in frm_Main.Instance.MdiChildren)
+                {
+                    if (child is frm_DeletedProducts)
+                    {
+                        child.BringToFront();
+                        child.Activate();
+                        deletedProductsFound = true;
+                        break;
+                    }
+                }
+
+                if (!deletedProductsFound)
+                {
+                    frm_DeletedProducts deletedProducts = new frm_DeletedProducts();
+                    deletedProducts.MdiParent = frm_Main.Instance;
+                    deletedProducts.Text = "Quản lý sản phẩm đã xóa";
+                    deletedProducts.WindowState = FormWindowState.Normal;
+                    deletedProducts.Size = new Size(1000, 750);
+                    deletedProducts.StartPosition = FormStartPosition.CenterParent;
+
+                    frm_Main.Instance.CreateTabForForm(deletedProducts, "Quản lý sản phẩm đã xóa");
+
+                    deletedProducts.Show();
+                    deletedProducts.Activate();
+                }
             }
-            frm_Main.Instance.Controls["frm_DeletedProducts"].BringToFront();
         }
 
         private void btnManageDeletedSuppliers_Click(object sender, EventArgs e)
         {
-            if (!frm_Main.Instance.Controls.ContainsKey("frm_DeletedSuppliers"))
+            if (frm_Main.Instance != null)
             {
-                UC_DeletedSuppliers deletedSuppliers = new UC_DeletedSuppliers();
-                deletedSuppliers.Dock = DockStyle.Fill;
-                deletedSuppliers.Name = "UC_DeletedSuppliers"; // Gán tên rõ ràng
-                frm_Main.Instance.Controls.Add(deletedSuppliers);
-            }
+                bool deletedSuppliersFound = false;
+                foreach (Form child in frm_Main.Instance.MdiChildren)
+                {
+                    if (child is frm_DeletedSuppliers)
+                    {
+                        child.BringToFront();
+                        child.Activate();
+                        deletedSuppliersFound = true;
+                        break;
+                    }
+                }
 
-            Control uc = frm_Main.Instance.Controls["UC_DeletedSuppliers"];
-            uc.Visible = true; // Đảm bảo hiển thị
-            uc.BringToFront();
+                if (!deletedSuppliersFound)
+                {
+                    frm_DeletedSuppliers deletedSuppliers = new frm_DeletedSuppliers();
+                    deletedSuppliers.MdiParent = frm_Main.Instance;
+                    deletedSuppliers.Text = "Quản lý nhà cung cấp đã xóa";
+                    deletedSuppliers.WindowState = FormWindowState.Normal;
+                    deletedSuppliers.Size = new Size(1000, 750);
+                    deletedSuppliers.StartPosition = FormStartPosition.CenterParent;
+
+                    frm_Main.Instance.CreateTabForForm(deletedSuppliers, "Quản lý nhà cung cấp đã xóa");
+
+                    deletedSuppliers.Show();
+                    deletedSuppliers.Activate();
+                }
+            }
         }
 
         private void btnManageDeletedEmployees_Click(object sender, EventArgs e)
         {
-            if (!frm_Main.Instance.Controls.ContainsKey("UC_DeletedEmployees"))
+            if (frm_Main.Instance != null)
             {
-                UC_DeletedEmployees deletedEmployees = new UC_DeletedEmployees();
-                deletedEmployees.Dock = DockStyle.Fill;
-                deletedEmployees.Name = "UC_DeletedEmployees"; // Gán tên rõ ràng
-                frm_Main.Instance.Controls.Add(deletedEmployees);
-            }
+                bool deletedEmployeesFound = false;
+                foreach (Form child in frm_Main.Instance.MdiChildren)
+                {
+                    if (child is frm_DeletedEmployees)
+                    {
+                        child.BringToFront();
+                        child.Activate();
+                        deletedEmployeesFound = true;
+                        break;
+                    }
+                }
 
-            Control uc = frm_Main.Instance.Controls["UC_DeletedEmployees"];
-            uc.Visible = true; // Đảm bảo hiển thị
-            uc.BringToFront();
+                if (!deletedEmployeesFound)
+                {
+                    frm_DeletedEmployees deletedEmployees = new frm_DeletedEmployees();
+                    deletedEmployees.MdiParent = frm_Main.Instance;
+                    deletedEmployees.Text = "Quản lý nhân viên đã xóa";
+                    deletedEmployees.WindowState = FormWindowState.Normal;
+                    deletedEmployees.Size = new Size(1000, 750);
+                    deletedEmployees.StartPosition = FormStartPosition.CenterParent;
+
+                    frm_Main.Instance.CreateTabForForm(deletedEmployees, "Quản lý nhân viên đã xóa");
+
+                    deletedEmployees.Show();
+                    deletedEmployees.Activate();
+                }
+            }
         }
 
         private void btnManageDeletedPositions_Click(object sender, EventArgs e)
         {
-            if (!frm_Main.Instance.Controls.ContainsKey("UC_DeletedPositions"))
+            if (frm_Main.Instance != null)
             {
-                UC_DeletedPositions deletedPositions = new UC_DeletedPositions();
-                deletedPositions.Dock = DockStyle.Fill;
-                deletedPositions.Name = "UC_DeletedPositions"; // Gán tên rõ ràng
-                frm_Main.Instance.Controls.Add(deletedPositions);
-            }
+                bool deletedPositionsFound = false;
+                foreach (Form child in frm_Main.Instance.MdiChildren)
+                {
+                    if (child is frm_DeletedPositions)
+                    {
+                        child.BringToFront();
+                        child.Activate();
+                        deletedPositionsFound = true;
+                        break;
+                    }
+                }
 
-            Control uc = frm_Main.Instance.Controls["UC_DeletedPositions"];
-            uc.Visible = true; // Đảm bảo hiển thị
-            uc.BringToFront();
+                if (!deletedPositionsFound)
+                {
+                    frm_DeletedPositions deletedPositions = new frm_DeletedPositions();
+                    deletedPositions.MdiParent = frm_Main.Instance;
+                    deletedPositions.Text = "Quản lý chức danh đã xóa";
+                    deletedPositions.WindowState = FormWindowState.Normal;
+                    deletedPositions.Size = new Size(1000, 750);
+                    deletedPositions.StartPosition = FormStartPosition.CenterParent;
+
+                    frm_Main.Instance.CreateTabForForm(deletedPositions, "Quản lý chức danh đã xóa");
+
+                    deletedPositions.Show();
+                    deletedPositions.Activate();
+                }
+            }
         }
 
         private void btnManageDeletedInvoices_Click(object sender, EventArgs e)
         {
-            if (!frm_Main.Instance.Controls.ContainsKey("UC_DeletedInvoices"))
+            if (frm_Main.Instance != null)
             {
-                UC_DeletedInvoices deletedInvoices = new UC_DeletedInvoices();
-                deletedInvoices.Dock = DockStyle.Fill;
-                deletedInvoices.Name = "UC_DeletedInvoices"; // Gán tên rõ ràng
-                frm_Main.Instance.Controls.Add(deletedInvoices);
+                bool deletedInvoicesFound = false;
+                foreach (Form child in frm_Main.Instance.MdiChildren)
+                {
+                    if (child is frm_DeletedInvoices)
+                    {
+                        child.BringToFront();
+                        child.Activate();
+                        deletedInvoicesFound = true;
+                        break;
+                    }
+                }
+
+                if (!deletedInvoicesFound)
+                {
+                    frm_DeletedInvoices deletedInvoices = new frm_DeletedInvoices();
+                    deletedInvoices.MdiParent = frm_Main.Instance;
+                    deletedInvoices.Text = "Quản lý hóa đơn đã xóa";
+                    deletedInvoices.WindowState = FormWindowState.Normal;
+                    deletedInvoices.Size = new Size(1000, 750);
+                    deletedInvoices.StartPosition = FormStartPosition.CenterParent;
+
+                    frm_Main.Instance.CreateTabForForm(deletedInvoices, "Quản lý hóa đơn đã xóa");
+
+                    deletedInvoices.Show();
+                    deletedInvoices.Activate();
+                }
             }
-
-            Control uc = frm_Main.Instance.Controls["UC_DeletedInvoices"];
-            uc.Visible = true; // Đảm bảo hiển thị
-            uc.BringToFront();
         }
-
-
     }
 }

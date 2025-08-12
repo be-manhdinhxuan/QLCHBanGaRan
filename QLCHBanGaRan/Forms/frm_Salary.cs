@@ -1,4 +1,4 @@
-﻿using QLCHBanGaRan.UCFunction;
+﻿
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -26,36 +26,76 @@ namespace QLCHBanGaRan.Forms
                 MessageBox.Show("Bạn không có quyền truy cập chức năng này!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            if (!frm_Main.Instance.Controls.ContainsKey("UC_SalaryManager"))
+
+            if (frm_Main.Instance != null)
             {
-                UC_SalaryManager salaryManager = new UC_SalaryManager();
-                salaryManager.Dock = DockStyle.Fill;
-                frm_Main.Instance.Controls.Add(salaryManager);
+                bool salaryManagerFound = false;
+                foreach (Form child in frm_Main.Instance.MdiChildren)
+                {
+                    if (child is frm_SalaryManager)
+                    {
+                        child.BringToFront();
+                        child.Activate();
+                        salaryManagerFound = true;
+                        break;
+                    }
+                }
+
+                if (!salaryManagerFound)
+                {
+                    frm_SalaryManager salaryManager = new frm_SalaryManager();
+                    salaryManager.MdiParent = frm_Main.Instance;
+                    salaryManager.Text = "Quản lý chức danh";
+                    salaryManager.WindowState = FormWindowState.Normal;
+                    salaryManager.Size = new Size(1000, 750);
+                    salaryManager.StartPosition = FormStartPosition.CenterParent;
+
+                    frm_Main.Instance.CreateTabForForm(salaryManager, "Quản lý chức danh");
+
+                    salaryManager.Show();
+                    salaryManager.Activate();
+                }
             }
-            frm_Main.Instance.Controls["UC_SalaryManager"].BringToFront();
         }
 
         private void btnChamCong_Click(object sender, EventArgs e)
         {
-            string controlName = "UC_TimeSheetEmployee";
-
-            // Giả định frm_Main có thuộc tính CurrentMaND để truyền vào UC_TimeSheetEmployee
-            string maND = frm_Main.Instance.CurrentMaND; // Điều chỉnh nguồn maND nếu khác
+            string maND = frm_Main.Instance.CurrentMaND;
             if (string.IsNullOrEmpty(maND))
             {
                 MessageBox.Show("Vui lòng đăng nhập để sử dụng chức năng chấm công.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            if (!frm_Main.Instance.Controls.ContainsKey(controlName))
+            if (frm_Main.Instance != null)
             {
-                UC_TimeSheetEmployee timeSheetEmployee = new UC_TimeSheetEmployee(maND); // Truyền maND
-                timeSheetEmployee.Name = controlName;
-                timeSheetEmployee.Dock = DockStyle.Fill;
-                frm_Main.Instance.Controls.Add(timeSheetEmployee);
-            }
+                bool timeSheetEmployeeFound = false;
+                foreach (Form child in frm_Main.Instance.MdiChildren)
+                {
+                    if (child is frm_TimeSheetEmployee)
+                    {
+                        child.BringToFront();
+                        child.Activate();
+                        timeSheetEmployeeFound = true;
+                        break;
+                    }
+                }
 
-            frm_Main.Instance.Controls[controlName].BringToFront();
+                if (!timeSheetEmployeeFound)
+                {
+                    frm_TimeSheetEmployee timeSheetEmployee = new frm_TimeSheetEmployee(maND);
+                    timeSheetEmployee.MdiParent = frm_Main.Instance;
+                    timeSheetEmployee.Text = "Chấm công";
+                    timeSheetEmployee.WindowState = FormWindowState.Normal;
+                    timeSheetEmployee.Size = new Size(1000, 750);
+                    timeSheetEmployee.StartPosition = FormStartPosition.CenterParent;
+
+                    frm_Main.Instance.CreateTabForForm(timeSheetEmployee, "Chấm công");
+
+                    timeSheetEmployee.Show();
+                    timeSheetEmployee.Activate();
+                }
+            }
         }
 
         private void UC_Salary_Load(object sender, EventArgs e)
@@ -66,7 +106,6 @@ namespace QLCHBanGaRan.Forms
 
         private void btnThongKeChamCong_Click(object sender, EventArgs e)
         {
-            string controlName = "UC_TimeSheetManager";
             bool isAdmin = QLCHBanGaRan.lib.cls_EmployeeManagement.CheckPermission(QLCHBanGaRan.Forms.frm_Main.NguoiDungID);
             if (!isAdmin)
             {
@@ -74,15 +113,35 @@ namespace QLCHBanGaRan.Forms
                 return;
             }
 
-            if (!frm_Main.Instance.Controls.ContainsKey(controlName))
+            if (frm_Main.Instance != null)
             {
-                UC_TimeSheetManager timeSheetManager = new UC_TimeSheetManager(); // Truyền maND
-                timeSheetManager.Name = controlName;
-                timeSheetManager.Dock = DockStyle.Fill;
-                frm_Main.Instance.Controls.Add(timeSheetManager);
-            }
+                bool timeSheetManagerFound = false;
+                foreach (Form child in frm_Main.Instance.MdiChildren)
+                {
+                    if (child is frm_TimeSheetManager)
+                    {
+                        child.BringToFront();
+                        child.Activate();
+                        timeSheetManagerFound = true;
+                        break;
+                    }
+                }
 
-            frm_Main.Instance.Controls[controlName].BringToFront();
+                if (!timeSheetManagerFound)
+                {
+                    frm_TimeSheetManager timeSheetManager = new frm_TimeSheetManager();
+                    timeSheetManager.MdiParent = frm_Main.Instance;
+                    timeSheetManager.Text = "Thống kê chấm công";
+                    timeSheetManager.WindowState = FormWindowState.Normal;
+                    timeSheetManager.Size = new Size(1000, 750);
+                    timeSheetManager.StartPosition = FormStartPosition.CenterParent;
+
+                    frm_Main.Instance.CreateTabForForm(timeSheetManager, "Thống kê chấm công");
+
+                    timeSheetManager.Show();
+                    timeSheetManager.Activate();
+                }
+            }
         }
     }
 }

@@ -120,6 +120,48 @@
     <Compile Include="Forms\frm_Connect.Designer.cs">
       <DependentUpon>frm_Connect.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\frm_DeletedEmployees.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frm_DeletedEmployees.Designer.cs">
+      <DependentUpon>frm_DeletedEmployees.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frm_DeletedInvoices.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frm_DeletedInvoices.Designer.cs">
+      <DependentUpon>frm_DeletedInvoices.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frm_DeletedPositions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frm_DeletedPositions.Designer.cs">
+      <DependentUpon>frm_DeletedPositions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frm_DeletedProducts.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frm_DeletedProducts.Designer.cs">
+      <DependentUpon>frm_DeletedProducts.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frm_DeletedSuppliers.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frm_DeletedSuppliers.Designer.cs">
+      <DependentUpon>frm_DeletedSuppliers.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frm_DrinkManager.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frm_DrinkManager.Designer.cs">
+      <DependentUpon>frm_DrinkManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frm_FoodManager.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frm_FoodManager.Designer.cs">
+      <DependentUpon>frm_FoodManager.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\frm_Home.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -144,6 +186,12 @@
     <Compile Include="Forms\frm_Main.Designer.cs">
       <DependentUpon>frm_Main.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\frm_NCCManager.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frm_NCCManager.Designer.cs">
+      <DependentUpon>frm_NCCManager.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\frm_Noti.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -162,6 +210,12 @@
     <Compile Include="Forms\frm_Personnel.Designer.cs">
       <DependentUpon>frm_Personnel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\frm_PersonnelManager.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frm_PersonnelManager.Designer.cs">
+      <DependentUpon>frm_PersonnelManager.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\frm_PrintInvoice.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -174,17 +228,71 @@
     <Compile Include="Forms\frm_Product.Designer.cs">
       <DependentUpon>frm_Product.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\frm_ProfilePersonnelManager.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frm_ProfilePersonnelManager.Designer.cs">
+      <DependentUpon>frm_ProfilePersonnelManager.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\frm_Report.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\frm_Report.Designer.cs">
       <DependentUpon>frm_Report.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\frm_RpInvoiceDetails.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frm_RpInvoiceDetails.Designer.cs">
+      <DependentUpon>frm_RpInvoiceDetails.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frm_RpProductInventory.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frm_RpProductInventory.Designer.cs">
+      <DependentUpon>frm_RpProductInventory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frm_RpProductSold.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frm_RpProductSold.Designer.cs">
+      <DependentUpon>frm_RpProductSold.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frm_RpProfileAllEmployess.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frm_RpProfileAllEmployess.Designer.cs">
+      <DependentUpon>frm_RpProfileAllEmployess.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frm_RpRevenue.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frm_RpRevenue.Designer.cs">
+      <DependentUpon>frm_RpRevenue.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frm_RpSalary.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frm_RpSalary.Designer.cs">
+      <DependentUpon>frm_RpSalary.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frm_RpTimeSheet.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frm_RpTimeSheet.Designer.cs">
+      <DependentUpon>frm_RpTimeSheet.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\frm_Salary.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\frm_Salary.Designer.cs">
       <DependentUpon>frm_Salary.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frm_SalaryManager.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frm_SalaryManager.Designer.cs">
+      <DependentUpon>frm_SalaryManager.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\frm_Splash.cs">
       <SubType>Form</SubType>
@@ -197,6 +305,30 @@
     </Compile>
     <Compile Include="Forms\frm_System.Designer.cs">
       <DependentUpon>frm_System.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frm_TimeSheetEmployee.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frm_TimeSheetEmployee.Designer.cs">
+      <DependentUpon>frm_TimeSheetEmployee.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frm_TimeSheetManager.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frm_TimeSheetManager.Designer.cs">
+      <DependentUpon>frm_TimeSheetManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frm_RpProduct.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frm_RpProduct.Designer.cs">
+      <DependentUpon>frm_RpProduct.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frm_UserManager.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frm_UserManager.Designer.cs">
+      <DependentUpon>frm_UserManager.cs</DependentUpon>
     </Compile>
     <Compile Include="lib\cls_DatabaseManager.cs" />
     <Compile Include="lib\cls_EmployeeManagement.cs" />
@@ -268,190 +400,6 @@
       <DependentUpon>rp_TimeSheet.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="UCFunction\UC_DeletedEmployees.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UCFunction\UC_DeletedEmployees.Designer.cs">
-      <DependentUpon>UC_DeletedEmployees.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UCFunction\UC_DeletedInvoices.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UCFunction\UC_DeletedInvoices.Designer.cs">
-      <DependentUpon>UC_DeletedInvoices.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UCFunction\UC_DeletedPositions.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UCFunction\UC_DeletedPositions.Designer.cs">
-      <DependentUpon>UC_DeletedPositions.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UCFunction\UC_DeletedProducts.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UCFunction\UC_DeletedProducts.Designer.cs">
-      <DependentUpon>UC_DeletedProducts.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UCFunction\UC_DeletedSuppliers.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UCFunction\UC_DeletedSuppliers.Designer.cs">
-      <DependentUpon>UC_DeletedSuppliers.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UCFunction\UC_DrinkManager.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UCFunction\UC_DrinkManager.Designer.cs">
-      <DependentUpon>UC_DrinkManager.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UCFunction\UC_FoodManager.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UCFunction\UC_FoodManager.Designer.cs">
-      <DependentUpon>UC_FoodManager.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UCFunction\UC_InvoiceDetails.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UCFunction\UC_InvoiceDetails.Designer.cs">
-      <DependentUpon>UC_InvoiceDetails.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UCFunction\UC_NCCManager.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UCFunction\UC_NCCManager.Designer.cs">
-      <DependentUpon>UC_NCCManager.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UCFunction\UC_PersonnelManager.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UCFunction\UC_PersonnelManager.Designer.cs">
-      <DependentUpon>UC_PersonnelManager.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UCFunction\UC_ProfilePersonnelManager.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UCFunction\UC_ProfilePersonnelManager.Designer.cs">
-      <DependentUpon>UC_ProfilePersonnelManager.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UCFunction\UC_RpProduct.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UCFunction\UC_RpProduct.Designer.cs">
-      <DependentUpon>UC_RpProduct.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UCFunction\UC_RpProductInventory.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UCFunction\UC_RpProductInventory.Designer.cs">
-      <DependentUpon>UC_RpProductInventory.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UCFunction\UC_RpProductSold.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UCFunction\UC_RpProductSold.Designer.cs">
-      <DependentUpon>UC_RpProductSold.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UCFunction\UC_RpProfileAllEmployess.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UCFunction\UC_RpProfileAllEmployess.Designer.cs">
-      <DependentUpon>UC_RpProfileAllEmployess.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UCFunction\UC_RpTimeSheet.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UCFunction\UC_RpTimeSheet.Designer.cs">
-      <DependentUpon>UC_RpTimeSheet.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UCFunction\UC_RpRevenue.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UCFunction\UC_RpRevenue.Designer.cs">
-      <DependentUpon>UC_RpRevenue.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UCFunction\UC_RpSalary.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UCFunction\UC_RpSalary.Designer.cs">
-      <DependentUpon>UC_RpSalary.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UCFunction\UC_SalaryManager.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UCFunction\UC_SalaryManager.Designer.cs">
-      <DependentUpon>UC_SalaryManager.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UCFunction\UC_TimeSheetEmployee.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UCFunction\UC_TimeSheetEmployee.Designer.cs">
-      <DependentUpon>UC_TimeSheetEmployee.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UCFunction\UC_TimeSheetManager.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UCFunction\UC_TimeSheetManager.Designer.cs">
-      <DependentUpon>UC_TimeSheetManager.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UCFunction\UC_UserManager.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UCFunction\UC_UserManager.Designer.cs">
-      <DependentUpon>UC_UserManager.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UCSystems\UC_Category.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UCSystems\UC_Category.Designer.cs">
-      <DependentUpon>UC_Category.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UCSystems\UC_Home.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UCSystems\UC_Home.Designer.cs">
-      <DependentUpon>UC_Home.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UCSystems\UC_Noti.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UCSystems\UC_Noti.Designer.cs">
-      <DependentUpon>UC_Noti.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UCSystems\UC_Order.cs" />
-    <Compile Include="UCSystems\UC_Order.Designer.cs">
-      <DependentUpon>UC_Order.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UCSystems\UC_Personnel.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UCSystems\UC_Personnel.Designer.cs">
-      <DependentUpon>UC_Personnel.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UCSystems\UC_Product.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UCSystems\UC_Product.Designer.cs">
-      <DependentUpon>UC_Product.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UCSystems\UC_Report.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UCSystems\UC_Report.Designer.cs">
-      <DependentUpon>UC_Report.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UCSystems\UC_Salary.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UCSystems\UC_Salary.Designer.cs">
-      <DependentUpon>UC_Salary.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UCSystems\UC_System.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UCSystems\UC_System.Designer.cs">
-      <DependentUpon>UC_System.cs</DependentUpon>
-    </Compile>
     <Compile Include="Utilities\DatabaseHelper.cs" />
     <Compile Include="Utilities\LoadingAnimation.cs" />
     <Compile Include="Utilities\LoadingOverlay.cs">
@@ -463,6 +411,30 @@
     <EmbeddedResource Include="Forms\frm_Category.resx">
       <DependentUpon>frm_Category.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frm_DeletedEmployees.resx">
+      <DependentUpon>frm_DeletedEmployees.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frm_DeletedInvoices.resx">
+      <DependentUpon>frm_DeletedInvoices.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frm_DeletedPositions.resx">
+      <DependentUpon>frm_DeletedPositions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frm_DeletedProducts.resx">
+      <DependentUpon>frm_DeletedProducts.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frm_DeletedSuppliers.resx">
+      <DependentUpon>frm_DeletedSuppliers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frm_DrinkManager.resx">
+      <DependentUpon>frm_DrinkManager.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frm_FoodManager.resx">
+      <DependentUpon>frm_FoodManager.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frm_Home.resx">
+      <DependentUpon>frm_Home.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frm_InvoiceDetails.resx">
       <DependentUpon>frm_InvoiceDetails.cs</DependentUpon>
     </EmbeddedResource>
@@ -472,11 +444,17 @@
     <EmbeddedResource Include="Forms\frm_Main.resx">
       <DependentUpon>frm_Main.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frm_NCCManager.resx">
+      <DependentUpon>frm_NCCManager.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frm_Order.resx">
       <DependentUpon>frm_Order.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frm_Personnel.resx">
       <DependentUpon>frm_Personnel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frm_PersonnelManager.resx">
+      <DependentUpon>frm_PersonnelManager.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frm_PrintInvoice.resx">
       <DependentUpon>frm_PrintInvoice.cs</DependentUpon>
@@ -484,14 +462,53 @@
     <EmbeddedResource Include="Forms\frm_Product.resx">
       <DependentUpon>frm_Product.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frm_ProfilePersonnelManager.resx">
+      <DependentUpon>frm_ProfilePersonnelManager.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frm_Report.resx">
       <DependentUpon>frm_Report.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frm_RpInvoiceDetails.resx">
+      <DependentUpon>frm_RpInvoiceDetails.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frm_RpProduct.resx">
+      <DependentUpon>frm_RpProduct.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frm_RpProductInventory.resx">
+      <DependentUpon>frm_RpProductInventory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frm_RpProductSold.resx">
+      <DependentUpon>frm_RpProductSold.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frm_RpProfileAllEmployess.resx">
+      <DependentUpon>frm_RpProfileAllEmployess.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frm_RpRevenue.resx">
+      <DependentUpon>frm_RpRevenue.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frm_RpSalary.resx">
+      <DependentUpon>frm_RpSalary.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frm_RpTimeSheet.resx">
+      <DependentUpon>frm_RpTimeSheet.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frm_Salary.resx">
       <DependentUpon>frm_Salary.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frm_SalaryManager.resx">
+      <DependentUpon>frm_SalaryManager.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frm_System.resx">
       <DependentUpon>frm_System.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frm_TimeSheetEmployee.resx">
+      <DependentUpon>frm_TimeSheetEmployee.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frm_TimeSheetManager.resx">
+      <DependentUpon>frm_TimeSheetManager.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frm_UserManager.resx">
+      <DependentUpon>frm_UserManager.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -542,87 +559,6 @@
     <EmbeddedResource Include="Report\rp_TimeSheet.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>rp_TimeSheet.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UCFunction\UC_DeletedEmployees.resx">
-      <DependentUpon>UC_DeletedEmployees.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UCFunction\UC_DeletedPositions.resx">
-      <DependentUpon>UC_DeletedPositions.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UCFunction\UC_DeletedProducts.resx">
-      <DependentUpon>UC_DeletedProducts.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UCFunction\UC_DeletedSuppliers.resx">
-      <DependentUpon>UC_DeletedSuppliers.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UCFunction\UC_DrinkManager.resx">
-      <DependentUpon>UC_DrinkManager.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UCFunction\UC_FoodManager.resx">
-      <DependentUpon>UC_FoodManager.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UCFunction\UC_InvoiceDetails.resx">
-      <DependentUpon>UC_InvoiceDetails.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UCFunction\UC_NCCManager.resx">
-      <DependentUpon>UC_NCCManager.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UCFunction\UC_PersonnelManager.resx">
-      <DependentUpon>UC_PersonnelManager.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UCFunction\UC_ProfilePersonnelManager.resx">
-      <DependentUpon>UC_ProfilePersonnelManager.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UCFunction\UC_RpProductSold.resx">
-      <DependentUpon>UC_RpProductSold.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UCFunction\UC_RpProfileAllEmployess.resx">
-      <DependentUpon>UC_RpProfileAllEmployess.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UCFunction\UC_RpTimeSheet.resx">
-      <DependentUpon>UC_RpTimeSheet.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UCFunction\UC_RpRevenue.resx">
-      <DependentUpon>UC_RpRevenue.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UCFunction\UC_RpSalary.resx">
-      <DependentUpon>UC_RpSalary.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UCFunction\UC_SalaryManager.resx">
-      <DependentUpon>UC_SalaryManager.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UCFunction\UC_TimeSheetEmployee.resx">
-      <DependentUpon>UC_TimeSheetEmployee.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UCFunction\UC_TimeSheetManager.resx">
-      <DependentUpon>UC_TimeSheetManager.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UCFunction\UC_UserManager.resx">
-      <DependentUpon>UC_UserManager.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UCSystems\UC_Category.resx">
-      <DependentUpon>UC_Category.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UCSystems\UC_Home.resx">
-      <DependentUpon>UC_Home.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UCSystems\UC_Order.resx">
-      <DependentUpon>UC_Order.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UCSystems\UC_Personnel.resx">
-      <DependentUpon>UC_Personnel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UCSystems\UC_Product.resx">
-      <DependentUpon>UC_Product.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UCSystems\UC_Report.resx">
-      <DependentUpon>UC_Report.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UCSystems\UC_Salary.resx">
-      <DependentUpon>UC_Salary.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UCSystems\UC_System.resx">
-      <DependentUpon>UC_System.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="config.env">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

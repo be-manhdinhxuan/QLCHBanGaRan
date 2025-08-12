@@ -1,5 +1,4 @@
-﻿using QLCHBanGaRan.UCFunction;
-using QLCHBanGaRan.UCSystems;
+﻿
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
@@ -199,7 +198,7 @@ namespace QLCHBanGaRan.Forms
             productForm.Activate();
             productForm.BringToFront();
 
-            if (productForm.Controls[0] is UC_Product productControl && productControl.Controls[0] is UC_FoodManager foodManager)
+            if (productForm.Controls[0] is frm_Product productControl && productControl.Controls[0] is frm_FoodManager foodManager)
                 foodManager.ProductAdded += FoodManager_ProductAdded;
         }
 
@@ -677,7 +676,7 @@ namespace QLCHBanGaRan.Forms
         {
             foreach (Form form in this.MdiChildren)
             {
-                if (form is frm_Order orderForm && orderForm.Controls[0] is UC_Order orderControl)
+                if (form is frm_Order orderForm && orderForm.Controls[0] is frm_Order orderControl)
                 {
                     orderControl.RefreshProductList();
                     break;
@@ -690,15 +689,29 @@ namespace QLCHBanGaRan.Forms
         /// </summary>
         /// <param name="form">Form cần tạo tab</param>
         /// <param name="title">Tiêu đề của tab</param>
-        private void CreateTabForForm(Form form, string title)
+        public void CreateTabForForm(Form form, string title)
         {
-            // Kiểm tra xem form đã có tab chưa
-            if (_formTabMapping.ContainsKey(form))
+            if (form == null || tabControlMain == null)
             {
+                Console.WriteLine("Error: Form or tabControlMain is null.");
                 return;
             }
 
-            // Tạo tab mới
+            // Kiểm tra và cập nhật tab hiện có
+            if (_formTabMapping.ContainsKey(form))
+            {
+                TabPage existingTab = _formTabMapping[form];
+                if (existingTab.Text != title) // Cập nhật tiêu đề nếu khác
+                {
+                    existingTab.Text = title;
+                    Console.WriteLine($"Tab updated for {title}: {existingTab.Text}");
+                }
+                tabControlMain.SelectedTab = existingTab; // Đưa tab lên trước
+                form.Activate(); // Đảm bảo form được kích hoạt
+                return;
+            }
+
+            // Tạo tab mới nếu chưa tồn tại
             TabPage newTab = new TabPage(title);
             newTab.Tag = form; // Lưu reference đến form
 
@@ -710,12 +723,13 @@ namespace QLCHBanGaRan.Forms
 
             // Chọn tab mới
             tabControlMain.SelectedTab = newTab;
+            form.Activate(); // Đảm bảo form được hiển thị
 
             // Đăng ký event khi form đóng
             form.FormClosed += (s, e) => RemoveTabForForm(form);
 
             // Debug
-            Console.WriteLine($"Tab created for {title}: {newTab.Text}");
+            Console.WriteLine($"Tab created for {title}: {newTab.Text}, MdiChildren count: {this.MdiChildren.Length}");
         }
 
         /// <summary>
@@ -729,9 +743,7 @@ namespace QLCHBanGaRan.Forms
                 TabPage tabToRemove = _formTabMapping[form];
                 tabControlMain.TabPages.Remove(tabToRemove);
                 _formTabMapping.Remove(form);
-
-                // Debug
-                Console.WriteLine($"Tab removed for {form.Text}");
+                Console.WriteLine($"Tab removed for {form.Text}, Remaining tabs: {tabControlMain.TabCount}");
             }
         }
 
