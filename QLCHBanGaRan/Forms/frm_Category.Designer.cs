@@ -46,9 +46,9 @@
             this.grpDeletedSuppliers.SuspendLayout();
             this.grpDeletedProducts.SuspendLayout();
             this.SuspendLayout();
-            // 
+            //
             // grpDeletedRecords
-            // 
+            //
             this.grpDeletedRecords.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.grpDeletedRecords.BackColor = System.Drawing.Color.Transparent;
             this.grpDeletedRecords.Controls.Add(this.grpDeletedInvoices);
@@ -64,9 +64,9 @@
             this.grpDeletedRecords.TabIndex = 7;
             this.grpDeletedRecords.TabStop = false;
             this.grpDeletedRecords.Text = "Quản lý bản ghi đã xóa";
-            // 
+            //
             // grpDeletedInvoices
-            // 
+            //
             this.grpDeletedInvoices.Controls.Add(this.btnManageDeletedInvoices);
             this.grpDeletedInvoices.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.grpDeletedInvoices.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(0)))), ((int)(((byte)(42)))));
@@ -76,9 +76,9 @@
             this.grpDeletedInvoices.TabIndex = 8;
             this.grpDeletedInvoices.TabStop = false;
             this.grpDeletedInvoices.Text = "Hóa đơn";
-            // 
+            //
             // btnManageDeletedInvoices
-            // 
+            //
             this.btnManageDeletedInvoices.BackgroundImage = global::QLCHBanGaRan.Properties.Resources.invoice_del;
             this.btnManageDeletedInvoices.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnManageDeletedInvoices.Location = new System.Drawing.Point(32, 24);
@@ -87,9 +87,9 @@
             this.btnManageDeletedInvoices.TabIndex = 0;
             this.btnManageDeletedInvoices.UseVisualStyleBackColor = true;
             this.btnManageDeletedInvoices.Click += new System.EventHandler(this.btnManageDeletedInvoices_Click);
-            // 
+            //
             // grpDeletedPositions
-            // 
+            //
             this.grpDeletedPositions.Controls.Add(this.btnManageDeletedPositions);
             this.grpDeletedPositions.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.grpDeletedPositions.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(0)))), ((int)(((byte)(42)))));
@@ -99,9 +99,9 @@
             this.grpDeletedPositions.TabIndex = 7;
             this.grpDeletedPositions.TabStop = false;
             this.grpDeletedPositions.Text = "Chức danh";
-            // 
+            //
             // btnManageDeletedPositions
-            // 
+            //
             this.btnManageDeletedPositions.BackgroundImage = global::QLCHBanGaRan.Properties.Resources.position_del;
             this.btnManageDeletedPositions.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnManageDeletedPositions.Location = new System.Drawing.Point(33, 26);
@@ -110,9 +110,9 @@
             this.btnManageDeletedPositions.TabIndex = 0;
             this.btnManageDeletedPositions.UseVisualStyleBackColor = true;
             this.btnManageDeletedPositions.Click += new System.EventHandler(this.btnManageDeletedPositions_Click);
-            // 
+            //
             // grpDeletedEmployees
-            // 
+            //
             this.grpDeletedEmployees.Controls.Add(this.btnManageDeletedEmployees);
             this.grpDeletedEmployees.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.grpDeletedEmployees.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(0)))), ((int)(((byte)(42)))));
@@ -122,9 +122,9 @@
             this.grpDeletedEmployees.TabIndex = 6;
             this.grpDeletedEmployees.TabStop = false;
             this.grpDeletedEmployees.Text = "Nhân viên";
-            // 
+            //
             // btnManageDeletedEmployees
-            // 
+            //
             this.btnManageDeletedEmployees.BackgroundImage = global::QLCHBanGaRan.Properties.Resources.employee_del;
             this.btnManageDeletedEmployees.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnManageDeletedEmployees.Location = new System.Drawing.Point(28, 30);
@@ -133,9 +133,9 @@
             this.btnManageDeletedEmployees.TabIndex = 0;
             this.btnManageDeletedEmployees.UseVisualStyleBackColor = true;
             this.btnManageDeletedEmployees.Click += new System.EventHandler(this.btnManageDeletedEmployees_Click);
-            // 
+            //
             // grpDeletedSuppliers
-            // 
+            //
             this.grpDeletedSuppliers.Controls.Add(this.btnManageDeletedSuppliers);
             this.grpDeletedSuppliers.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.grpDeletedSuppliers.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(0)))), ((int)(((byte)(42)))));
@@ -145,9 +145,9 @@
             this.grpDeletedSuppliers.TabIndex = 5;
             this.grpDeletedSuppliers.TabStop = false;
             this.grpDeletedSuppliers.Text = "Nhà cung cấp";
-            // 
+            //
             // btnManageDeletedSuppliers
-            // 
+            //
             this.btnManageDeletedSuppliers.BackgroundImage = global::QLCHBanGaRan.Properties.Resources.supplier_del;
             this.btnManageDeletedSuppliers.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnManageDeletedSuppliers.Location = new System.Drawing.Point(32, 30);
@@ -156,9 +156,9 @@
             this.btnManageDeletedSuppliers.TabIndex = 0;
             this.btnManageDeletedSuppliers.UseVisualStyleBackColor = true;
             this.btnManageDeletedSuppliers.Click += new System.EventHandler(this.btnManageDeletedSuppliers_Click);
-            // 
+            //
             // grpDeletedProducts
-            // 
+            //
             this.grpDeletedProducts.Controls.Add(this.btnManageDeletedProducts);
             this.grpDeletedProducts.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.grpDeletedProducts.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(0)))), ((int)(((byte)(42)))));
@@ -168,9 +168,9 @@
             this.grpDeletedProducts.TabIndex = 4;
             this.grpDeletedProducts.TabStop = false;
             this.grpDeletedProducts.Text = "Sản phẩm";
-            // 
+            //
             // btnManageDeletedProducts
-            // 
+            //
             this.btnManageDeletedProducts.BackgroundImage = global::QLCHBanGaRan.Properties.Resources.product_del;
             this.btnManageDeletedProducts.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnManageDeletedProducts.Location = new System.Drawing.Point(29, 30);
@@ -179,14 +179,14 @@
             this.btnManageDeletedProducts.TabIndex = 0;
             this.btnManageDeletedProducts.UseVisualStyleBackColor = true;
             this.btnManageDeletedProducts.Click += new System.EventHandler(this.btnManageDeletedProducts_Click);
-            // 
-            // UC_Category
+            //
+            //
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.Controls.Add(this.grpDeletedRecords);
-            this.Name = "UC_Category";
+            this.Name = "frm_Category";
             this.Size = new System.Drawing.Size(893, 619);
             this.grpDeletedRecords.ResumeLayout(false);
             this.grpDeletedInvoices.ResumeLayout(false);

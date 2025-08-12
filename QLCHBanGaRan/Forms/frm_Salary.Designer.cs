@@ -40,9 +40,9 @@
             this.grpChamCong.SuspendLayout();
             this.grpQuanLyChucDanh.SuspendLayout();
             this.SuspendLayout();
-            // 
+            //
             // grpQuanLyLuong
-            // 
+            //
             this.grpQuanLyLuong.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.grpQuanLyLuong.BackColor = System.Drawing.Color.Transparent;
             this.grpQuanLyLuong.Controls.Add(this.grpThongKeChamCong);
@@ -56,9 +56,9 @@
             this.grpQuanLyLuong.TabIndex = 7;
             this.grpQuanLyLuong.TabStop = false;
             this.grpQuanLyLuong.Text = "Quản lý lương";
-            // 
+            //
             // grpThongKeChamCong
-            // 
+            //
             this.grpThongKeChamCong.Controls.Add(this.btnThongKeChamCong);
             this.grpThongKeChamCong.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.grpThongKeChamCong.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(0)))), ((int)(((byte)(42)))));
@@ -68,9 +68,9 @@
             this.grpThongKeChamCong.TabIndex = 3;
             this.grpThongKeChamCong.TabStop = false;
             this.grpThongKeChamCong.Text = "Thống kê chấm công";
-            // 
+            //
             // btnThongKeChamCong
-            // 
+            //
             this.btnThongKeChamCong.BackgroundImage = global::QLCHBanGaRan.Properties.Resources.statistics_cc;
             this.btnThongKeChamCong.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnThongKeChamCong.Location = new System.Drawing.Point(35, 28);
@@ -79,9 +79,9 @@
             this.btnThongKeChamCong.TabIndex = 0;
             this.btnThongKeChamCong.UseVisualStyleBackColor = true;
             this.btnThongKeChamCong.Click += new System.EventHandler(this.btnThongKeChamCong_Click);
-            // 
+            //
             // grpChamCong
-            // 
+            //
             this.grpChamCong.Controls.Add(this.btnChamCong);
             this.grpChamCong.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.grpChamCong.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(0)))), ((int)(((byte)(42)))));
@@ -91,9 +91,9 @@
             this.grpChamCong.TabIndex = 2;
             this.grpChamCong.TabStop = false;
             this.grpChamCong.Text = "Chấm công";
-            // 
+            //
             // btnChamCong
-            // 
+            //
             this.btnChamCong.BackgroundImage = global::QLCHBanGaRan.Properties.Resources.planner_120px;
             this.btnChamCong.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnChamCong.Location = new System.Drawing.Point(35, 28);
@@ -102,9 +102,9 @@
             this.btnChamCong.TabIndex = 0;
             this.btnChamCong.UseVisualStyleBackColor = true;
             this.btnChamCong.Click += new System.EventHandler(this.btnChamCong_Click);
-            // 
+            //
             // grpQuanLyChucDanh
-            // 
+            //
             this.grpQuanLyChucDanh.Controls.Add(this.btnQuanLyChucDanh);
             this.grpQuanLyChucDanh.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.grpQuanLyChucDanh.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(0)))), ((int)(((byte)(42)))));
@@ -114,9 +114,9 @@
             this.grpQuanLyChucDanh.TabIndex = 0;
             this.grpQuanLyChucDanh.TabStop = false;
             this.grpQuanLyChucDanh.Text = "Quản lý lương chức danh";
-            // 
+            //
             // btnQuanLyChucDanh
-            // 
+            //
             this.btnQuanLyChucDanh.BackgroundImage = global::QLCHBanGaRan.Properties.Resources.salary_manager_120px;
             this.btnQuanLyChucDanh.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnQuanLyChucDanh.Location = new System.Drawing.Point(35, 28);
@@ -125,14 +125,14 @@
             this.btnQuanLyChucDanh.TabIndex = 0;
             this.btnQuanLyChucDanh.UseVisualStyleBackColor = true;
             this.btnQuanLyChucDanh.Click += new System.EventHandler(this.btnQuanLyChucDanh_Click);
-            // 
-            // UC_Salary
-            // 
+            //
+            //
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.Controls.Add(this.grpQuanLyLuong);
-            this.Name = "UC_Salary";
+            this.Name = "frm_Salary";
             this.Size = new System.Drawing.Size(893, 619);
             this.grpQuanLyLuong.ResumeLayout(false);
             this.grpThongKeChamCong.ResumeLayout(false);

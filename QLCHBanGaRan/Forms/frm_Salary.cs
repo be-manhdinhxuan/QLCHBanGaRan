@@ -98,7 +98,7 @@ namespace QLCHBanGaRan.Forms
             }
         }
 
-        private void UC_Salary_Load(object sender, EventArgs e)
+        private void frm_Salary_Load(object sender, EventArgs e)
         {
             bool isAdmin = QLCHBanGaRan.lib.cls_EmployeeManagement.CheckPermission(QLCHBanGaRan.Forms.frm_Main.NguoiDungID);
             btnQuanLyChucDanh.Visible = isAdmin;

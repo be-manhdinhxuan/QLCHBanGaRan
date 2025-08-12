@@ -447,6 +447,9 @@
     <EmbeddedResource Include="Forms\frm_NCCManager.resx">
       <DependentUpon>frm_NCCManager.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frm_Noti.resx">
+      <DependentUpon>frm_Noti.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frm_Order.resx">
       <DependentUpon>frm_Order.cs</DependentUpon>
     </EmbeddedResource>

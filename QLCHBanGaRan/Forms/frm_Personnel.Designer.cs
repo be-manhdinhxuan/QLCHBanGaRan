@@ -37,9 +37,9 @@
             this.grpHoSoNhanVien.SuspendLayout();
             this.grpQuanLyNhanVien.SuspendLayout();
             this.SuspendLayout();
-            // 
+            //
             // grpQuanLyNhanSu
-            // 
+            //
             this.grpQuanLyNhanSu.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.grpQuanLyNhanSu.BackColor = System.Drawing.Color.Transparent;
             this.grpQuanLyNhanSu.Controls.Add(this.grpHoSoNhanVien);
@@ -52,9 +52,9 @@
             this.grpQuanLyNhanSu.TabIndex = 5;
             this.grpQuanLyNhanSu.TabStop = false;
             this.grpQuanLyNhanSu.Text = "Quản lý nhân sự";
-            // 
+            //
             // grpHoSoNhanVien
-            // 
+            //
             this.grpHoSoNhanVien.Controls.Add(this.btnHoSoNhanVien);
             this.grpHoSoNhanVien.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.grpHoSoNhanVien.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(0)))), ((int)(((byte)(42)))));
@@ -64,9 +64,9 @@
             this.grpHoSoNhanVien.TabIndex = 1;
             this.grpHoSoNhanVien.TabStop = false;
             this.grpHoSoNhanVien.Text = "Hồ sơ nhân viên";
-            // 
+            //
             // grpQuanLyNhanVien
-            // 
+            //
             this.grpQuanLyNhanVien.Controls.Add(this.btnQuanLyNhanVien);
             this.grpQuanLyNhanVien.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.grpQuanLyNhanVien.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(0)))), ((int)(((byte)(42)))));
@@ -76,9 +76,9 @@
             this.grpQuanLyNhanVien.TabIndex = 0;
             this.grpQuanLyNhanVien.TabStop = false;
             this.grpQuanLyNhanVien.Text = "Quản lý nhân viên";
-            // 
+            //
             // btnHoSoNhanVien
-            // 
+            //
             this.btnHoSoNhanVien.BackgroundImage = global::QLCHBanGaRan.Properties.Resources.resume_100px;
             this.btnHoSoNhanVien.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnHoSoNhanVien.Location = new System.Drawing.Point(35, 28);
@@ -87,9 +87,9 @@
             this.btnHoSoNhanVien.TabIndex = 0;
             this.btnHoSoNhanVien.UseVisualStyleBackColor = true;
             this.btnHoSoNhanVien.Click += new System.EventHandler(this.btnHoSoNhanVien_Click);
-            // 
+            //
             // btnQuanLyNhanVien
-            // 
+            //
             this.btnQuanLyNhanVien.BackgroundImage = global::QLCHBanGaRan.Properties.Resources.edit_user_100px;
             this.btnQuanLyNhanVien.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnQuanLyNhanVien.Location = new System.Drawing.Point(35, 28);
@@ -98,14 +98,14 @@
             this.btnQuanLyNhanVien.TabIndex = 0;
             this.btnQuanLyNhanVien.UseVisualStyleBackColor = true;
             this.btnQuanLyNhanVien.Click += new System.EventHandler(this.btnQuanLyNhanVien_Click);
-            // 
-            // UC_Personnel
-            // 
+            //
+            //
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.Controls.Add(this.grpQuanLyNhanSu);
-            this.Name = "UC_Personnel";
+            this.Name = "frm_Personnel";
             this.Size = new System.Drawing.Size(893, 619);
             this.grpQuanLyNhanSu.ResumeLayout(false);
             this.grpHoSoNhanVien.ResumeLayout(false);

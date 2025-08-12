@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
@@ -15,9 +14,8 @@ namespace QLCHBanGaRan.Forms
         bool checkPer;
 
         static frm_Main _obj;
-        // Gọi userControls (dùng tạm thời cho _Home hoặc _Noti, các form con sẽ thay thế)
+
         frm_Home _Home = new frm_Home();
-        frm_Noti _Noti = new frm_Noti();
 
         // Dictionary để theo dõi tab tương ứng với form MDI
         private Dictionary<Form, TabPage> _formTabMapping = new Dictionary<Form, TabPage>();
@@ -75,15 +73,13 @@ namespace QLCHBanGaRan.Forms
         {
             get
             {
-                if (_obj == null)
+                if (_obj == null || _obj.IsDisposed)
                 {
                     _obj = new frm_Main(NguoiDungID);
                 }
                 return _obj;
             }
         }
-
-
 
         // Di chuyển side menu
         private void moveSidePanel(Control btn)
@@ -94,7 +90,6 @@ namespace QLCHBanGaRan.Forms
 
         private void btnHome_Click(object sender, EventArgs e)
         {
-            // Sử dụng method chung để hiển thị frm_Home
             ShowHomeForm();
         }
 
@@ -157,8 +152,61 @@ namespace QLCHBanGaRan.Forms
             }
         }
 
+        private void btnTimeSheetEmployee_Click(object sender, EventArgs e)
+        {
+
+            // Kiểm tra xem đã có form TimeSheetEmployee nào đang mở chưa
+            foreach (Form child in this.MdiChildren)
+            {
+                if (child is frm_TimeSheetEmployee existingTimeSheetForm)
+                {
+                    existingTimeSheetForm.Activate();
+                    existingTimeSheetForm.BringToFront();
+                    existingTimeSheetForm.Refresh();
+
+                    // Chọn tab tương ứng
+                    if (_formTabMapping.ContainsKey(existingTimeSheetForm))
+                    {
+                        tabControlMain.SelectedTab = _formTabMapping[existingTimeSheetForm];
+                    }
+
+                    Console.WriteLine("Existing frm_TimeSheetEmployee activated and refreshed");
+                    return;
+                }
+            }
+
+            // Tạo form mới
+            frm_TimeSheetEmployee newTimeSheetForm = new frm_TimeSheetEmployee(NguoiDungID);
+            newTimeSheetForm.MdiParent = this;
+            newTimeSheetForm.Text = "Bảng chấm công";
+            newTimeSheetForm.WindowState = FormWindowState.Normal;
+
+            // Đặt kích thước form phù hợp với MDI container
+            newTimeSheetForm.Size = new Size(1000, 750);
+            newTimeSheetForm.StartPosition = FormStartPosition.CenterParent;
+
+            // Tạo tab cho form
+            CreateTabForForm(newTimeSheetForm, "Bảng chấm công");
+
+            // Đảm bảo form được hiển thị đúng cách trong MDI container
+            newTimeSheetForm.Show();
+            newTimeSheetForm.Activate();
+            newTimeSheetForm.BringToFront();
+            newTimeSheetForm.Refresh();
+
+            // Debug chi tiết
+            Console.WriteLine($"frm_TimeSheetEmployee created and shown: IsDisposed={newTimeSheetForm.IsDisposed}, Visible={newTimeSheetForm.Visible}, " +
+                              $"WindowState={newTimeSheetForm.WindowState}, Location={newTimeSheetForm.Location}, Size={newTimeSheetForm.Size}");
+        }
+
         private void btnProduct_Click(object sender, EventArgs e)
         {
+            if (!checkPer)
+            {
+                ShowNotificationForm();
+                return;
+            }
+
             moveSidePanel(btnProduct);
 
             // Ẩn _Home nếu đang hiển thị
@@ -204,6 +252,12 @@ namespace QLCHBanGaRan.Forms
 
         private void btnPersonnel_Click(object sender, EventArgs e)
         {
+            if (!checkPer)
+            {
+                ShowNotificationForm();
+                return;
+            }
+
             moveSidePanel(btnPersonnel);
 
             // Ẩn _Home nếu đang hiển thị
@@ -246,6 +300,12 @@ namespace QLCHBanGaRan.Forms
 
         private void btnSalary_Click(object sender, EventArgs e)
         {
+            if (!checkPer)
+            {
+                ShowNotificationForm();
+                return;
+            }
+
             moveSidePanel(btnSalary);
 
             // Ẩn _Home nếu đang hiển thị
@@ -288,6 +348,12 @@ namespace QLCHBanGaRan.Forms
 
         private void btnReport_Click(object sender, EventArgs e)
         {
+            if (!checkPer)
+            {
+                ShowNotificationForm();
+                return;
+            }
+
             moveSidePanel(btnReport);
 
             // Ẩn _Home nếu đang hiển thị
@@ -330,6 +396,12 @@ namespace QLCHBanGaRan.Forms
 
         private void btnCategory_Click(object sender, EventArgs e)
         {
+            if (!checkPer)
+            {
+                ShowNotificationForm();
+                return;
+            }
+
             moveSidePanel(btnCategory);
 
             // Ẩn _Home nếu đang hiển thị
@@ -372,6 +444,12 @@ namespace QLCHBanGaRan.Forms
 
         private void btnSystem_Click(object sender, EventArgs e)
         {
+            if (!checkPer)
+            {
+                ShowNotificationForm();
+                return;
+            }
+
             moveSidePanel(btnSystem);
 
             // Ẩn _Home nếu đang hiển thị
@@ -420,12 +498,12 @@ namespace QLCHBanGaRan.Forms
             {
                 NguoiDungID = null;
                 CurrentMaND = null;
-                this.Hide();
+                this.Hide(); // Ẩn thay vì đóng ngay
                 using (var loginForm = new frm_Login())
                 {
                     loginForm.ShowDialog();
+                    this.Close(); // Đóng frm_Main sau khi loginForm đóng
                 }
-                this.Close();
             }
         }
 
@@ -480,7 +558,6 @@ namespace QLCHBanGaRan.Forms
         private void _loadPermission()
         {
             checkPer = lib.cls_EmployeeManagement.CheckPermission(NguoiDungID);
-            
         }
 
         /// <summary>
@@ -577,7 +654,9 @@ namespace QLCHBanGaRan.Forms
 
         private void Frm_Main_FormClosing(object sender, FormClosingEventArgs e)
         {
-            // Xử lý khi người dùng đóng cửa sổ
+            // Debug: In lý do đóng
+            Console.WriteLine($"FormClosing triggered with CloseReason: {e.CloseReason}");
+
             if (e.CloseReason == CloseReason.UserClosing)
             {
                 var result = MessageBox.Show(
@@ -596,8 +675,6 @@ namespace QLCHBanGaRan.Forms
                 Application.Exit();
             }
         }
-
-
 
         [DllImport("user32.dll")]
         private static extern bool ReleaseCapture();
@@ -671,7 +748,6 @@ namespace QLCHBanGaRan.Forms
             }
         }
 
-        // Khi thêm món, cập nhật list ở UC_Order
         private void FoodManager_ProductAdded(object sender, EventArgs e)
         {
             foreach (Form form in this.MdiChildren)
@@ -757,22 +833,25 @@ namespace QLCHBanGaRan.Forms
             if (tabControlMain.SelectedTab != null && tabControlMain.SelectedTab.Tag is Form form)
             {
                 // Kích hoạt form tương ứng với tab được chọn
-                form.Activate();
-                form.BringToFront();
-                form.Refresh();
-
-                // Đảm bảo form được hiển thị trong vùng MDI
-                if (form.WindowState == FormWindowState.Minimized)
+                if (!form.IsDisposed) // Kiểm tra form không bị dispose
                 {
-                    form.WindowState = FormWindowState.Normal;
+                    form.Activate();
+                    form.BringToFront();
+                    form.Refresh();
+
+                    // Đảm bảo form được hiển thị trong vùng MDI
+                    if (form.WindowState == FormWindowState.Minimized)
+                    {
+                        form.WindowState = FormWindowState.Normal;
+                    }
+
+                    // Cập nhật text của form chính
+                    this.Text = form.Text;
+
+                    // Debug
+                    Console.WriteLine($"Tab selected: {tabControlMain.SelectedTab.Text}, Form activated: {form.Text}, " +
+                                      $"MdiChildren.Count={this.MdiChildren.Length}, Visible={form.Visible}, IsDisposed={form.IsDisposed}");
                 }
-
-                // Cập nhật text của form chính
-                this.Text = form.Text;
-
-                // Debug
-                Console.WriteLine($"Tab selected: {tabControlMain.SelectedTab.Text}, Form activated: {form.Text}, " +
-                                  $"MdiChildren.Count={this.MdiChildren.Length}, Visible={form.Visible}");
             }
         }
 
@@ -818,6 +897,50 @@ namespace QLCHBanGaRan.Forms
             // Debug
             Console.WriteLine($"frm_Home auto-displayed: IsDisposed={newHomeForm.IsDisposed}, Visible={newHomeForm.Visible}, " +
                               $"WindowState={newHomeForm.WindowState}, Location={newHomeForm.Location}, Size={newHomeForm.Size}");
+        }
+
+        /// <summary>
+        /// Hiển thị frm_Noti như một MDI child form
+        /// </summary>
+        private void ShowNotificationForm()
+        {
+            // Kiểm tra xem đã có frm_Noti nào đang mở chưa
+            foreach (Form child in this.MdiChildren)
+            {
+                if (child is frm_Noti existingNotiForm)
+                {
+                    existingNotiForm.Activate();
+                    existingNotiForm.BringToFront();
+                    existingNotiForm.Refresh();
+
+                    // Chọn tab tương ứng
+                    if (_formTabMapping.ContainsKey(existingNotiForm))
+                    {
+                        tabControlMain.SelectedTab = _formTabMapping[existingNotiForm];
+                    }
+                    return;
+                }
+            }
+
+            // Tạo và hiển thị frm_Noti mới nếu không có
+            frm_Noti notiForm = new frm_Noti();
+            notiForm.MdiParent = this;
+            notiForm.Text = "Thông báo";
+            notiForm.WindowState = FormWindowState.Normal;
+            notiForm.Size = new Size(900, 625); // Điều chỉnh kích thước phù hợp
+            notiForm.StartPosition = FormStartPosition.CenterParent;
+
+            // Tạo tab cho frm_Noti
+            CreateTabForForm(notiForm, "Thông báo");
+
+            notiForm.Show();
+            notiForm.Activate();
+            notiForm.BringToFront();
+            notiForm.Refresh();
+
+            // Debug
+            Console.WriteLine($"frm_Noti displayed: IsDisposed={notiForm.IsDisposed}, Visible={notiForm.Visible}, " +
+                              $"WindowState={notiForm.WindowState}, Location={notiForm.Location}, Size={notiForm.Size}");
         }
     }
 }

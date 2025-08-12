@@ -61,7 +61,7 @@ namespace QLCHBanGaRan.Forms
                 bool drinkManagerFound = false;
                 foreach (Form child in frm_Main.Instance.MdiChildren)
                 {
-                    if (child is frm_DrinkManager) // Giả định chuyển UC_DrinkManager thành frm_DrinkManager
+                    if (child is frm_DrinkManager)
                     {
                         child.BringToFront();
                         child.Activate();
@@ -94,7 +94,7 @@ namespace QLCHBanGaRan.Forms
                 bool nccManagerFound = false;
                 foreach (Form child in frm_Main.Instance.MdiChildren)
                 {
-                    if (child is frm_NCCManager) // Giả định chuyển UC_NCCManager thành frm_NCCManager
+                    if (child is frm_NCCManager)
                     {
                         child.BringToFront();
                         child.Activate();

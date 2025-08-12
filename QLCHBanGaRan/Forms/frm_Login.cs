@@ -9,10 +9,11 @@ namespace QLCHBanGaRan
 {
     public partial class frm_Login : Form
     {
-        // false = ẨN; true = HIỆN
         private bool _showPassword = false;
         private bool isLoginInProgress = false; // Cờ để ngăn chặn gọi lặp
         private bool isMessageShown = false;    // Cờ để ngăn thông báo lặp
+        private bool isDragging = false;
+        private Point lastCursorPosition;
 
         public frm_Login()
         {
@@ -22,15 +23,11 @@ namespace QLCHBanGaRan
             txtTenDangNhap.Text = "";
             txtPassword.Text = "";
 
-            // Không dùng HintText của MaterialTextbox (dùng label mờ)
-            txtTenDangNhap.HintText = "";
-            txtPassword.HintText = "";
-
-            // Label gợi ý (placeholder)
+            // Label gợi ý (placeholder) ban đầu
             lblHintUsername.ForeColor = Color.FromArgb(128, 64, 64, 64);
-            lblHintUsername.Enabled = false;
+            lblHintUsername.Visible = true; // Hiển thị ban đầu khi ô trống
             lblHintPassword.ForeColor = Color.FromArgb(128, 64, 64, 64);
-            lblHintPassword.Enabled = false;
+            lblHintPassword.Visible = true; // Hiển thị ban đầu khi ô trống
 
             // Icon mắt: cảm giác nút bấm + không bắt Tab
             picEyeToggle.TabStop = false;
@@ -41,35 +38,36 @@ namespace QLCHBanGaRan
             txtTenDangNhap.Enter += txtTenDangNhap_Enter;
             txtTenDangNhap.Leave += txtTenDangNhap_Leave;
             txtTenDangNhap.KeyPress += txtTenDangNhap_KeyPress;
-            //txtTenDangNhap.KeyDown += txtTenDangNhap_KeyDown;
+            txtTenDangNhap.KeyDown += txtTenDangNhap_KeyDown;
 
             txtPassword.Enter += txtPassword_Enter;
             txtPassword.Leave += txtPassword_Leave;
             txtPassword.KeyPress += txtPassword_KeyPress;
-            //txtPassword.KeyDown += txtPassword_KeyDown;
+            txtPassword.KeyDown += txtPassword_KeyDown;
 
             // “Nhấn-giữ để xem” (ổn định hơn Click)
             picEyeToggle.MouseDown += picEyeToggle_MouseDown;
             picEyeToggle.MouseUp += picEyeToggle_MouseUp;
 
             btnClose.Click += btnClose_Click;
+            pnlRight.MouseDown += pnlRight_MouseDown;
+            pnlRight.MouseMove += pnlRight_MouseMove;
+            pnlRight.MouseUp += pnlRight_MouseUp;
 
             this.Shown += (s, e) =>
             {
                 _showPassword = false;      // mặc định ẨN
-                UpdateMaskAndIcon();        // chỉ set mask + icon
+                UpdateMaskAndIcon();        // Cập nhật mask và icon
+                txtTenDangNhap.Focus();
             };
 
-            // Focus ban đầu
-            txtTenDangNhap.Focus();
             this.AcceptButton = btnLogin;
-
         }
 
         private void UpdateMaskAndIcon()
         {
-            // MaterialTextbox: isPassword == true => ẨN
-            txtPassword.isPassword = !_showPassword;
+            // Sử dụng UseSystemPasswordChar thay vì isPassword
+            txtPassword.UseSystemPasswordChar = !_showPassword;
 
             // Đổi icon theo trạng thái
             picEyeToggle.Image = _showPassword
@@ -82,14 +80,9 @@ namespace QLCHBanGaRan
             txtPassword.Refresh();
         }
 
-        /// <summary>
-        /// Trả focus về ô mật khẩu và đưa caret về cuối (an toàn sau khi handle đã tạo).
-        /// </summary>
         private void FocusPasswordAtEnd()
         {
             txtPassword.Focus();
-
-            // Chỉ BeginInvoke khi handle đã tạo để tránh InvalidOperationException
             if (this.IsHandleCreated && txtPassword.IsHandleCreated)
             {
                 this.BeginInvoke((Action)(() =>
@@ -104,7 +97,10 @@ namespace QLCHBanGaRan
         private void txtTenDangNhap_Enter(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtTenDangNhap.Text))
+            {
+                lblHintUsername.Visible = false;
                 txtTenDangNhap.ForeColor = Color.Black;
+            }
         }
 
         private void txtTenDangNhap_Leave(object sender, EventArgs e)
@@ -123,6 +119,7 @@ namespace QLCHBanGaRan
             {
                 lblHintUsername.Visible = false;
                 txtTenDangNhap.Text = "";
+                txtTenDangNhap.ForeColor = Color.Black;
             }
         }
 
@@ -131,7 +128,7 @@ namespace QLCHBanGaRan
             if (e.KeyCode == Keys.Enter && !isLoginInProgress)
             {
                 e.Handled = true;
-                e.SuppressKeyPress = true; // Ngăn chặn event bubbling
+                e.SuppressKeyPress = true;
                 btnLogin.PerformClick();
             }
         }
@@ -141,9 +138,10 @@ namespace QLCHBanGaRan
         private void txtPassword_Enter(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtPassword.Text))
+            {
+                lblHintPassword.Visible = false;
                 txtPassword.ForeColor = Color.Black;
-
-            // Không set cứng isPassword; giữ theo _showPassword
+            }
             UpdateMaskAndIcon();
         }
 
@@ -164,6 +162,7 @@ namespace QLCHBanGaRan
             {
                 lblHintPassword.Visible = false;
                 txtPassword.Text = "";
+                txtPassword.ForeColor = Color.Black;
             }
             UpdateMaskAndIcon();
         }
@@ -173,24 +172,23 @@ namespace QLCHBanGaRan
             if (e.KeyCode == Keys.Enter && !isLoginInProgress)
             {
                 e.Handled = true;
-                e.SuppressKeyPress = true; // Ngăn chặn event bubbling
+                e.SuppressKeyPress = true;
                 btnLogin.PerformClick();
             }
         }
 
         // ================== Toggle hiển thị/ẩn mật khẩu ==================
 
-        // Nhấn-giữ để xem
         private void picEyeToggle_MouseDown(object sender, MouseEventArgs e)
         {
-            _showPassword = true;   // HIỆN
+            _showPassword = true;
             UpdateMaskAndIcon();
             FocusPasswordAtEnd();
         }
 
         private void picEyeToggle_MouseUp(object sender, MouseEventArgs e)
         {
-            _showPassword = false;  // ẨN
+            _showPassword = false;
             UpdateMaskAndIcon();
             FocusPasswordAtEnd();
         }
@@ -202,89 +200,114 @@ namespace QLCHBanGaRan
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (result == DialogResult.Yes)
-                Application.Exit();
+                this.Hide(); // Ẩn frm_Login thay vì Application.Exit()
         }
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
-            // Ngăn chặn gọi lặp và vô hiệu hóa tạm thời
-            if (!isLoginInProgress)
+            if (isLoginInProgress) return;
+
+            isLoginInProgress = true;
+            isMessageShown = false;
+            btnLogin.Enabled = false;
+
+            try
             {
-                isLoginInProgress = true;
-                isMessageShown = false; // Đặt lại cờ thông báo
-                btnLogin.Enabled = false; // Vô hiệu hóa nút trong quá trình xử lý
+                string username = txtTenDangNhap.Text.Trim();
+                string password = txtPassword.Text.Trim();
 
-                // Thêm delay nhỏ để tránh gọi lặp
-                System.Threading.Thread.Sleep(50);
-
-                try
+                if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
                 {
-                    string username = txtTenDangNhap.Text; // Không trim để giữ nguyên ký tự
-                    string password = txtPassword.Text;    // Không trim để giữ nguyên ký tự
+                    MessageBox.Show("Vui lòng nhập đầy đủ username và password!", "Lỗi",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
 
-                    if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+                string encryptedPassword = cls_Encryption.Encrypt(password);
+                string maND = cls_EmployeeManagement.CheckLogin(username, encryptedPassword);
+
+                if (maND != "ERROR")
+                {
+                    MessageBox.Show("Đăng nhập thành công!", "Thành công",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    this.Hide(); // Ẩn frm_Login thay vì Close
+                    frm_Main mainForm = new frm_Main(maND); // Tạo instance mới của frm_Main
+                    mainForm.FormClosed += (s, args) =>
                     {
-                        MessageBox.Show("Vui lòng nhập đầy đủ username và password!", "Lỗi",
-                                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        return;
+                        if (!this.IsDisposed) // Kiểm tra frm_Login chưa bị dispose
+                            this.Show(); // Hiển thị lại frm_Login khi frm_Main đóng
+                    };
+                    mainForm.Show();
+                }
+                else
+                {
+                    MessageBox.Show("Tên đăng nhập hoặc mật khẩu không đúng.", "Lỗi",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (SqlException ex)
+            {
+                if (!isMessageShown)
+                {
+                    isMessageShown = true;
+                    if (ex.Number == 50002)
+                    {
+                        MessageBox.Show("Tài khoản của bạn đã bị vô hiệu hóa.", "Lỗi",
+                                        MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
-
-                    // Mã hóa mật khẩu trước khi kiểm tra
-                    string encryptedPassword = cls_Encryption.Encrypt(password);
-                    string maND = cls_EmployeeManagement.CheckLogin(username, encryptedPassword);
-
-                    if (maND != "ERROR")
+                    else if (ex.Number == 50001)
                     {
-                        MessageBox.Show("Đăng nhập thành công!", "Thành công",
-                                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        this.Hide();
-                        frm_Main mainForm = new frm_Main(maND);
-                        mainForm.Show();
-                    }
-                    else
-                    {
-                        // Trường hợp maND trả về "ERROR" (không có exception)
                         MessageBox.Show("Tên đăng nhập hoặc mật khẩu không đúng.", "Lỗi",
                                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
-                }
-                catch (SqlException ex)
-                {
-                    if (!isMessageShown) // Chỉ hiển thị thông báo nếu chưa hiển thị
+                    else
                     {
-                        isMessageShown = true;
-                        if (ex.Number == 50002) // Tài khoản bị vô hiệu hóa
-                        {
-                            MessageBox.Show("Tài khoản của bạn đã bị vô hiệu hóa.", "Lỗi",
-                                            MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
-                        else if (ex.Number == 50001) // Sai username hoặc password
-                        {
-                            MessageBox.Show("Tên đăng nhập hoặc mật khẩu không đúng.", "Lỗi",
-                                            MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
-                        else
-                        {
-                            MessageBox.Show("Lỗi đăng nhập: " + ex.Message, "Lỗi",
-                                            MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    // Chỉ xử lý các exception không phải SqlException
-                    if (!isMessageShown && !(ex is SqlException))
-                    {
-                        isMessageShown = true;
                         MessageBox.Show("Lỗi đăng nhập: " + ex.Message, "Lỗi",
                                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
-                finally
+            }
+            catch (Exception ex)
+            {
+                if (!isMessageShown && !(ex is SqlException))
                 {
-                    isLoginInProgress = false;
-                    btnLogin.Enabled = true; // Kích hoạt lại nút sau khi hoàn tất
+                    isMessageShown = true;
+                    MessageBox.Show("Lỗi đăng nhập: " + ex.Message, "Lỗi",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+            }
+            finally
+            {
+                isLoginInProgress = false;
+                btnLogin.Enabled = true;
+                txtTenDangNhap.Focus();
+            }
+        }
+
+        private void pnlRight_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                isDragging = true;
+                lastCursorPosition = e.Location;
+            }
+        }
+
+        private void pnlRight_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (isDragging)
+            {
+                int deltaX = e.X - lastCursorPosition.X;
+                int deltaY = e.Y - lastCursorPosition.Y;
+                this.Location = new Point(this.Location.X + deltaX, this.Location.Y + deltaY);
+            }
+        }
+
+        private void pnlRight_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                isDragging = false;
             }
         }
     }

@@ -34,9 +34,9 @@
             this.grpPhanQuyen.SuspendLayout();
             this.grpQuanLyNguoiDung.SuspendLayout();
             this.SuspendLayout();
-            // 
+            //
             // grpPhanQuyen
-            // 
+            //
             this.grpPhanQuyen.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.grpPhanQuyen.BackColor = System.Drawing.Color.Transparent;
             this.grpPhanQuyen.Controls.Add(this.grpQuanLyNguoiDung);
@@ -48,9 +48,9 @@
             this.grpPhanQuyen.TabIndex = 6;
             this.grpPhanQuyen.TabStop = false;
             this.grpPhanQuyen.Text = "Phân quyền";
-            // 
+            //
             // grpQuanLyNguoiDung
-            // 
+            //
             this.grpQuanLyNguoiDung.Controls.Add(this.btnQuanLyNguoiDung);
             this.grpQuanLyNguoiDung.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.grpQuanLyNguoiDung.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(0)))), ((int)(((byte)(42)))));
@@ -60,9 +60,9 @@
             this.grpQuanLyNguoiDung.TabIndex = 0;
             this.grpQuanLyNguoiDung.TabStop = false;
             this.grpQuanLyNguoiDung.Text = "Quản lý người dùng";
-            // 
+            //
             // btnQuanLyNguoiDung
-            // 
+            //
             this.btnQuanLyNguoiDung.BackgroundImage = global::QLCHBanGaRan.Properties.Resources.admin_settings_male_120px;
             this.btnQuanLyNguoiDung.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnQuanLyNguoiDung.Location = new System.Drawing.Point(35, 28);
@@ -71,14 +71,14 @@
             this.btnQuanLyNguoiDung.TabIndex = 0;
             this.btnQuanLyNguoiDung.UseVisualStyleBackColor = true;
             this.btnQuanLyNguoiDung.Click += new System.EventHandler(this.btnQuanLyNguoiDung_Click);
-            // 
-            // UC_System
-            // 
+            //
+            //
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.Controls.Add(this.grpPhanQuyen);
-            this.Name = "UC_System";
+            this.Name = "frm_System";
             this.Size = new System.Drawing.Size(893, 619);
             this.grpPhanQuyen.ResumeLayout(false);
             this.grpQuanLyNguoiDung.ResumeLayout(false);
