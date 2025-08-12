@@ -28,7 +28,7 @@ namespace QLCHBanGaRan.UCFunction
         {
             _reset();
             _sttButton(true, true, true, false, false, false);
-            Forms.frm_Main.Instance.btnProduct_Click(null, null);
+            //Forms.frm_Main.Instance.btnProduct_Click(null, null);
             ProductAdded?.Invoke(this, EventArgs.Empty);
         }
 

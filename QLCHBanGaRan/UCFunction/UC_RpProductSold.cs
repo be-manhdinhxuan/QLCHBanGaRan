@@ -33,7 +33,7 @@ namespace QLCHBanGaRan.UCFunction
         private void btnBack_Click(object sender, EventArgs e)
         {
             // Quay lại màn hình chính
-            Forms.frm_Main.Instance.pnlContainer.Controls["UC_Report"].BringToFront();
+            Forms.frm_Main.Instance.Controls["frm_Report"].BringToFront();
         }
 
         private void LoadReport()

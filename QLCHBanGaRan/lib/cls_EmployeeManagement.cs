@@ -15,7 +15,7 @@ namespace QLCHBanGaRan.lib
 
         public static void SetInitialValues(string maNV)
         {
-            using (SqlConnection conn = new SqlConnection(cls_DatabaseManager.connectionString))
+            using (SqlConnection conn = new SqlConnection(cls_DatabaseManager.ConnectionString))
             {
                 conn.Open();
                 string query = "SELECT CMND, Email FROM NhanVien WHERE MaNV = @MaNV AND IsDeleted = 0";
@@ -39,7 +39,7 @@ namespace QLCHBanGaRan.lib
             string MaND = null;
             try
             {
-                using (SqlConnection conn = new SqlConnection(cls_DatabaseManager.connectionString))
+                using (SqlConnection conn = new SqlConnection(cls_DatabaseManager.ConnectionString))
                 {
                     conn.Open();
                     string query = @"
@@ -250,7 +250,7 @@ namespace QLCHBanGaRan.lib
         {
             try
             {
-                using (SqlConnection conn = new SqlConnection(cls_DatabaseManager.connectionString))
+                using (SqlConnection conn = new SqlConnection(cls_DatabaseManager.ConnectionString))
                 {
                     conn.Open();
                     using (SqlCommand cmd = new SqlCommand("sp_DeleteEmployee", conn))
@@ -342,7 +342,7 @@ namespace QLCHBanGaRan.lib
             new SqlParameter("@Success", SqlDbType.Bit) { Direction = ParameterDirection.Output }
                 };
 
-                using (SqlConnection conn = new SqlConnection(cls_DatabaseManager.connectionString))
+                using (SqlConnection conn = new SqlConnection(cls_DatabaseManager.ConnectionString))
                 {
                     conn.Open();
                     using (SqlCommand cmd = new SqlCommand(query, conn))

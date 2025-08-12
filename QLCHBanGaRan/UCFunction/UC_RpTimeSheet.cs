@@ -43,9 +43,9 @@ namespace QLCHBanGaRan.UCFunction
         private void btnBack_Click(object sender, EventArgs e)
         {
             // Quay lại trang trước đó
-            if (Forms.frm_Main.Instance.pnlContainer.Controls.ContainsKey("UC_Report"))
+            if (Forms.frm_Main.Instance.Controls.ContainsKey("frm_Report"))
             {
-                Forms.frm_Main.Instance.pnlContainer.Controls["UC_Report"].BringToFront();
+                Forms.frm_Main.Instance.Controls["frm_Report"].BringToFront();
             }
         }
 

@@ -4,16 +4,41 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using System.ComponentModel;
 
 namespace QLCHBanGaRan.lib
 {
     public class cls_DatabaseManager
     {
-        public static readonly string connectionString = File.ReadAllText("config.env").Trim();
+        private static string _connectionString;
+
+        public static string ConnectionString
+        {
+            get
+            {
+                if (_connectionString == null)
+                {
+                    // Bỏ qua khi đang ở Design mode (VD: kéo thả UC vào Form)
+                    if (LicenseManager.UsageMode == LicenseUsageMode.Designtime)
+                    {
+                        return "Server=.;Database=FakeDB;Trusted_Connection=True;";
+                    }
+
+                    string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.env");
+                    if (!File.Exists(path))
+                    {
+                        throw new FileNotFoundException($"Không tìm thấy file cấu hình: {path}");
+                    }
+
+                    _connectionString = File.ReadAllText(path).Trim();
+                }
+                return _connectionString;
+            }
+        }
 
         public static void Connect()
         {
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
             {
                 try
                 {
@@ -30,7 +55,7 @@ namespace QLCHBanGaRan.lib
         public static DataTable TableRead(string query, SqlParameter[] parameters = null)
         {
             DataTable dt = new DataTable();
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
             {
                 try
                 {
@@ -62,14 +87,14 @@ namespace QLCHBanGaRan.lib
         public static DataTable TableReadStoredProc(string storedProcName, SqlParameter[] parameters = null)
         {
             DataTable dt = new DataTable();
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
             {
                 try
                 {
                     conn.Open();
                     using (SqlCommand cmd = new SqlCommand(storedProcName, conn))
                     {
-                        cmd.CommandType = CommandType.StoredProcedure; // Chỉ định là stored procedure
+                        cmd.CommandType = CommandType.StoredProcedure;
                         if (parameters != null)
                         {
                             cmd.Parameters.AddRange(parameters);
@@ -95,13 +120,16 @@ namespace QLCHBanGaRan.lib
         public static int ExecuteNonQuery(string query, SqlParameter[] parameters = null)
         {
             int rowsAffected = 0;
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
             {
                 conn.Open();
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    // Phát hiện nếu query là tên stored procedure
-                    if (query.Trim().ToLower().StartsWith("sp_") || !query.ToLower().Contains("select") && !query.ToLower().Contains("insert") && !query.ToLower().Contains("update") && !query.ToLower().Contains("delete"))
+                    if (query.Trim().ToLower().StartsWith("sp_") ||
+                        (!query.ToLower().Contains("select") &&
+                         !query.ToLower().Contains("insert") &&
+                         !query.ToLower().Contains("update") &&
+                         !query.ToLower().Contains("delete")))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
                     }
@@ -123,7 +151,7 @@ namespace QLCHBanGaRan.lib
                     catch (SqlException ex)
                     {
                         Console.WriteLine($"ExecuteNonQuery Error - Number: {ex.Number}, Message: {ex.Message}, Procedure: {query}, Parameters: {string.Join(", ", parameters?.Select(p => $"{p.ParameterName}={p.Value}") ?? new string[] { "None" })}");
-                        throw; // Ném lại ngoại lệ để xử lý ở cấp cao hơn
+                        throw;
                     }
                     catch (Exception ex)
                     {
@@ -138,7 +166,7 @@ namespace QLCHBanGaRan.lib
         public static object ExecuteScalar(string query, SqlParameter[] parameters = null)
         {
             object result = null;
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
             {
                 try
                 {
@@ -164,7 +192,6 @@ namespace QLCHBanGaRan.lib
             return result;
         }
 
-        // Thêm phương thức kiểm tra trùng lặp
         public static bool CheckDuplicate(string table, string column, string value, string condition = "")
         {
             string query = $"SELECT COUNT(*) FROM {table} WHERE {column} = @Value {condition}";
@@ -173,7 +200,6 @@ namespace QLCHBanGaRan.lib
             return Convert.ToInt32(result) > 0;
         }
 
-        // Thêm phương thức tạo mã ngẫu nhiên
         public static string GenerateRandomMaND(int length = 10)
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";

@@ -1,20 +1,19 @@
-﻿using System;
+﻿using QLCHBanGaRan.UCFunction;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
 using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using QLCHBanGaRan.Forms;
-using QLCHBanGaRan.UCFunction;
 
-namespace QLCHBanGaRan.UCSystems
+namespace QLCHBanGaRan.Forms
 {
-    public partial class UC_System : UserControl
+    public partial class frm_System : Form
     {
-        public UC_System()
+        public frm_System()
         {
             InitializeComponent();
         }

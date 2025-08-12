@@ -137,7 +137,7 @@ namespace QLCHBanGaRan.UCFunction
         {
             _reset();
             _sttButton(true, true, false, false, false);
-            Forms.frm_Main.Instance.pnlContainer.Controls["UC_Personnel"].BringToFront();
+            Forms.frm_Main.Instance.Controls["frm_Personnel"].BringToFront();
         }
 
         private void btnSua_Click(object sender, EventArgs e)

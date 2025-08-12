@@ -71,7 +71,7 @@ namespace QLCHBanGaRan.UCFunction
         {
             _sttButton(true, false, true, false, false, false, true);
             _reset();
-            Forms.frm_Main.Instance.pnlContainer.Controls["UC_Salary"].BringToFront();
+            Forms.frm_Main.Instance.Controls["frm_Salary"].BringToFront();
         }
 
         private void UC_SalaryManager_Load(object sender, EventArgs e)

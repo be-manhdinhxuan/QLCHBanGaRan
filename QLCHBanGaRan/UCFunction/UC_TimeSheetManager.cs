@@ -139,7 +139,7 @@ namespace QLCHBanGaRan.UCFunction
 
         private void btnBack_Click(object sender, EventArgs e)
         {
-            Forms.frm_Main.Instance.pnlContainer.Controls["UC_Salary"].BringToFront();
+            Forms.frm_Main.Instance.Controls["frm_Salary"].BringToFront();
         }
 
         private void btnHienThi_Click(object sender, EventArgs e)
@@ -274,7 +274,7 @@ namespace QLCHBanGaRan.UCFunction
         {
             if (dtList.Rows.Count == 0) return;
 
-            using (SqlConnection conn = new SqlConnection(cls_DatabaseManager.connectionString))
+            using (SqlConnection conn = new SqlConnection(cls_DatabaseManager.ConnectionString))
             {
                 try
                 {
@@ -330,7 +330,7 @@ namespace QLCHBanGaRan.UCFunction
             string maNV = cmbFilterNV.SelectedValue.ToString();
             string thang = dtpThang.Value.ToString("yyyyMM");
 
-            using (SqlConnection conn = new SqlConnection(cls_DatabaseManager.connectionString))
+            using (SqlConnection conn = new SqlConnection(cls_DatabaseManager.ConnectionString))
             {
                 try
                 {

@@ -1,20 +1,19 @@
-﻿using System;
+﻿using QLCHBanGaRan.UCFunction;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
 using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using QLCHBanGaRan.Forms;
-using QLCHBanGaRan.UCFunction;
 
-namespace QLCHBanGaRan.UCSystems
+namespace QLCHBanGaRan.Forms
 {
-    public partial class UC_Report : UserControl
+    public partial class frm_Report : Form
     {
-        public UC_Report()
+        public frm_Report()
         {
             InitializeComponent();
         }
@@ -41,12 +40,12 @@ namespace QLCHBanGaRan.UCSystems
                 Forms.frm_Main.Instance.Controls.Add(timeSheet);
             }
             Forms.frm_Main.Instance.Controls["UC_RpTimeSheet"].BringToFront();
-            
+
         }
 
         private void btnRpSalary_Click(object sender, EventArgs e)
         {
-            
+
             if (!Forms.frm_Main.Instance.Controls.ContainsKey("UC_RpSalary"))
             {
                 UC_RpSalary rpSalary = new UC_RpSalary();
@@ -54,12 +53,12 @@ namespace QLCHBanGaRan.UCSystems
                 Forms.frm_Main.Instance.Controls.Add(rpSalary);
             }
             Forms.frm_Main.Instance.Controls["UC_RpSalary"].BringToFront();
-            
+
         }
 
         private void btnRpSanPham_Click(object sender, EventArgs e)
         {
-            
+
             if (!Forms.frm_Main.Instance.Controls.ContainsKey("UC_RpProduct"))
             {
                 UC_RpProduct rpProduct = new UC_RpProduct();
@@ -67,12 +66,12 @@ namespace QLCHBanGaRan.UCSystems
                 Forms.frm_Main.Instance.Controls.Add(rpProduct);
             }
             Forms.frm_Main.Instance.Controls["UC_RpProduct"].BringToFront();
-            
+
         }
 
         private void btnRpSPDaBan_Click(object sender, EventArgs e)
         {
-            
+
             if (!Forms.frm_Main.Instance.Controls.ContainsKey("UC_RpProductSold"))
             {
                 UC_RpProductSold rpProductSold = new UC_RpProductSold();
@@ -80,7 +79,7 @@ namespace QLCHBanGaRan.UCSystems
                 Forms.frm_Main.Instance.Controls.Add(rpProductSold);
             }
             Forms.frm_Main.Instance.Controls["UC_RpProductSold"].BringToFront();
-            
+
         }
 
         private void btnRpDoanhThu_Click(object sender, EventArgs e)
@@ -92,7 +91,7 @@ namespace QLCHBanGaRan.UCSystems
                 Forms.frm_Main.Instance.Controls.Add(rpRevenue);
             }
             Forms.frm_Main.Instance.Controls["UC_RpRevenue"].BringToFront();
-            
+
         }
 
         private void btnRpHoaDon_Click(object sender, EventArgs e)
@@ -104,7 +103,7 @@ namespace QLCHBanGaRan.UCSystems
                 Forms.frm_Main.Instance.Controls.Add(invoiceDetails);
             }
             Forms.frm_Main.Instance.Controls["UC_InvoiceDetails"].BringToFront();
-            
+
         }
 
         private void btnRpSPTonKho_Click(object sender, EventArgs e)
@@ -116,7 +115,7 @@ namespace QLCHBanGaRan.UCSystems
                 Forms.frm_Main.Instance.Controls.Add(productInventory);
             }
             Forms.frm_Main.Instance.Controls["UC_RpProductInventory"].BringToFront();
-            
+
         }
     }
 }

@@ -101,7 +101,7 @@ namespace QLCHBanGaRan.UCFunction
                 foreach (DataGridViewRow row in dtDeletedProducts.SelectedRows)
                 {
                     string maNCC = row.Cells["MaSP"].Value.ToString();
-                    using (SqlConnection conn = new SqlConnection(cls_DatabaseManager.connectionString))
+                    using (SqlConnection conn = new SqlConnection(cls_DatabaseManager.ConnectionString))
                     {
                         conn.Open();
                         SqlCommand cmd = new SqlCommand("sp_RestoreNCC", conn);

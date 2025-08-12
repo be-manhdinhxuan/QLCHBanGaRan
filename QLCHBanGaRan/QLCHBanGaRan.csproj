@@ -108,11 +108,23 @@
     <Compile Include="Forms\frm_About.Designer.cs">
       <DependentUpon>frm_About.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\frm_Category.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frm_Category.Designer.cs">
+      <DependentUpon>frm_Category.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\frm_Connect.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\frm_Connect.Designer.cs">
       <DependentUpon>frm_Connect.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frm_Home.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frm_Home.Designer.cs">
+      <DependentUpon>frm_Home.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\frm_InvoiceDetails.cs">
       <SubType>Form</SubType>
@@ -132,17 +144,59 @@
     <Compile Include="Forms\frm_Main.Designer.cs">
       <DependentUpon>frm_Main.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\frm_Noti.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frm_Noti.Designer.cs">
+      <DependentUpon>frm_Noti.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frm_Order.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frm_Order.Designer.cs">
+      <DependentUpon>frm_Order.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frm_Personnel.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frm_Personnel.Designer.cs">
+      <DependentUpon>frm_Personnel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\frm_PrintInvoice.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\frm_PrintInvoice.Designer.cs">
       <DependentUpon>frm_PrintInvoice.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\frm_Product.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frm_Product.Designer.cs">
+      <DependentUpon>frm_Product.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frm_Report.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frm_Report.Designer.cs">
+      <DependentUpon>frm_Report.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frm_Salary.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frm_Salary.Designer.cs">
+      <DependentUpon>frm_Salary.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\frm_Splash.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\frm_Splash.Designer.cs">
       <DependentUpon>frm_Splash.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frm_System.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frm_System.Designer.cs">
+      <DependentUpon>frm_System.cs</DependentUpon>
     </Compile>
     <Compile Include="lib\cls_DatabaseManager.cs" />
     <Compile Include="lib\cls_EmployeeManagement.cs" />
@@ -364,9 +418,7 @@
     <Compile Include="UCSystems\UC_Noti.Designer.cs">
       <DependentUpon>UC_Noti.cs</DependentUpon>
     </Compile>
-    <Compile Include="UCSystems\UC_Order.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="UCSystems\UC_Order.cs" />
     <Compile Include="UCSystems\UC_Order.Designer.cs">
       <DependentUpon>UC_Order.cs</DependentUpon>
     </Compile>
@@ -408,6 +460,9 @@
     <EmbeddedResource Include="Forms\frm_About.resx">
       <DependentUpon>frm_About.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frm_Category.resx">
+      <DependentUpon>frm_Category.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frm_InvoiceDetails.resx">
       <DependentUpon>frm_InvoiceDetails.cs</DependentUpon>
     </EmbeddedResource>
@@ -417,8 +472,26 @@
     <EmbeddedResource Include="Forms\frm_Main.resx">
       <DependentUpon>frm_Main.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frm_Order.resx">
+      <DependentUpon>frm_Order.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frm_Personnel.resx">
+      <DependentUpon>frm_Personnel.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frm_PrintInvoice.resx">
       <DependentUpon>frm_PrintInvoice.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frm_Product.resx">
+      <DependentUpon>frm_Product.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frm_Report.resx">
+      <DependentUpon>frm_Report.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frm_Salary.resx">
+      <DependentUpon>frm_Salary.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frm_System.resx">
+      <DependentUpon>frm_System.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -552,7 +625,7 @@
       <DependentUpon>UC_System.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="config.env">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

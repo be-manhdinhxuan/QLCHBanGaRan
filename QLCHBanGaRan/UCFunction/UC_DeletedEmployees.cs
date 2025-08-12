@@ -101,7 +101,7 @@ namespace QLCHBanGaRan.UCFunction
                 foreach (DataGridViewRow row in dtDeletedProducts.SelectedRows)
                 {
                     string maNV = row.Cells["MaSP"].Value.ToString(); // Sử dụng MaSP vì nó đại diện cho MaNV
-                    using (SqlConnection conn = new SqlConnection(cls_DatabaseManager.connectionString))
+                    using (SqlConnection conn = new SqlConnection(cls_DatabaseManager.ConnectionString))
                     {
                         conn.Open();
                         using (SqlCommand cmd = new SqlCommand("sp_RestoreEmployee", conn))
@@ -138,7 +138,7 @@ namespace QLCHBanGaRan.UCFunction
                 if (MessageBox.Show($"Bạn có chắc muốn xóa vĩnh viễn {dtDeletedProducts.SelectedRows.Count} nhân viên đã chọn?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
                     int successCount = 0;
-                    using (SqlConnection conn = new SqlConnection(cls_DatabaseManager.connectionString))
+                    using (SqlConnection conn = new SqlConnection(cls_DatabaseManager.ConnectionString))
                     {
                         conn.Open();
                         SqlTransaction transaction = conn.BeginTransaction();

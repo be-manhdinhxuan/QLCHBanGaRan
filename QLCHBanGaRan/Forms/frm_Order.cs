@@ -1,17 +1,19 @@
-﻿using CrystalDecisions.CrystalReports.Engine;
-using QLCHBanGaRan.Forms;
-using QLCHBanGaRan.lib;
+﻿using QLCHBanGaRan.lib;
+using QLCHBanGaRan.UCSystems;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
+using System.Drawing;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace QLCHBanGaRan.UCSystems
+namespace QLCHBanGaRan.Forms
 {
-    [DesignerCategory("")]
-    public partial class UC_Order : UserControl
+    public partial class frm_Order : Form
     {
         private string idEmployess;
         private string tenNV;
@@ -19,14 +21,14 @@ namespace QLCHBanGaRan.UCSystems
         private string maHD;
         private DataTable tbOrder;
 
-        public UC_Order()
+        public frm_Order()
         {
             InitializeComponent();
             if (!this.DesignMode) // Chỉ khởi tạo logic khi không phải Design Time
             {
                 InitializeOrderTable(); // Khởi tạo DataTable
                 InitializeControls(); // Khởi tạo các control
-                this.Load += UC_Order_Load; // Gán sự kiện Load
+                this.Load += frm_Order_Load; // Gán sự kiện Load
             }
         }
 
@@ -294,7 +296,7 @@ namespace QLCHBanGaRan.UCSystems
             }
         }
 
-        private void UC_Order_Load(object sender, EventArgs e)
+        private void frm_Order_Load(object sender, EventArgs e)
         {
             if (!this.DesignMode) // Chỉ thực thi khi không phải Design Time
             {

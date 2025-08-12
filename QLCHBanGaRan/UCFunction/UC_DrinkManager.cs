@@ -108,9 +108,9 @@ namespace QLCHBanGaRan.UCFunction
         {
             _reset();
             _sttButton(true, true, true, false, false, false);
-            if (Forms.frm_Main.Instance.pnlContainer.Controls.ContainsKey("UC_Product"))
+            if (Forms.frm_Main.Instance.Controls.ContainsKey("frm_Product"))
             {
-                Forms.frm_Main.Instance.pnlContainer.Controls["UC_Product"].BringToFront();
+                Forms.frm_Main.Instance.Controls["frm_Product"].BringToFront();
             }
         }
 

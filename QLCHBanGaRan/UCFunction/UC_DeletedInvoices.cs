@@ -136,7 +136,7 @@ namespace QLCHBanGaRan.UCFunction
                 if (MessageBox.Show($"Bạn có chắc muốn xóa vĩnh viễn {dtDeletedProducts.SelectedRows.Count} hóa đơn đã chọn?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
                     int successCount = 0;
-                    using (SqlConnection conn = new SqlConnection(cls_DatabaseManager.connectionString))
+                    using (SqlConnection conn = new SqlConnection(cls_DatabaseManager.ConnectionString))
                     {
                         conn.Open();
                         SqlTransaction transaction = conn.BeginTransaction();

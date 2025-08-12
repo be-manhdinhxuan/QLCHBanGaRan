@@ -30,7 +30,7 @@ namespace QLCHBanGaRan.UCFunction
 
         private void btnBack_Click(object sender, EventArgs e)
         {
-            Forms.frm_Main.Instance.pnlContainer.Controls["UC_Report"].BringToFront();
+            Forms.frm_Main.Instance.Controls["frm_Report"].BringToFront();
         }
 
         private void btnThongKe_Click(object sender, EventArgs e)

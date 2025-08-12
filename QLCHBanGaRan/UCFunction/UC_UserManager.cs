@@ -272,7 +272,7 @@ namespace QLCHBanGaRan.UCFunction
         {
             _reset();
             _sttButton(true, false, false, false, false, false);
-            Forms.frm_Main.Instance.pnlContainer.Controls["UC_System"].BringToFront();
+            Forms.frm_Main.Instance.Controls["frm_System"].BringToFront();
         }
 
         // Khi giữ chuột

@@ -76,7 +76,7 @@ namespace QLCHBanGaRan.lib
         {
             try
             {
-                using (SqlConnection conn = new SqlConnection(cls_DatabaseManager.connectionString))
+                using (SqlConnection conn = new SqlConnection(cls_DatabaseManager.ConnectionString))
                 {
                     conn.Open();
                     SqlCommand cmd = new SqlCommand("sp_DelNCC", conn);

@@ -1,26 +1,32 @@
-﻿using System;
+﻿using QLCHBanGaRan.UCFunction;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
-using QLCHBanGaRan.Forms;
-using QLCHBanGaRan.UCFunction;
 
-namespace QLCHBanGaRan.UCSystems
+namespace QLCHBanGaRan.Forms
 {
-    public partial class UC_Personnel : UserControl
+    public partial class frm_Personnel : Form
     {
-        public UC_Personnel()
+        public frm_Personnel()
         {
             InitializeComponent();
         }
 
         private void btnQuanLyNhanVien_Click(object sender, EventArgs e)
         {
-            if (!frm_Main.Instance.Controls.ContainsKey("frm_PersonnelManager"))
+            if (!frm_Main.Instance.Controls.ContainsKey("UC_PersonnelManager"))
             {
                 UC_PersonnelManager personnelManager = new UC_PersonnelManager();
                 personnelManager.Dock = DockStyle.Fill;
                 frm_Main.Instance.Controls.Add(personnelManager);
             }
-            frm_Main.Instance.Controls["frm_PersonnelManager"].BringToFront();
+            frm_Main.Instance.Controls["UC_PersonnelManager"].BringToFront();
         }
 
         private void btnHoSoNhanVien_Click(object sender, EventArgs e)
@@ -34,6 +40,6 @@ namespace QLCHBanGaRan.UCSystems
             frm_Main.Instance.Controls["UC_ProfilePersonnelManager"].BringToFront();
         }
 
-        
+
     }
 }

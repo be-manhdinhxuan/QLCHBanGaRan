@@ -30,6 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frm_Main));
             this.pnlLeft = new System.Windows.Forms.Panel();
+            this.btnInfo = new System.Windows.Forms.Button();
             this.lblUserAccount = new System.Windows.Forms.Label();
             this.btnLogout = new System.Windows.Forms.Button();
             this.panelSide = new System.Windows.Forms.Panel();
@@ -38,26 +39,21 @@
             this.btnCategory = new System.Windows.Forms.Button();
             this.btnSalary = new System.Windows.Forms.Button();
             this.btnPersonnel = new System.Windows.Forms.Button();
-            this.btnProduct = new System.Windows.Forms.Button();
             this.btnOrder = new System.Windows.Forms.Button();
+            this.btnProduct = new System.Windows.Forms.Button();
             this.btnHome = new System.Windows.Forms.Button();
             this.pnlLeftTop = new System.Windows.Forms.Panel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.btnInfo = new System.Windows.Forms.Button();
-            this.pnlHeader = new System.Windows.Forms.Panel();
-            this.btnMinimize = new System.Windows.Forms.Button();
-            this.btnZoom = new System.Windows.Forms.Button();
-            this.btnClose = new System.Windows.Forms.Button();
-            this.panelControls = new System.Windows.Forms.Panel();
+            this.tabControlMain = new System.Windows.Forms.TabControl();
             this.pnlLeft.SuspendLayout();
             this.pnlLeftTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            this.pnlHeader.SuspendLayout();
             this.SuspendLayout();
             // 
             // pnlLeft
             // 
             this.pnlLeft.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(0)))), ((int)(((byte)(42)))));
+            this.pnlLeft.Controls.Add(this.btnInfo);
             this.pnlLeft.Controls.Add(this.lblUserAccount);
             this.pnlLeft.Controls.Add(this.btnLogout);
             this.pnlLeft.Controls.Add(this.panelSide);
@@ -66,22 +62,38 @@
             this.pnlLeft.Controls.Add(this.btnCategory);
             this.pnlLeft.Controls.Add(this.btnSalary);
             this.pnlLeft.Controls.Add(this.btnPersonnel);
-            this.pnlLeft.Controls.Add(this.btnProduct);
             this.pnlLeft.Controls.Add(this.btnOrder);
+            this.pnlLeft.Controls.Add(this.btnProduct);
             this.pnlLeft.Controls.Add(this.btnHome);
             this.pnlLeft.Controls.Add(this.pnlLeftTop);
-            this.pnlLeft.Dock = System.Windows.Forms.DockStyle.Left;
-            this.pnlLeft.Location = new System.Drawing.Point(0, 0);
+            this.pnlLeft.Location = new System.Drawing.Point(0, 1);
             this.pnlLeft.Name = "pnlLeft";
-            this.pnlLeft.Size = new System.Drawing.Size(229, 645);
+            this.pnlLeft.Size = new System.Drawing.Size(229, 798);
             this.pnlLeft.TabIndex = 3;
+            // 
+            // btnInfo
+            // 
+            this.btnInfo.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnInfo.FlatAppearance.BorderSize = 0;
+            this.btnInfo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnInfo.Font = new System.Drawing.Font("Segoe UI", 10.25F);
+            this.btnInfo.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.btnInfo.Image = global::QLCHBanGaRan.Properties.Resources.info_24px;
+            this.btnInfo.Location = new System.Drawing.Point(5, 727);
+            this.btnInfo.Name = "btnInfo";
+            this.btnInfo.Size = new System.Drawing.Size(217, 47);
+            this.btnInfo.TabIndex = 14;
+            this.btnInfo.Text = "Thông tin";
+            this.btnInfo.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnInfo.UseVisualStyleBackColor = true;
+            this.btnInfo.Click += new System.EventHandler(this.btnInfo_Click);
             // 
             // lblUserAccount
             // 
             this.lblUserAccount.AutoSize = true;
             this.lblUserAccount.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblUserAccount.ForeColor = System.Drawing.Color.White;
-            this.lblUserAccount.Location = new System.Drawing.Point(3, 602);
+            this.lblUserAccount.Location = new System.Drawing.Point(3, 608);
             this.lblUserAccount.Name = "lblUserAccount";
             this.lblUserAccount.Size = new System.Drawing.Size(137, 30);
             this.lblUserAccount.TabIndex = 15;
@@ -198,23 +210,6 @@
             this.btnPersonnel.UseVisualStyleBackColor = true;
             this.btnPersonnel.Click += new System.EventHandler(this.btnPersonnel_Click);
             // 
-            // btnProduct
-            // 
-            this.btnProduct.FlatAppearance.BorderSize = 0;
-            this.btnProduct.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnProduct.Font = new System.Drawing.Font("Segoe UI Semilight", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnProduct.ForeColor = System.Drawing.Color.White;
-            this.btnProduct.Image = global::QLCHBanGaRan.Properties.Resources.kawaii_french_fries_32px;
-            this.btnProduct.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnProduct.Location = new System.Drawing.Point(13, 228);
-            this.btnProduct.Name = "btnProduct";
-            this.btnProduct.Size = new System.Drawing.Size(217, 47);
-            this.btnProduct.TabIndex = 7;
-            this.btnProduct.Text = "Sản phẩm";
-            this.btnProduct.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnProduct.UseVisualStyleBackColor = true;
-            this.btnProduct.Click += new System.EventHandler(this.btnProduct_Click);
-            // 
             // btnOrder
             // 
             this.btnOrder.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(0)))), ((int)(((byte)(42)))));
@@ -232,6 +227,23 @@
             this.btnOrder.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnOrder.UseVisualStyleBackColor = false;
             this.btnOrder.Click += new System.EventHandler(this.btnOrder_Click);
+            // 
+            // btnProduct
+            // 
+            this.btnProduct.FlatAppearance.BorderSize = 0;
+            this.btnProduct.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnProduct.Font = new System.Drawing.Font("Segoe UI Semilight", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnProduct.ForeColor = System.Drawing.Color.White;
+            this.btnProduct.Image = global::QLCHBanGaRan.Properties.Resources.kawaii_french_fries_32px;
+            this.btnProduct.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnProduct.Location = new System.Drawing.Point(13, 228);
+            this.btnProduct.Name = "btnProduct";
+            this.btnProduct.Size = new System.Drawing.Size(217, 47);
+            this.btnProduct.TabIndex = 7;
+            this.btnProduct.Text = "Sản phẩm";
+            this.btnProduct.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnProduct.UseVisualStyleBackColor = true;
+            this.btnProduct.Click += new System.EventHandler(this.btnProduct_Click);
             // 
             // btnHome
             // 
@@ -269,103 +281,40 @@
             this.pictureBox1.TabIndex = 2;
             this.pictureBox1.TabStop = false;
             // 
-            // btnInfo
+            // tabControlMain
             // 
-            this.btnInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnInfo.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnInfo.FlatAppearance.BorderSize = 0;
-            this.btnInfo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnInfo.Image = global::QLCHBanGaRan.Properties.Resources.info_24px;
-            this.btnInfo.Location = new System.Drawing.Point(774, 0);
-            this.btnInfo.Name = "btnInfo";
-            this.btnInfo.Size = new System.Drawing.Size(27, 26);
-            this.btnInfo.TabIndex = 3;
-            this.btnInfo.UseVisualStyleBackColor = true;
-            this.btnInfo.Click += new System.EventHandler(this.btnInfo_Click);
-            // 
-            // pnlHeader
-            // 
-            this.pnlHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(0)))), ((int)(((byte)(42)))));
-            this.pnlHeader.Controls.Add(this.btnInfo);
-            this.pnlHeader.Controls.Add(this.btnMinimize);
-            this.pnlHeader.Controls.Add(this.btnZoom);
-            this.pnlHeader.Controls.Add(this.btnClose);
-            this.pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlHeader.Location = new System.Drawing.Point(229, 0);
-            this.pnlHeader.Name = "pnlHeader";
-            this.pnlHeader.Size = new System.Drawing.Size(893, 26);
-            this.pnlHeader.TabIndex = 1;
-            this.pnlHeader.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pnlHeader_MouseDown);
-            // 
-            // btnMinimize
-            // 
-            this.btnMinimize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnMinimize.FlatAppearance.BorderSize = 0;
-            this.btnMinimize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnMinimize.Image = global::QLCHBanGaRan.Properties.Resources.subtract_24px;
-            this.btnMinimize.Location = new System.Drawing.Point(806, 0);
-            this.btnMinimize.Name = "btnMinimize";
-            this.btnMinimize.Size = new System.Drawing.Size(27, 26);
-            this.btnMinimize.TabIndex = 3;
-            this.btnMinimize.UseVisualStyleBackColor = true;
-            this.btnMinimize.Click += new System.EventHandler(this.btnMinimize_Click);
-            // 
-            // btnZoom
-            // 
-            this.btnZoom.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnZoom.FlatAppearance.BorderSize = 0;
-            this.btnZoom.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnZoom.Image = global::QLCHBanGaRan.Properties.Resources.restore_down_24px;
-            this.btnZoom.Location = new System.Drawing.Point(839, 0);
-            this.btnZoom.Name = "btnZoom";
-            this.btnZoom.Size = new System.Drawing.Size(27, 26);
-            this.btnZoom.TabIndex = 3;
-            this.btnZoom.UseVisualStyleBackColor = true;
-            this.btnZoom.Click += new System.EventHandler(this.btnZoom_Click);
-            // 
-            // btnClose
-            // 
-            this.btnClose.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnClose.FlatAppearance.BorderSize = 0;
-            this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnClose.Image = global::QLCHBanGaRan.Properties.Resources.btn_close;
-            this.btnClose.Location = new System.Drawing.Point(868, 0);
-            this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(25, 26);
-            this.btnClose.TabIndex = 2;
-            this.btnClose.UseVisualStyleBackColor = true;
-            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
-            // 
-            // panelControls
-            // 
-            this.panelControls.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelControls.Location = new System.Drawing.Point(229, 26);
-            this.panelControls.Name = "panelControls";
-            this.panelControls.Size = new System.Drawing.Size(893, 619);
-            this.panelControls.TabIndex = 4;
+            this.tabControlMain.Appearance = System.Windows.Forms.TabAppearance.FlatButtons;
+            this.tabControlMain.ItemSize = new System.Drawing.Size(120, 26);
+            this.tabControlMain.Location = new System.Drawing.Point(229, 0);
+            this.tabControlMain.Name = "tabControlMain";
+            this.tabControlMain.SelectedIndex = 0;
+            this.tabControlMain.Size = new System.Drawing.Size(1080, 26);
+            this.tabControlMain.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
+            this.tabControlMain.TabIndex = 1;
+            this.tabControlMain.SelectedIndexChanged += new System.EventHandler(this.TabControlMain_SelectedIndexChanged);
+            this.tabControlMain.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tabControlMain_MouseDown);
             // 
             // frm_Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(1122, 645);
-            this.Controls.Add(this.panelControls);
-            this.Controls.Add(this.pnlHeader);
+            this.ClientSize = new System.Drawing.Size(1310, 800);
+            this.Controls.Add(this.tabControlMain);
             this.Controls.Add(this.pnlLeft);
             this.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = global::QLCHBanGaRan.Properties.Resources.logo;
+            this.IsMdiContainer = true;
             this.Name = "frm_Main";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Hệ Thống Quản Lý Nhà Hàng KFC";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Frm_Main_FormClosing);
             this.Load += new System.EventHandler(this.frm_Main_Load);
             this.SizeChanged += new System.EventHandler(this.Frm_Main_SizeChanged);
             this.pnlLeft.ResumeLayout(false);
             this.pnlLeft.PerformLayout();
             this.pnlLeftTop.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            this.pnlHeader.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -373,8 +322,7 @@
         #endregion
         private System.Windows.Forms.Panel pnlLeft;
         private System.Windows.Forms.Panel pnlLeftTop;
-        private System.Windows.Forms.Panel pnlHeader;
-        private System.Windows.Forms.Button btnClose;
+        private System.Windows.Forms.TabControl tabControlMain;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Button btnHome;
         private System.Windows.Forms.Button btnOrder;
@@ -385,11 +333,8 @@
         private System.Windows.Forms.Button btnReport;
         private System.Windows.Forms.Button btnSystem;
         private System.Windows.Forms.Panel panelSide;
-        private System.Windows.Forms.Panel panelControls;
         private System.Windows.Forms.Button btnLogout;
         private System.Windows.Forms.Button btnInfo;
-        private System.Windows.Forms.Button btnMinimize;
-        private System.Windows.Forms.Button btnZoom;
         private System.Windows.Forms.Label lblUserAccount; // Thêm biến thành viên cho label mới
     }
 }
