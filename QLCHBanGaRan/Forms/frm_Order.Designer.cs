@@ -545,6 +545,7 @@ namespace QLCHBanGaRan.Forms
             this.btnSaveDB.TabIndex = 26;
             this.btnSaveDB.Text = "LƯU CSDL";
             this.btnSaveDB.UseVisualStyleBackColor = false;
+            this.btnSaveDB.Click += new System.EventHandler(this.btnSaveDB_Click);
             // 
             // check
             // 

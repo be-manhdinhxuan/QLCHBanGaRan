@@ -300,11 +300,6 @@ namespace QLCHBanGaRan.Forms
 
         private void btnSalary_Click(object sender, EventArgs e)
         {
-            if (!checkPer)
-            {
-                ShowNotificationForm();
-                return;
-            }
 
             moveSidePanel(btnSalary);
 

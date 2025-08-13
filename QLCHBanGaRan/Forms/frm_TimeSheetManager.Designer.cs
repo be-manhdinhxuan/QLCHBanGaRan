@@ -2,15 +2,8 @@
 {
     partial class frm_TimeSheetManager
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -20,12 +13,6 @@
             base.Dispose(disposing);
         }
 
-        #region Windows Form Designer generated code
-
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
@@ -39,6 +26,16 @@
             this.dtpThang = new System.Windows.Forms.DateTimePicker();
             this.lblThang = new System.Windows.Forms.Label();
             this.dtList = new System.Windows.Forms.DataGridView();
+            //this.maNVDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            //this.tenNVDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            //this.chucDanhDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            //this.ngayDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            //this.gioVaoDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            //this.gioRaDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            //this.trangThaiDataGridViewComboBoxColumn = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            //this.lyDoNghiDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            //this.soGioLamDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            //this.maChamCongDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.grpDanhSach = new System.Windows.Forms.GroupBox();
             this.btnNop = new System.Windows.Forms.Button();
             this.btnLuu = new System.Windows.Forms.Button();
@@ -49,9 +46,8 @@
             this.grpDanhSach.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             this.SuspendLayout();
-            // 
+
             // lblTitle
-            // 
             this.lblTitle.AutoSize = true;
             this.lblTitle.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(0)))), ((int)(((byte)(42)))));
@@ -60,9 +56,8 @@
             this.lblTitle.Size = new System.Drawing.Size(217, 25);
             this.lblTitle.TabIndex = 68;
             this.lblTitle.Text = "QUẢN LÝ CHẤM CÔNG";
-            // 
+
             // grpThongTin
-            // 
             this.grpThongTin.Controls.Add(this.cmbFilterNV);
             this.grpThongTin.Controls.Add(this.btnHienThi);
             this.grpThongTin.Controls.Add(this.dtpThang);
@@ -75,18 +70,16 @@
             this.grpThongTin.TabIndex = 70;
             this.grpThongTin.TabStop = false;
             this.grpThongTin.Text = "Thông tin chấm công";
-            // 
+
             // cmbFilterNV
-            // 
             this.cmbFilterNV.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cmbFilterNV.FormattingEnabled = true;
             this.cmbFilterNV.Location = new System.Drawing.Point(109, 41);
             this.cmbFilterNV.Name = "cmbFilterNV";
             this.cmbFilterNV.Size = new System.Drawing.Size(230, 28);
             this.cmbFilterNV.TabIndex = 74;
-            // 
+
             // btnHienThi
-            // 
             this.btnHienThi.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(28)))), ((int)(((byte)(36)))));
             this.btnHienThi.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnHienThi.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -98,9 +91,8 @@
             this.btnHienThi.Text = "HIỂN THỊ";
             this.btnHienThi.UseVisualStyleBackColor = false;
             this.btnHienThi.Click += new System.EventHandler(this.btnHienThi_Click);
-            // 
+
             // dtpThang
-            // 
             this.dtpThang.CalendarFont = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dtpThang.CustomFormat = "MM/yyyy";
             this.dtpThang.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -109,9 +101,8 @@
             this.dtpThang.Name = "dtpThang";
             this.dtpThang.Size = new System.Drawing.Size(165, 27);
             this.dtpThang.TabIndex = 3;
-            // 
+
             // lblThang
-            // 
             this.lblThang.AutoSize = true;
             this.lblThang.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblThang.Location = new System.Drawing.Point(378, 45);
@@ -119,9 +110,8 @@
             this.lblThang.Size = new System.Drawing.Size(50, 20);
             this.lblThang.TabIndex = 1;
             this.lblThang.Text = "Tháng";
-            // 
+
             // dtList
-            // 
             this.dtList.AllowUserToAddRows = false;
             this.dtList.AllowUserToDeleteRows = false;
             dataGridViewCellStyle4.BackColor = System.Drawing.Color.White;
@@ -160,9 +150,79 @@
             this.dtList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.dtList.Size = new System.Drawing.Size(838, 340);
             this.dtList.TabIndex = 1;
-            // 
+
+            // Thêm các cột vào dtList
+            this.maNVDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.maNVDataGridViewTextBoxColumn.Name = "maNVDataGridViewTextBoxColumn";
+            this.maNVDataGridViewTextBoxColumn.HeaderText = "Mã NV";
+            this.maNVDataGridViewTextBoxColumn.DataPropertyName = "MaNV";
+            this.maNVDataGridViewTextBoxColumn.ReadOnly = true;
+            this.dtList.Columns.Add(this.maNVDataGridViewTextBoxColumn);
+
+            this.tenNVDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.tenNVDataGridViewTextBoxColumn.Name = "tenNVDataGridViewTextBoxColumn";
+            this.tenNVDataGridViewTextBoxColumn.HeaderText = "Tên NV";
+            this.tenNVDataGridViewTextBoxColumn.DataPropertyName = "TenNV";
+            this.tenNVDataGridViewTextBoxColumn.ReadOnly = true;
+            this.dtList.Columns.Add(this.tenNVDataGridViewTextBoxColumn);
+
+            this.chucDanhDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.chucDanhDataGridViewTextBoxColumn.Name = "chucDanhDataGridViewTextBoxColumn";
+            this.chucDanhDataGridViewTextBoxColumn.HeaderText = "Chức danh";
+            this.chucDanhDataGridViewTextBoxColumn.DataPropertyName = "ChucDanh";
+            this.chucDanhDataGridViewTextBoxColumn.ReadOnly = true;
+            this.dtList.Columns.Add(this.chucDanhDataGridViewTextBoxColumn);
+
+            this.ngayDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ngayDataGridViewTextBoxColumn.Name = "ngayDataGridViewTextBoxColumn";
+            this.ngayDataGridViewTextBoxColumn.HeaderText = "Ngày";
+            this.ngayDataGridViewTextBoxColumn.DataPropertyName = "Ngay";
+            this.ngayDataGridViewTextBoxColumn.ReadOnly = true;
+            this.dtList.Columns.Add(this.ngayDataGridViewTextBoxColumn);
+
+            this.gioVaoDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.gioVaoDataGridViewTextBoxColumn.Name = "gioVaoDataGridViewTextBoxColumn";
+            this.gioVaoDataGridViewTextBoxColumn.HeaderText = "Giờ vào";
+            this.gioVaoDataGridViewTextBoxColumn.DataPropertyName = "GioVao";
+            this.gioVaoDataGridViewTextBoxColumn.ReadOnly = true;
+            this.dtList.Columns.Add(this.gioVaoDataGridViewTextBoxColumn);
+
+            this.gioRaDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.gioRaDataGridViewTextBoxColumn.Name = "gioRaDataGridViewTextBoxColumn";
+            this.gioRaDataGridViewTextBoxColumn.HeaderText = "Giờ ra";
+            this.gioRaDataGridViewTextBoxColumn.DataPropertyName = "GioRa";
+            this.dtList.Columns.Add(this.gioRaDataGridViewTextBoxColumn);
+
+            this.trangThaiDataGridViewComboBoxColumn = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.trangThaiDataGridViewComboBoxColumn.Name = "trangThaiDataGridViewComboBoxColumn";
+            this.trangThaiDataGridViewComboBoxColumn.HeaderText = "Trạng thái";
+            this.trangThaiDataGridViewComboBoxColumn.DataPropertyName = "TrangThai";
+            this.trangThaiDataGridViewComboBoxColumn.ReadOnly = true;
+            this.trangThaiDataGridViewComboBoxColumn.Items.AddRange(new object[] { "Chưa chấm công", "Đi làm", "Nghỉ" });
+            this.dtList.Columns.Add(this.trangThaiDataGridViewComboBoxColumn);
+
+            this.lyDoNghiDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.lyDoNghiDataGridViewTextBoxColumn.Name = "lyDoNghiDataGridViewTextBoxColumn";
+            this.lyDoNghiDataGridViewTextBoxColumn.HeaderText = "Lý do nghỉ";
+            this.lyDoNghiDataGridViewTextBoxColumn.DataPropertyName = "LyDoNghi";
+            this.lyDoNghiDataGridViewTextBoxColumn.ReadOnly = false;
+            this.dtList.Columns.Add(this.lyDoNghiDataGridViewTextBoxColumn);
+
+            this.soGioLamDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.soGioLamDataGridViewTextBoxColumn.Name = "soGioLamDataGridViewTextBoxColumn";
+            this.soGioLamDataGridViewTextBoxColumn.HeaderText = "Số giờ làm";
+            this.soGioLamDataGridViewTextBoxColumn.DataPropertyName = "SoGioLam";
+            this.soGioLamDataGridViewTextBoxColumn.ReadOnly = true;
+            this.dtList.Columns.Add(this.soGioLamDataGridViewTextBoxColumn);
+
+            this.maChamCongDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.maChamCongDataGridViewTextBoxColumn.Name = "maChamCongDataGridViewTextBoxColumn";
+            this.maChamCongDataGridViewTextBoxColumn.HeaderText = "Mã chấm công";
+            this.maChamCongDataGridViewTextBoxColumn.DataPropertyName = "MaChamCong";
+            this.maChamCongDataGridViewTextBoxColumn.Visible = false;
+            this.dtList.Columns.Add(this.maChamCongDataGridViewTextBoxColumn);
+
             // grpDanhSach
-            // 
             this.grpDanhSach.Controls.Add(this.dtList);
             this.grpDanhSach.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.grpDanhSach.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(0)))), ((int)(((byte)(42)))));
@@ -172,9 +232,8 @@
             this.grpDanhSach.TabIndex = 79;
             this.grpDanhSach.TabStop = false;
             this.grpDanhSach.Text = "Lịch chấm công";
-            // 
+
             // btnNop
-            // 
             this.btnNop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(28)))), ((int)(((byte)(36)))));
             this.btnNop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnNop.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -186,9 +245,8 @@
             this.btnNop.Text = "NỘP";
             this.btnNop.UseVisualStyleBackColor = false;
             this.btnNop.Click += new System.EventHandler(this.btnNop_Click);
-            // 
+
             // btnLuu
-            // 
             this.btnLuu.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(28)))), ((int)(((byte)(42)))));
             this.btnLuu.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnLuu.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -200,9 +258,8 @@
             this.btnLuu.Text = "LƯU";
             this.btnLuu.UseVisualStyleBackColor = false;
             this.btnLuu.Click += new System.EventHandler(this.btnLuu_Click);
-            // 
+
             // lblStatus
-            // 
             this.lblStatus.AutoSize = true;
             this.lblStatus.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStatus.ForeColor = System.Drawing.Color.Green;
@@ -210,13 +267,11 @@
             this.lblStatus.Name = "lblStatus";
             this.lblStatus.Size = new System.Drawing.Size(0, 15);
             this.lblStatus.TabIndex = 84;
-            // 
+
             // errorProvider
-            // 
             this.errorProvider.ContainerControl = this;
-            // 
+
             // frm_TimeSheetManager
-            // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
@@ -236,11 +291,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
-        #endregion
-
+        #region Windows Form Designer generated code
         private System.Windows.Forms.Label lblTitle;
         private System.Windows.Forms.GroupBox grpThongTin;
         private System.Windows.Forms.Button btnHienThi;
@@ -264,5 +317,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn lyDoNghiDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn soGioLamDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn maChamCongDataGridViewTextBoxColumn;
+        #endregion
     }
 }

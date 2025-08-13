@@ -616,5 +616,6 @@ namespace QLCHBanGaRan.Forms
                 ConfigureDataGridViewColumns(dtSearch);
             }
         }
+
     }
 }

@@ -24,7 +24,8 @@ namespace QLCHBanGaRan.Forms
 
             dtList.CellBeginEdit += (s, e) =>
             {
-                if (e.ColumnIndex != dtList.Columns["gioRaDataGridViewTextBoxColumn"].Index)
+                if (e.ColumnIndex != dtList.Columns["gioRaDataGridViewTextBoxColumn"].Index &&
+                    e.ColumnIndex != dtList.Columns["lyDoNghiDataGridViewTextBoxColumn"].Index)
                 {
                     dtpGioRaPicker.Visible = false;
                 }
@@ -66,7 +67,8 @@ namespace QLCHBanGaRan.Forms
 
         private void dtList_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex >= 0 && e.ColumnIndex == dtList.Columns["gioRaDataGridViewTextBoxColumn"].Index)
+            if (e.RowIndex >= 0 && dtList.Columns["gioRaDataGridViewTextBoxColumn"] != null &&
+                e.ColumnIndex == dtList.Columns["gioRaDataGridViewTextBoxColumn"].Index)
             {
                 Rectangle rect = dtList.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, true);
                 dtpGioRaPicker.Location = new Point(rect.X, rect.Y);
@@ -83,7 +85,7 @@ namespace QLCHBanGaRan.Forms
                 }
                 else
                 {
-                    // Nếu không parse được thì giữ nguyên giá trị hiện tại (không reset về giờ hệ thống)
+                    dtpGioRaPicker.Value = DateTime.Today; // Đặt giờ mặc định nếu không parse được
                 }
 
                 dtpGioRaPicker.Tag = new Point(e.RowIndex, e.ColumnIndex); // Ghi lại vị trí
@@ -109,7 +111,7 @@ namespace QLCHBanGaRan.Forms
                 {
                     cell.Value = gioMoi;
 
-                    // Tính lại số giờ làm dưới dạng thập phân và hiển thị dưới dạng HH:mm
+                    // Tính lại số giờ làm và hiển thị dưới dạng HH:mm
                     var gioVaoStr = dtList.Rows[row].Cells["gioVaoDataGridViewTextBoxColumn"].Value?.ToString();
                     if (TimeSpan.TryParse(gioVaoStr, out TimeSpan gioVao) && TimeSpan.TryParse(gioMoi, out TimeSpan gioRa))
                     {
@@ -162,14 +164,14 @@ namespace QLCHBanGaRan.Forms
             DataTable dtFormatted = new DataTable();
             dtFormatted.Columns.Add("MaNV", typeof(string));
             dtFormatted.Columns.Add("TenNV", typeof(string));
-            dtFormatted.Columns.Add("ChucDanh", typeof(string)); // Sử dụng tên chức danh
+            dtFormatted.Columns.Add("ChucDanh", typeof(string));
             dtFormatted.Columns.Add("Ngay", typeof(DateTime));
             dtFormatted.Columns.Add("GioVao", typeof(string));
             dtFormatted.Columns.Add("GioRa", typeof(string));
-            dtFormatted.Columns.Add("TrangThai", typeof(string)); // Sử dụng chuỗi thay vì số
+            dtFormatted.Columns.Add("TrangThai", typeof(string));
             dtFormatted.Columns.Add("LyDoNghi", typeof(string));
-            dtFormatted.Columns.Add("SoGioLam", typeof(string)); // Thay đổi thành string để hiển thị HH:mm
-            dtFormatted.Columns.Add("MaChamCong", typeof(int));
+            dtFormatted.Columns.Add("SoGioLam", typeof(string));
+            dtFormatted.Columns.Add("MaChamCong", typeof(long));
 
             // Thêm dữ liệu mặc định cho nhân viên được chọn
             if (maNV != null)
@@ -203,9 +205,9 @@ namespace QLCHBanGaRan.Forms
                         newRow["Ngay"] = ngay;
                         newRow["GioVao"] = "";
                         newRow["GioRa"] = "";
-                        newRow["TrangThai"] = "Chưa chấm công"; // Mặc định
+                        newRow["TrangThai"] = "Chưa chấm công";
                         newRow["LyDoNghi"] = "";
-                        newRow["SoGioLam"] = "00:00"; // Mặc định hiển thị HH:mm
+                        newRow["SoGioLam"] = "00:00";
                         newRow["MaChamCong"] = DBNull.Value;
                         dtFormatted.Rows.Add(newRow);
                     }
@@ -223,11 +225,10 @@ namespace QLCHBanGaRan.Forms
                         DateTime ngay = Convert.ToDateTime(row["Ngay"]);
                         string gioVao = row["GioVao"].ToString();
                         string gioRa = row["GioRa"].ToString() ?? "";
-                        int trangThaiNum = row["TrangThai"] != DBNull.Value ? Convert.ToInt32(row["TrangThai"]) : 1; // Mặc định 1 nếu null
+                        int trangThaiNum = row["TrangThai"] != DBNull.Value ? Convert.ToInt32(row["TrangThai"]) : 1;
                         string lyDoNghi = row["LyDoNghi"].ToString() ?? "";
-                        double soGioLam = row["SoGioLam"] != DBNull.Value ? Convert.ToDouble(row["SoGioLam"]) : 0.0;
+                        string soGioLam = "00:00"; // Không lấy từ cơ sở dữ liệu vì SoGioLam nằm ở bảng ThongKeChamCong
 
-                        // Chuyển số trạng thái thành chữ
                         string trangThaiText = "Chưa chấm công";
                         switch (trangThaiNum)
                         {
@@ -245,9 +246,6 @@ namespace QLCHBanGaRan.Forms
                                 break;
                         }
 
-                        // Chuyển số giờ thập phân thành định dạng HH:mm
-                        string soGioLamFormatted = TimeSpan.FromHours(soGioLam).ToString(@"hh\:mm");
-
                         DataRow[] rowsToUpdate = dtFormatted.Select($"MaNV = '{dbMaNV}' AND Ngay = '{ngay:yyyy-MM-dd}'");
                         if (rowsToUpdate.Length > 0)
                         {
@@ -255,7 +253,7 @@ namespace QLCHBanGaRan.Forms
                             rowsToUpdate[0]["GioRa"] = gioRa;
                             rowsToUpdate[0]["TrangThai"] = trangThaiText;
                             rowsToUpdate[0]["LyDoNghi"] = lyDoNghi;
-                            rowsToUpdate[0]["SoGioLam"] = soGioLamFormatted;
+                            rowsToUpdate[0]["SoGioLam"] = soGioLam; // Hiển thị mặc định, sẽ tính lại khi chỉnh sửa GioRa
                             rowsToUpdate[0]["MaChamCong"] = row["MaChamCong"];
                         }
                     }
@@ -275,7 +273,12 @@ namespace QLCHBanGaRan.Forms
 
         private void btnLuu_Click(object sender, EventArgs e)
         {
-            if (dtList.Rows.Count == 0) return;
+            if (dtList.Rows.Count == 0)
+            {
+                lblStatus.Text = "Không có dữ liệu để lưu.";
+                lblStatus.ForeColor = System.Drawing.Color.Red;
+                return;
+            }
 
             using (SqlConnection conn = new SqlConnection(cls_DatabaseManager.ConnectionString))
             {
@@ -287,26 +290,30 @@ namespace QLCHBanGaRan.Forms
                         if (!row.IsNewRow)
                         {
                             // Lấy các giá trị cần thiết
-                            int maChamCong = row.Cells["maChamCongDataGridViewTextBoxColumn"].Value != DBNull.Value ? Convert.ToInt32(row.Cells["maChamCongDataGridViewTextBoxColumn"].Value) : 0;
-                            if (maChamCong == 0)
-                            {
-                                continue; // Bỏ qua nếu MaChamCong chưa có (bản ghi mới chưa lưu)
-                            }
-
+                            long maChamCong = row.Cells["maChamCongDataGridViewTextBoxColumn"].Value != DBNull.Value ? Convert.ToInt64(row.Cells["maChamCongDataGridViewTextBoxColumn"].Value) : 0;
                             string gioRa = row.Cells["gioRaDataGridViewTextBoxColumn"].Value?.ToString() ?? "";
                             string lyDoNghi = row.Cells["lyDoNghiDataGridViewTextBoxColumn"].Value?.ToString() ?? "";
+                            string maNV = row.Cells["maNVDataGridViewTextBoxColumn"].Value?.ToString();
+                            DateTime ngay = Convert.ToDateTime(row.Cells["ngayDataGridViewTextBoxColumn"].Value);
 
-                            using (SqlCommand cmd = new SqlCommand("sp_UpdateChamCong", conn))
+                            if (string.IsNullOrEmpty(maNV) || ngay == default)
                             {
-                                cmd.CommandType = CommandType.StoredProcedure;
+                                continue; // Bỏ qua nếu thiếu thông tin cần thiết
+                            }
 
-                                // Thêm tham số
-                                cmd.Parameters.AddWithValue("@MaChamCong", maChamCong);
-                                cmd.Parameters.AddWithValue("@GioRa", string.IsNullOrEmpty(gioRa) ? (object)DBNull.Value : gioRa);
-                                cmd.Parameters.AddWithValue("@LyDoNghi", string.IsNullOrEmpty(lyDoNghi) ? (object)DBNull.Value : lyDoNghi);
+                            if (maChamCong != 0)
+                            
+                            {
+                                // Cập nhật bản ghi hiện có
+                                using (SqlCommand cmd = new SqlCommand("sp_UpdateChamCong", conn))
+                                {
+                                    cmd.CommandType = CommandType.StoredProcedure;
+                                    cmd.Parameters.AddWithValue("@MaChamCong", maChamCong);
+                                    cmd.Parameters.AddWithValue("@GioRa", string.IsNullOrEmpty(gioRa) ? (object)DBNull.Value : gioRa);
+                                    cmd.Parameters.AddWithValue("@LyDoNghi", string.IsNullOrEmpty(lyDoNghi) ? (object)DBNull.Value : lyDoNghi);
 
-                                // Thực thi stored procedure
-                                cmd.ExecuteNonQuery();
+                                    cmd.ExecuteNonQuery();
+                                }
                             }
                         }
                     }
@@ -338,16 +345,45 @@ namespace QLCHBanGaRan.Forms
                 try
                 {
                     conn.Open();
-                    using (SqlCommand cmd = new SqlCommand("sp_InsertThongKeChamCong", conn))
+                    foreach (DataGridViewRow row in dtList.Rows)
                     {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@MaNV", maNV);
-                        cmd.Parameters.AddWithValue("@Thang", thang);
+                        if (!row.IsNewRow)
+                        {
+                            string gioVao = row.Cells["gioVaoDataGridViewTextBoxColumn"].Value?.ToString() ?? "";
+                            string gioRa = row.Cells["gioRaDataGridViewTextBoxColumn"].Value?.ToString() ?? "";
+                            DateTime ngay = Convert.ToDateTime(row.Cells["ngayDataGridViewTextBoxColumn"].Value);
 
-                        cmd.ExecuteNonQuery();
-                        lblStatus.Text = "Đã nộp và thống kê thành công cho tháng " + thang.Substring(4, 2) + "/" + thang.Substring(0, 4) + ".";
-                        lblStatus.ForeColor = System.Drawing.Color.Green;
+                            // Tính số giờ làm
+                            double soGioLamValue = 0.0;
+                            if (TimeSpan.TryParse(gioVao, out TimeSpan gioVaoTime) && TimeSpan.TryParse(gioRa, out TimeSpan gioRaTime))
+                            {
+                                TimeSpan thoiGianLam = gioRaTime - gioVaoTime;
+                                if (thoiGianLam.TotalMinutes >= 0)
+                                {
+                                    soGioLamValue = thoiGianLam.TotalHours;
+                                }
+                                else
+                                {
+                                    // Giả định ca làm qua ngày
+                                    thoiGianLam = gioRaTime.Add(new TimeSpan(24, 0, 0)) - gioVaoTime;
+                                    soGioLamValue = thoiGianLam.TotalHours;
+                                }
+                            }
+
+                            // Cập nhật hoặc thêm vào bảng ThongKeChamCong
+                            using (SqlCommand cmd = new SqlCommand("sp_InsertThongKeChamCong", conn))
+                            {
+                                cmd.CommandType = CommandType.StoredProcedure;
+                                cmd.Parameters.AddWithValue("@MaNV", maNV);
+                                cmd.Parameters.AddWithValue("@Thang", thang);
+                                cmd.Parameters.AddWithValue("@SoGioLam", soGioLamValue);
+
+                                cmd.ExecuteNonQuery();
+                            }
+                        }
                     }
+                    lblStatus.Text = "Đã nộp và thống kê thành công cho tháng " + thang.Substring(4, 2) + "/" + thang.Substring(0, 4) + ".";
+                    lblStatus.ForeColor = System.Drawing.Color.Green;
                 }
                 catch (Exception ex)
                 {
