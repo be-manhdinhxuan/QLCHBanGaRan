@@ -27,10 +27,12 @@
 ## 📥 Cài đặt
 
 ### 1️⃣ Clone repository
-git clone https://github.com/yourusername/QLCHBanGaRan.git
+git clone https://github.com/be-manhdinhxuan/QLCHBanGaRan.git
 ### 2️⃣ Cấu hình cơ sở dữ liệu
 
-- Tải file QLCHBanGaRan.mdf trong repository.
+- Tải file QLCHBanGaRan.mdf:
+  🔗 [QLCHBanGaRan.mdf](https://drive.google.com/file/d/1eSADG-tcllVO7DAY3DtMaml04yNZCoOp/view?usp=sharing)
+  🔗 [QLCHBanGaRan_log.ldf](https://drive.google.com/file/d/1pyBm_RfiSXXKTeqh4-l7025ZjyKg2gc1/view?usp=sharing)
 
 - Attach vào SQL Server:
 
